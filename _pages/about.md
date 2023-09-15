@@ -9,3 +9,9 @@ redirect_from:
 ---
 
 This website is currently under-construction. Come back soon to see the finished product!
+
+# Projects
+
+
+
+# Teaching
