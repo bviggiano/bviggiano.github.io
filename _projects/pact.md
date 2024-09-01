@@ -4,7 +4,7 @@ title: pact
 description: A Github based tool for creating programming assignments.
 img: assets/img/pact.png
 importance: 1
-category: 
+category:
 related_publications: False
 ---
 
