@@ -18,4 +18,6 @@ social: true # includes social icons at the bottom of the page
 
 # Ben Viggiano
 
-I am a second-year MS/PhD student at Stanford University, where I am fortunate to be advised by [Euan Ashley](https://med.stanford.edu/profiles/euan-ashley) and [Chris Ré](https://cs.stanford.edu/~chrismre/). I am primarily interested in building biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models), developing methods to align these models with real-world data, and finding ways to use them to advance research in biology and medicine. Prior to moving to CA, I completed my undergraduate at the University of Wisconsin-Madison, where I majored in Biomedical Engineering and Computer Science. 
+I am currently a rising second year MS/PhD student at Stanford University advised by [Euan Ashley](https://med.stanford.edu/profiles/euan-ashley) and [Chris Ré](https://cs.stanford.edu/~chrismre/). I am primarily interested in building biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models), and developing methods to use these models to inform gene therapy vector design. Prior to moving to CA, I completed my undergraduate at the University of Wisconsin-Madison, where I majored in Biomedical Engineering and Computer Science.
+
+
