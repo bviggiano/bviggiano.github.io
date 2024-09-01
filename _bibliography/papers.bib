@@ -2,114 +2,375 @@
 ---
 
 @string{aps = {American Physical Society,}}
-
-@book{einstein1920relativity,
-  title={Relativity: the Special and General Theory},
-  author={Einstein, Albert},
-  year={1920},
-  publisher={Methuen & Co Ltd},
-  html={relativity.html}
-}
-
-@book{einstein1956investigations,
+@ARTICLE{Szczykutowicz2021-ow,
   bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation},
-  preview={brownian-motion.gif}
+  title     = "A metric for quantification of iodine contrast enhancement
+               ({Q}-{ICE}) in computed tomography",
+  author    = "Szczykutowicz, T and Viggiano, Ben and Rose, Sean D and
+               Pickhardt, P and Lubner, M",
+  journal   = "J. Comput. Assist. Tomogr.",
+  publisher = "LWW",
+  volume    =  45,
+  number    =  6,
+  pages     = "870--876",
+  abstract  = "An automatable CT protocol and technologist workflow metric
+               allowing for the quantification of CT iodine contrast agent
+               enhancement was developed and applied to 312 patients. Background
+               Poor contrast enhancement is related to issues with examination
+               execution, contrast prescription, computed tomography (CT)
+               protocols, and patient conditions. Currently, our community has
+               no metric to monitor true enhancement on routine single-phase
+               examinations because this requires knowledge of both pre- and
+               postcontrast CT number. Purpose We propose an automatable
+               solution to quantifying contrast enhancement without requiring a
+               dedicated noncontrast series. Methods The difference in CT number
+               between a target region in an enhanced and unenhanced image
+               defines the metric “quantification of iodine contrast
+               enhancement” (Q-ICE). Quantification of iodine contrast
+               enhancement uses the noncontrast bolus tracking baseline image
+               from routine abdominal examinations, which mitigates the need for
+               a dedicated noncontrast series. We applied this method
+               retrospectively to 312 patient livers from 2 sites between 2017
+               and 2020. Each site used a weight-based contrast injection
+               protocol for weights 60 to 113 kg and a constant volume less than
+               60 kg and greater than 113 kg. Hypothesis testing was performed
+               to compare Q-ICE between sites and detect Q-ICE dependence on
+               weight and kilovoltage (kV). Results Mean Q-ICE differed between
+               sites (P = 0.004) by 4.96 Hounsfield unit with 95\% confidence
+               interval (1.63–8.28), albeit this difference was roughly 2 times
+               smaller than the SD in Q-ICE across patients at a single site.
+               For patients between 60 and 113 kg, we did not observe evidence
+               of Q-ICE varying with patient weight (P = 0.920 and 0.064 for 120
+               and 140 kV, respectively). The Q-ICE did vary with patient weight
+               for patients less than 60 kg (P = 0.003) and greater than 113 kg
+               (P = 0.04). We observed a roughly 10 Hounsfield unit reduction in
+               Q-ICE liver for patients scanned with 140 versus 120 kV. We
+               observed several underenhancing examinations with an arterial
+               phase appearance motivating our CT protocol optimization team to
+               consider increasing the delay for slowly enhancing patients.
+               Conclusions A quality metric for quantifying CT contrast
+               enhancement was developed and suggested tangible opportunities
+               for quality improvement and potential financial savings.",
+  month     =  aug,
+  year      =  2021,
+  preview = {q-ice.jpg}
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
+@ARTICLE{Rose2020-ap,
   bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers}
+  title     = "A multiinstitutional study on wasted {CT} scans for over 60,000
+               patients",
+  author    = "Rose, Sean and Viggiano, Ben and Bour, Robert and Bartels, Carrie
+               and Szczykutowicz, Timothy",
+  journal   = "AJR Am. J. Roentgenol.",
+  publisher = "American Roentgen Ray Society",
+  volume    =  215,
+  number    =  5,
+  pages     = "1123--1129",
+  abstract  = "OBJECTIVE. Repeated imaging is an unnecessary source of patient
+               radiation exposure, a detriment to patient satisfaction, and a
+               waste of time and money. Although analysis of rates of repeated
+               and rejected images is mandated in mammography and recommended in
+               radiography, the available data on these rates for CT are
+               limited. MATERIALS AND METHODS. In this retrospective study, an
+               automated repeat-reject rate analysis algorithm was used to
+               quantify repeat rates from 61,102 patient examinations obtained
+               between 2015 and 2018. The algorithm used DICOM metadata to
+               identify repeat acquisitions. We quantified rates for one
+               academic site and one rural site. The method allows scanner-,
+               technologist-, protocol-, and indication-specific rates to be
+               determined. Positive predictive values and sensitivity were
+               estimated for correctly identifying and classifying repeat
+               acquisitions. Repeat rates were compared between sites to
+               identify areas for targeted technologist training. RESULTS. Of
+               61,102 examinations, 4676 instances of repeat scanning
+               contributed excess radiation dose to patients. Estimated helical
+               overlap repeat rates were 1.4\% (95\% CI, 1.2-1.6\%) for the
+               rural site and 1.1\% (95\% CI, 1.0-1.2\%) for the academic site.
+               Significant differences in rates of repeat imaging required
+               because of bolus tracking (11.6\% vs 4.3\%; p < 0.001) and
+               helical extension (3.3\% vs 1.8\%; p < 0.001) were observed
+               between sites. Positive predictive values ranged from 91\% to
+               99\% depending on the reason for repeat imaging and site
+               location. Sensitivity of the algorithm was 92\% (95\% CI,
+               87-96\%). Rates tended to be highest for emergent imaging
+               procedures and exceeded 9\% for certain protocols. CONCLUSION.
+               Our multiinstitutional automated quantification of repeat rates
+               for CT provided a useful metric for unnecessary radiation
+               exposure and identification of technologists in need of training.",
+  month     =  nov,
+  year      =  2020,
+  keywords  = "protocols; quality; reject analysis; technologists; workflow
+               optimization",
+  language  = "en",
+  preview = {multi.png},
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein*†, A. and Podolsky*, B. and Rosen*, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.},
-  location={New Jersey},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  altmetric={248277},
-  dimensions={true},
-  google_scholar_id={qyhmnyLat1gC},
-  video={https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ},
-  additional_info={. *More Information* can be [found here](https://github.com/alshedivat/al-folio/)},
-  annotation={* Example use of superscripts<br>† Albert Einstein},
-  selected={true},
-  inspirehep_id = {3255}
-}
-
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
-}
-
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
-}
-
-@Article{einstein1905photoelectriceffect,
+@ARTICLE{Rose2021-ur,
   bibtex_show={true},
-  abbr={Ann. Phys.},
-  title="{{\"U}ber einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt}",
-  author={Albert Einstein},
-  abstract={This is the abstract text.},
-  journal={Ann. Phys.},
-  volume={322},
-  number={6},
-  pages={132--148},
-  year={1905},
-  doi={10.1002/andp.19053220607},
-  award={Albert Einstein receveid the **Nobel Prize in Physics** 1921 *for his services to Theoretical Physics, and especially for his discovery of the law of the photoelectric effect*},
-  award_name={Nobel Prize}
+  title     = "Applying a new {CT} quality metric in radiology: How {CT}
+               pulmonary angiography repeat rates compare across institutions",
+  author    = "Rose, Sean and Viggiano, Ben and Bour, Robert and Bartels, Carrie
+               and Kanne, Jeffery P and Szczykutowicz, Timothy P",
+  journal   = "J. Am. Coll. Radiol.",
+  publisher = "Elsevier BV",
+  volume    =  18,
+  number    =  7,
+  pages     = "962--968",
+  abstract  = "OBJECTIVES: To quantify overall CT repeat and reject rates at
+               five institutions and investigate repeat and reject rates for CT
+               pulmonary angiography (CTPA). METHODS: In this retrospective
+               study, we apply an automated repeat rate analysis algorithm to
+               103,752 patient examinations performed at five institutions from
+               July 2017 to August 2019. The algorithm identifies repeated scans
+               for specific scanner and protocol combinations. For each
+               institution, we compared repeat rates for CTPA to all other CT
+               protocols. We used logistic regression and analysis of deviance
+               to compare CTPA repeat rates across institutions and size-based
+               protocols. RESULTS: Of 103,752 examinations, 1,447 contained
+               repeated helical scans (1.4\%). Overall repeat rates differed
+               across institutions (P < .001) ranging from 0.8\% to 1.8\%.
+               Large-patient CTPA repeat rates ranged from 3.0\% to 11.2\% with
+               the odds (95\% confidence intervals) of a repeat being 4.8
+               (3.5-6.6) times higher for large- relative to medium-patient CTPA
+               protocols. CTPA repeat rates were elevated relative to all other
+               CT protocols at four of five institutions, with strong evidence
+               of an effect at two institutions (P < .001 for each; odds ratios:
+               2.0 [1.6-2.6] and 6.2 [4.4-8.9]) and somewhat weaker evidence at
+               the others (P = .005 and P = 0.011; odds ratios: 2.2 [1.3-3.8]
+               and 3.7 [1.5-9.1], respectively). Accounting for size-based
+               protocols, CTPA repeat rates differed across institutions (P <
+               .001). DISCUSSION: The results indicate low overall repeat rates
+               (<2\%) with CTPA rates elevated relative to other protocols.
+               Large-patient CTPA rates were highest (eg, 11.2\% at one
+               institution). Differences in repeat rates across institutions
+               suggest the potential for quality improvement.",
+  month     =  jul,
+  year      =  2021,
+  keywords  = "Equipment utilization; quality control; reject rate; repeat rate;
+               x-ray CT",
+  language  = "en",
+  preview = {rr_institution.png}
 }
 
-@book{przibram1967letters,
+@ARTICLE{Sinha2023-do,
   bibtex_show={true},
-  title={Letters on wave mechanics},
-  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
-  year={1967},
-  publisher={Vision},
-  preview={wave-mechanics.gif},
-  abbr={Vision}
+  title     = "Harnessing artificial intelligence for risk stratification in
+               acute myeloid leukemia ({AML}): Evaluating the utility of
+               longitudinal electronic health record ({EHR}) data via graph
+               neural networks",
+  author    = "Sinha, Riya and Schwede, Matthew and Viggiano, Ben and Kuo, David
+               and Henry, Solomon and Wood, Douglas and Mannis, Gabriel N and
+               Majeti, R and Chen, Jonathan and Zhang, Tian Y",
+  journal   = "Blood",
+  publisher = "Content Repository Only!",
+  volume    =  142,
+  pages     =  960,
+  abstract  = "Background: AML is a life-threatening disease, and to determine
+               which patients need allogeneic stem cell transplantation,
+               hematologists risk-stratify each case. However, standard risk
+               stratification using the European LeukemiaNet (ELN) criteria is
+               focused on baseline mutations and chromosomal aberrations, and
+               the risk estimate is not updated during a patient's course. In
+               other blood cancers, recalculating the risk with treatment
+               response data can help guide the need for more intensive therapy
+               (Kurtz, et al, Cell, 2019). Furthermore, deep learning graph
+               neural networks (GNN) applied to EHR data have strong predictive
+               power in a hematology context (Fouladvand, et al, J Biomed
+               Inform, 2023). Thus, we evaluated the power of a GNN to predict
+               survival in AML using longitudinal EHR data, specifically with
+               labs and histological features that are not included in the ELN
+               but may capture the treatment response. Methods: Patients who
+               were seen at the Stanford Cancer Institute, had EHR data
+               available within six months of diagnosis, and were diagnosed with
+               AML between June 1998 and January 2021 were included in this
+               retrospective analysis. The GNN was trained to predict survival
+               at two years from diagnosis using the first six months of
+               clinical data. Patients were excluded if they were lost to
+               follow-up before two years or died before six months. Data were
+               collected from structured databases associated with Stanford's
+               EHR, except that diagnosis dates were from Stanford's Cancer
+               Registry, and survival data was supplemented with other databases
+               including the Social Security Death Index. Dysplasia, bone marrow
+               cellularity, and bone marrow blast percentages from pathology
+               reports (“pathology report data”) were extracted using text
+               processing algorithms and weakly supervised machine learning
+               (Ratner, et al, ArXiv, 2017). To represent time series
+               information, we framed each patient's timeline as a network (or
+               “graph”) of events. The primary GNN model was a heterogenous
+               graph transformer classifier with two node types: complete blood
+               count (CBC) data and pathology report data (Hu, et al, ArXiv,
+               2020). Data from the same week were assumed to be from the same
+               timeframe and connected with bidirectional edges. Data separated
+               by longer time periods were connected with unidirectional edges
+               of a separate edge type. The independent test dataset consisted
+               of patients whose ELN 2022 classification was available, and to
+               train the model, the remaining data were divided into
+               train/validation splits of 0.9/0.1. Results: Of the 2,535
+               patients with survival data, 1,029 met inclusion criteria. Table
+               1 summarizes the data available in the EHR for each variable, and
+               nearly all patients had CBC and pathology report data. The area
+               under the receiver operating characteristic (AUROC) using the ELN
+               2022 criteria for predicting survival in the test dataset was
+               0.79. The AUROC curve for the GNN model was comparable at 0.76,
+               despite not using any variables from the ELN criteria, and the
+               model effectively stratified patients' disease into high- and
+               low-risk in the independent test dataset (hazard ratio [HR] 3.0,
+               log-rank p = 0.0009). Interestingly, despite not having access to
+               mutation or cytogenetic data, the high-risk cases were enriched
+               in known high-risk mutations, like TP53 and RUNX1, and in
+               high-risk chromosomal aberrations, like 5q deletion (Table 1).
+               Although the model predictions correlated with the ELN criteria
+               in some ways, they also stratified the ELN intermediate-risk AML
+               cases into high and low risk (HR 6.1 for model-predicted high
+               risk among ELN intermediate cases, p = 0.07). Conclusions: Risk
+               stratification using artificial intelligence and longitudinal
+               data from the EHR performed comparably to the ELN 2022 criteria
+               and has the potential to further stratify the ELN categories. The
+               model performed well despite only using histological features and
+               lab values, which are more readily available and more frequently
+               updated than next-generation sequencing results. In the future,
+               this approach may further improve with a larger sample size and
+               additional variables, such as measurable residual disease and
+               treatment information. Given the heterogeneity and increasing
+               complexity of AML classification, leveraging artificial
+               intelligence to assist with classification will be crucial, and
+               these results are a step towards a future where data are
+               automatically extracted from the EHR and used for continuously
+               updated risk stratification.",
+  month     =  nov,
+  year      =  2023,
+  preview = {ai_risk.png}
+}
+
+@ARTICLE{Yoo2024-ke,
+  bibtex_show={true},
+  title    = "Scalable approach to consumer wearable postmarket surveillance:
+              Development and validation study",
+  author   = "Yoo, Richard M and Viggiano, Ben T and Pundi, Krishna N and Fries,
+              Jason A and Zahedivash, Aydin and Podchiyska, Tanya and Din,
+              Natasha and Shah, Nigam H",
+  journal  = "JMIR Med. Inform.",
+  volume   =  12,
+  pages    = "e51171",
+  abstract = "Background: With the capability to render prediagnoses, consumer
+              wearables have the potential to affect subsequent diagnoses and
+              the level of care in the health care delivery setting. Despite
+              this, postmarket surveillance of consumer wearables has been
+              hindered by the lack of codified terms in electronic health
+              records (EHRs) to capture wearable use. Objective: We sought to
+              develop a weak supervision-based approach to demonstrate the
+              feasibility and efficacy of EHR-based postmarket surveillance on
+              consumer wearables that render atrial fibrillation (AF)
+              prediagnoses. Methods: We applied data programming, where labeling
+              heuristics are expressed as code-based labeling functions, to
+              detect incidents of AF prediagnoses. A labeler model was then
+              derived from the predictions of the labeling functions using the
+              Snorkel framework. The labeler model was applied to clinical notes
+              to probabilistically label them, and the labeled notes were then
+              used as a training set to fine-tune a classifier called
+              Clinical-Longformer. The resulting classifier identified patients
+              with an AF prediagnosis. A retrospective cohort study was
+              conducted, where the baseline characteristics and subsequent care
+              patterns of patients identified by the classifier were compared
+              against those who did not receive a prediagnosis. Results: The
+              labeler model derived from the labeling functions showed high
+              accuracy (0.92; F1-score=0.77) on the training set. The classifier
+              trained on the probabilistically labeled notes accurately
+              identified patients with an AF prediagnosis (0.95; F1-score=0.83).
+              The cohort study conducted using the constructed system carried
+              enough statistical power to verify the key findings of the Apple
+              Heart Study, which enrolled a much larger number of participants,
+              where patients who received a prediagnosis tended to be older,
+              male, and White with higher CHA2DS2-VASc (congestive heart
+              failure, hypertension, age ≥75 years, diabetes, stroke, vascular
+              disease, age 65-74 years, sex category) scores (P<.001). We also
+              made a novel discovery that patients with a prediagnosis were more
+              likely to use anticoagulants (525/1037, 50.63\% vs 5936/16,560,
+              35.85\%) and have an eventual AF diagnosis (305/1037, 29.41\% vs
+              262/16,560, 1.58\%). At the index diagnosis, the existence of a
+              prediagnosis did not distinguish patients based on clinical
+              characteristics, but did correlate with anticoagulant prescription
+              (P=.004 for apixaban and P=.01 for rivaroxaban). Conclusions: Our
+              work establishes the feasibility and efficacy of an EHR-based
+              surveillance system for consumer wearables that render AF
+              prediagnoses. Further work is necessary to generalize these
+              findings for patient populations at other sites.",
+  month    =  apr,
+  year     =  2024,
+  keywords = "EHR; NLP; arrhythmia; artificial intelligence; atrial
+              fibrillation; cardiology; classifier; consumer; consumer wearable
+              devices; consumers; device; devices; diagnose; diagnosis;
+              electronic health record; electronic health records; evaluation;
+              heart; labeler; labeling; machine learning; monitoring; natural
+              language processing; postmarket surveillance; surveillance;
+              wearable; wearables",
+  language = "en",
+  preview = {weak_supervision.png}
+}
+
+@ARTICLE{Viggiano2021-tk,
+  bibtex_show={true},
+  title     = "Effect of contrast agent administration on water equivalent
+               diameter in {CT}",
+  author    = "Viggiano, Benjamin and Rose, Sean and Szczykutowicz, Timothy P",
+  journal   = "Med. Phys.",
+  publisher = "Wiley",
+  volume    =  48,
+  number    =  3,
+  pages     = "1117--1124",
+  abstract  = "PURPOSE: Water equivalent diameter (WED) is the preferred
+               surrogate for patient size in computed tomography (CT). It is
+               better than geometric size surrogates and patient
+               weight/height/BMI/age because it correlates the best with x-ray
+               attenuation. The administration of oral/IV contrast agents
+               increases a patient's attenuation and should therefore increase
+               WED. Here we study the clinically relevant effect of oral and IV
+               contrast agent on WED. METHODS: We pulled 1703 routine adult
+               abdominal/pelvis cases acquired at 100, 120, and 140 kV from our
+               PACS under retrospective IRB approval. One hundred and forty
+               cases cases had no oral or IV contrast (NONCON), 285 had just IV
+               contrast (IV), 107 had just oral contrast (ORAL), and 1171 had
+               both oral and IV contrast (BOTH). For each case, we measured the
+               water equivalent and effective diameter (ED) from axial CT
+               images. We plotted the WED versus the ED for each class of
+               contrast. We used a linear regression model and omnibus F-test to
+               determine if significant differences between WED distributions
+               existed between the contrast groups for each kV. We then
+               performed a post hoc analysis to determine if any significant
+               differences existed in pairwise comparisons of the different
+               contrast groups. Bonferroni correction was used to account for
+               multiple comparisons. RESULTS: We found statistically significant
+               changes at 100 and 120 kV with a maximum change of 2.1 mm. We
+               measured a ~25 mm spread (i.e., prediction interval) of WEDs
+               within all four contrast groups. CONCLUSIONS: While our sample
+               size was large enough to detect statistically significant
+               differences between some of the contrast groups, the differences
+               were clinically irrelevant when one considers that the change in
+               size-specific dose estimate (SSDE) caused by our observations is
+               roughly 1\%.",
+  month     =  mar,
+  year      =  2021,
+  keywords  = "AEC; SSDE; WED",
+  language  = "en",
+  preview = {wed.png}
+}
+
+@MISC{Szczykutowicz2021-de,
+  bibtex_show={true},
+  title    = "Apparatus for tomography repeat rate/reject rate capture",
+  author   = "Szczykutowicz, T P and Viggiano, B T and Rose, S D",
+  journal  = "Patent",
+  number   =  10957444,
+  abstract = "A system for capturing possible repeats or rejections of images
+              occurring during tomographic imaging accommo dates the wide
+              variety of imaging protocols by providing groupings of common
+              imaging protocol types and highlight ing outliers of this
+              grouping. The grouping may consider text descriptions of the
+              images and their series, machine param eters such as tomographic
+              and localizer scans, and overlap between images of any given
+              series.",
+  month    =  mar,
+  year     =  2021,
+  preview = {repeat_rate.png},
 }
