@@ -3,8 +3,6 @@ layout: about
 title: about
 permalink: /about/
 subtitle:
-nav: true
+nav: false
 nav_order: 4
 ---
-
-# 
