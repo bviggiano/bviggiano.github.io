@@ -307,6 +307,8 @@ scholar:
   last_name: [Viggiano]
   first_name: [Ben, T.]
 
+  bibtex_show: false
+
   style: apa
   locale: en
 
@@ -351,6 +353,7 @@ filtered_bibtex_keywords:
     blog,
     code,
     google_scholar_id,
+    github,
     html,
     inspirehep_id,
     pdf,
