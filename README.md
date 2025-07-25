@@ -20,3 +20,4 @@ The site will be available at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 
 ## Deployment
 See [INSTALL.md](INSTALL.md#deployment) for instructions on how to deploy the site using GitHub Actions.
+When first deploying the site, make sure you follow all of the instructions in the section titled "Enabling automatic deployment".
