@@ -1,0 +1,20 @@
+<div class="col">
+  <a href="{{ course.url }}" target="_blank" rel="noopener noreferrer">
+    <div class="card h-100 hoverable">
+      {% if course.img %}
+        {%
+          include figure.liquid
+          loading="eager"
+          path=course.img
+          sizes = "250px"
+          alt="courseanization thumbnail"
+          class="card-img-top"
+        %}
+      {% endif %}
+      <div class="card-body">
+        <h2 class="card-title">{{ course.title }}</h2>
+        <p class="card-text">{{ course.description }}</p>
+      </div>
+    </div>
+  </a>
+</div>
