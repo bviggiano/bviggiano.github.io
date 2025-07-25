@@ -19,4 +19,4 @@ The site will be available at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 
 
 ## Deployment
-See [INSTALL.md](INSTALL.md#deployment) for instructions on how to deploy the site.
+See [INSTALL.md](INSTALL.md#deployment) for instructions on how to deploy the site using GitHub Actions.
