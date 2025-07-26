@@ -47,7 +47,7 @@ scholar_userid: pAj9eCoAAAAJ # your Google Scholar ID
 x_username: bviggiano_13 # your X handle
 # youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 # zotero_username: # your zotero username
-#custom_social: # can be any name here other than the ones already defined above
-#  logo: https://www.alberteinstein.com/wp-content/uploads/2024/03/cropped-favicon-192x192.png # can be png, svg, jpg
-#  title: Custom Social
-#  url: https://www.alberteinstein.com/
+# custom_social: # can be any name here other than the ones already defined above
+#   logo: https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/huggingface.png
+#   title: HF
+#   url: https://huggingface.co/bviggiano
