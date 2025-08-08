@@ -83,9 +83,9 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: Ben's Blog # blog_name will be displayed in your blog page
-blog_description: Under construction
-permalink: /blog/:year/:title/
+blog_name: # blog_name will be displayed in your blog page
+blog_description: A collection of notes on things I've learned that I thought might be helpful for others! 
+permalink: /blog/:title/
 lsi: false # produce an index for related posts
 
 # Pagination
