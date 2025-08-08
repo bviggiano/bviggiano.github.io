@@ -1,0 +1,7 @@
+{% assign target_post = site.posts | where: "url", include.url | first %}
+{% if target_post %}
+  {% assign read_time = target_post.content | number_of_words | divided_by: 180 | plus: 1 %}
+  <span class="read-time" style="color: #777; font-size: 0.9em; padding-left: 0.5em;">
+    • {{ read_time }} min read
+  </span>
+{% endif %}
