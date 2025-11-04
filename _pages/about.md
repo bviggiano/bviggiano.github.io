@@ -15,6 +15,10 @@ social: true # includes social icons at the bottom of the page
 
 ---
 
-I am currently a rising second year MS/PhD student at Stanford University advised by [Euan Ashley](https://med.stanford.edu/profiles/euan-ashley). I am primarily interested in developing methods to align the generative capabilities of biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models) with large scale functional assay data for protein engineering applications. 
+I am currently a MS/PhD candidate at Stanford University 🌲 studying computer science 🤖 and biomedical informatics 🧬, where I am fortunate to be advised by the amazing [Euan Ashley 🧬🫀](https://med.stanford.edu/profiles/euan-ashley).
 
-Prior to moving to CA, I completed my undergraduate at the University of Wisconsin-Madison, where I majored in Biomedical Engineering and Computer Science.
+My primary research interests revolve around developing methods that utilize artificial intelligence to accelerate protein engineering approaches such as [directed evolution](https://en.wikipedia.org/wiki/Directed_evolution), and developing and exploring the capabilities of biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models).
+
+I am very thankful to be supported by a T15 predoctoral training grant from the National Library of Medicine 🇺🇸, and by a MAC3 Data Science and Precision Medicine Fellowship.
+
+Prior to moving to the Bay Area, I completed my undergraduate studies at the University of Wisconsin-Madison 🦡, where I majored in Biomedical Engineering 🦾 and Computer Science 💻.
