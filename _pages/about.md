@@ -17,7 +17,7 @@ social: true # includes social icons at the bottom of the page
 
 I am currently a MS/PhD candidate at Stanford University 🌲 studying computer science 🤖 and biomedical informatics 🧬, where I am fortunate to be advised by the amazing [Euan Ashley 🧬🫀](https://med.stanford.edu/profiles/euan-ashley).
 
-My primary research interests revolve around developing methods that utilize artificial intelligence to accelerate protein engineering approaches such as [directed evolution](https://en.wikipedia.org/wiki/Directed_evolution), and developing and exploring the capabilities of biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models).
+My primary research interests revolve around developing methods that utilize machine learning and artificial intelligence to accelerate protein engineering approaches such as [directed evolution](https://en.wikipedia.org/wiki/Directed_evolution), and developing and exploring the capabilities of biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models).
 
 I am very thankful to be supported by a T15 predoctoral training grant from the National Library of Medicine 🇺🇸, and by a MAC3 Data Science and Precision Medicine Fellowship.
 
