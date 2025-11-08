@@ -10,7 +10,7 @@ nav_order: 6
 <div class="courses">
   {% assign sorted_courses = site.data.courses | sort: "importance" %}
 
-  <div class="row row-cols-1 row-cols-md-3">
+  <div class="row row-cols-1 row-cols-md-4">
     {% for course in sorted_courses %}
       {% include courses.liquid %}
     {% endfor %}
