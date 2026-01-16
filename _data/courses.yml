@@ -1,9 +1,11 @@
 - title: Data Driven Medicine
   img: https://avatars.githubusercontent.com/u/138249118?s=200&v=4
   url: https://github.com/bmds-215
-  description: Primary Instructor - Nigam Shah
+  instructor: Nigam Shah
+  description: Methods for analyzing electronic health records using machine learning, NLP, and text-mining to answer clinical research questions.
 
 - title: Computational Methods for Biomedical Imaging
   img: https://avatars.githubusercontent.com/u/200406716?s=200&v=4
   url: https://github.com/bmds-260
-  description: Primary Instructor - Mirabela Rusu
+  instructor: Mirabela Rusu
+  description: Foundational techniques for processing, analyzing, and interpreting biomedical images for scientific discovery and clinical applications.
