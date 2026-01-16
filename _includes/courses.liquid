@@ -12,8 +12,10 @@
         %}
       {% endif %}
       <div class="card-body">
-        <h5 class="card-title">{{ course.title }}</h5>
-        <p class="card-text">{{ course.description }}</p>
+        <h6 class="card-title" style="font-size: 0.9em;">{{ course.title }}</h6>
+        <p class="card-text" style="font-size: 0.8em;">Primary Instructor: {{ course.instructor }}</p>
+        <hr style="margin: 0.5em 0;">
+        <p class="card-text" style="font-size: 0.8em; color: gray;">{{ course.description }}</p>
       </div>
     </div>
   </a>
