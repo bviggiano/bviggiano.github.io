@@ -85,7 +85,7 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 
 blog_name: # blog_name will be displayed in your blog page
 blog_description: A collection of notes on things I've learned that I thought might be helpful for others! 
-permalink: /notes/:title/
+permalink: /blog/:title/
 lsi: false # produce an index for related posts
 
 # Pagination
@@ -140,6 +140,9 @@ collections:
     defaults:
       layout: post
     output: true
+  notes:
+    output: true
+    permalink: /notes/:title/
   projects:
     output: true
 
@@ -240,9 +243,9 @@ jekyll-archives:
   posts:
     enabled: [year, tags, categories] # enables year, tag and category archives (remove if you need to disable one of them).
     permalinks:
-      year: "/notes/:year/"
-      tags: "/notes/:type/:name/"
-      categories: "/notes/:type/:name/"
+      year: "/blog/:year/"
+      tags: "/blog/tag/:name/"
+      categories: "/blog/category/:name/"
   books:
     enabled: [year, tags, categories] # enables year, tag and category archives (remove if you need to disable one of them).
 
