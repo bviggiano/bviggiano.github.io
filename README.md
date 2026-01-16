@@ -7,13 +7,12 @@ Thanks to [alshedivat](https://github.com/alshedivat) for providing the outstand
 
 ## To preview locally
 
-To preview the site and make changes locally, you can use the following commands:
-
-Run the following commands after starting the docker container:
+To preview the site locally, run:
 ```bash
-docker compose pull
-docker compose up
+./preview_locally.sh
 ```
+
+This will start Docker Desktop (if needed), pull the latest images, and open your browser.
 
 The site will be available at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 
