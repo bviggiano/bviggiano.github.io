@@ -12,7 +12,6 @@ profile:
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
-
 ---
 
 I am currently a MS/PhD candidate at Stanford University 🌲 studying computer science 🤖 and biomedical informatics 🧬, where I am fortunate to be advised by the amazing [Euan Ashley 🧬🫀](https://med.stanford.edu/profiles/euan-ashley).

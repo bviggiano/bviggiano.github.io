@@ -10,6 +10,7 @@ A collection of notes on things I've learned that I thought might be helpful for
 
 {% for note in site.notes %}
 {% assign read_time = note.content | number_of_words | divided_by: 180 | plus: 1 %}
+
 <div style="margin-bottom: 1.5em;">
   <div style="display: flex; align-items: center;">
     {% if note.image %}
@@ -25,5 +26,6 @@ A collection of notes on things I've learned that I thought might be helpful for
 {% endfor %}
 
 {% if site.notes.size == 0 %}
+
 <p><em>No notes yet.</em></p>
 {% endif %}
