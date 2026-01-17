@@ -39,7 +39,7 @@ ninja.data = [{
           },
         },{id: "nav-teaching",
           title: "teaching",
-          description: "In my time at Stanford, I have taught and helped develop materials for the following courses",
+          description: "During my time at Stanford, I have taught and helped develop materials for the following courses",
           section: "Navigation",
           handler: () => {
             window.location.href = "/teaching/";
@@ -62,12 +62,12 @@ ninja.data = [{
               window.location.href = "/notes/test/";
             },},{id: "projects-pact",
           title: 'pact',
-          description: "A Github based tool for creating programming assignments.",
+          description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/pact/";
             },},{id: "projects-provada",
           title: 'ProVADA',
-          description: "Guided protein variant design through test-time compute.",
+          description: "Conditional variant generation via ensemble-guided test-time steering",
           section: "Projects",handler: () => {
               window.location.href = "/projects/provada/";
             },},{
