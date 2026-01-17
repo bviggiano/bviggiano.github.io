@@ -2,7 +2,7 @@
 layout: page
 permalink: /teaching/
 title: teaching
-description: In my time at Stanford, I have taught and helped develop materials for the following courses
+description: During my time at Stanford, I have taught and helped develop materials for the following courses
 nav: true
 nav_order: 5
 ---

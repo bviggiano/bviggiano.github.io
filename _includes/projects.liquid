@@ -1,5 +1,10 @@
 <div class="col">
-  <a href="{% if project.redirect %}{{ project.redirect }}{% else %}{{ project.url | relative_url }}{% endif %}">
+  <a
+    href="{% if project.redirect %}{{ project.redirect }}{% elsif project.github %}{{ project.github }}{% else %}{{ project.url | relative_url }}{% endif %}"
+    {% if project.redirect or project.github %}
+      target="_blank" rel="noopener noreferrer"
+    {% endif %}
+  >
     <div class="card h-100 hoverable">
       {% if project.img %}
         {%
@@ -12,23 +17,38 @@
         %}
       {% endif %}
       <div class="card-body">
-        <h2 class="card-title">{{ project.title }}</h2>
-        <p class="card-text">{{ project.description }}</p>
-        <div class="row ml-1 mr-1 p-0">
-          {% if project.github %}
-            <div class="github-icon">
-              <div class="icon" data-toggle="tooltip" title="Code Repository">
-                <a href="{{ project.github }}"><i class="fa-brands fa-github gh-icon"></i></a>
-              </div>
-              {% if project.github_stars %}
-                <span class="stars" data-toggle="tooltip" title="GitHub Stars">
-                  <i class="fa-solid fa-star"></i>
-                  <span id="{{ project.github_stars }}-stars"></span>
-                </span>
-              {% endif %}
-            </div>
+        {% if project.github %}
+          {% assign repo_path = project.github | remove: 'https://github.com/' %}
+          <h2 class="card-title"><i class="fa-brands fa-github gh-icon"></i> {{ repo_path }}</h2>
+          {% if project.description %}
+            <p class="card-text">{{ project.description }}</p>
+          {% else %}
+            <p class="card-text" id="repo-desc-{{ repo_path | slugify }}"></p>
           {% endif %}
-        </div>
+          <div class="repo-stats" id="repo-stats-{{ repo_path | slugify }}"></div>
+          <script>
+            fetch('https://api.github.com/repos/{{ repo_path }}')
+              .then(response => response.json())
+              .then(data => {
+                {% unless project.description %}
+                if (data.description) {
+                  document.getElementById('repo-desc-{{ repo_path | slugify }}').textContent = data.description;
+                }
+                {% endunless %}
+                const statsEl = document.getElementById('repo-stats-{{ repo_path | slugify }}');
+                if (data.stargazers_count !== undefined) {
+                  statsEl.innerHTML = `
+                    <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
+                    <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
+                  `;
+                }
+              })
+              .catch(() => {});
+          </script>
+        {% else %}
+          <h2 class="card-title">{{ project.title }}</h2>
+          <p class="card-text">{{ project.description }}</p>
+        {% endif %}
       </div>
     </div>
   </a>
