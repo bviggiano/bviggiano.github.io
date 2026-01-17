@@ -74,6 +74,83 @@ layout: default
     {% include citation.liquid %}
   {% endif %}
 
+  {% comment %} Kudos button for notes {% endcomment %}
+  {% if url_beginning == '/notes' %}
+    <div class="kudos-container">
+      <button class="kudos-button" id="kudos-btn">
+        <span class="kudos-count" id="kudos-count">0</span>
+        <span class="kudos-text">kudos</span>
+      </button>
+      <span class="kudos-label">Click or hold to give kudos!</span>
+    </div>
+    <script>
+      const pageId = '{{ page.url | slugify }}';
+      const storageKey = 'kudos_' + pageId;
+      const emojis = ['🚀', '👏', '🙏'];
+      let holdInterval = null;
+      let holdTimeout = null;
+
+      function getKudos() {
+        return parseInt(localStorage.getItem(storageKey) || '0');
+      }
+
+      function giveKudos() {
+        const btn = document.getElementById('kudos-btn');
+        const count = getKudos() + 1;
+        localStorage.setItem(storageKey, count);
+        document.getElementById('kudos-count').textContent = count;
+
+        // Create floating emoji with random selection
+        const emoji = document.createElement('span');
+        emoji.className = 'kudos-float';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 50 - 25 + 'px';
+        btn.appendChild(emoji);
+
+        setTimeout(() => {
+          emoji.remove();
+        }, 700);
+      }
+
+      function startHold() {
+        // Give one kudos immediately
+        giveKudos();
+
+        // Start trickling after a short delay
+        holdTimeout = setTimeout(() => {
+          holdInterval = setInterval(() => {
+            giveKudos();
+          }, 150);
+        }, 300);
+      }
+
+      function stopHold() {
+        if (holdTimeout) {
+          clearTimeout(holdTimeout);
+          holdTimeout = null;
+        }
+        if (holdInterval) {
+          clearInterval(holdInterval);
+          holdInterval = null;
+        }
+      }
+
+      // Set up event listeners
+      const btn = document.getElementById('kudos-btn');
+      btn.addEventListener('mousedown', startHold);
+      btn.addEventListener('mouseup', stopHold);
+      btn.addEventListener('mouseleave', stopHold);
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startHold();
+      });
+      btn.addEventListener('touchend', stopHold);
+
+      // Initialize count on page load
+      document.getElementById('kudos-count').textContent = getKudos();
+    </script>
+  {% endif %}
+
   {% if page.related_publications %}
     <h2>References</h2>
     <div class="publications">
@@ -93,4 +170,14 @@ layout: default
   {% if site.giscus and page.giscus_comments %}
     {% include giscus.liquid %}
   {% endif %}
+
+  <div class="contribute-notice">
+    <i class="fa-brands fa-github"></i>
+    <span
+      >Found an issue or want to contribute?
+      <a href="https://github.com/bviggiano/bviggiano.github.io" target="_blank" rel="noopener noreferrer"
+        >GitHub issues and PRs are welcome!</a
+      ></span
+    >
+  </div>
 </div>

@@ -6,26 +6,113 @@ nav: true
 nav_order: 3
 ---
 
-A collection of notes on things I've learned that I thought might be helpful for others!
+<div class="notes-page">
+  <p class="notes-intro">A collection of notes on things I've learned that I thought might be helpful for others! These are intended to be more informal/ less polished than blog posts but are hopefully still useful and informative.</p>
 
-{% for note in site.notes %}
-{% assign read_time = note.content | number_of_words | divided_by: 180 | plus: 1 %}
+{% if site.notes.size > 0 %}
 
-<div style="margin-bottom: 1.5em;">
-  <div style="display: flex; align-items: center;">
-    {% if note.image %}
-    <img src="{{ note.image | relative_url }}" alt="icon" style="height: 2em; width: 2em; object-fit: contain; margin-right: 0.3em;">
-    {% else %}
-    <span style="font-size: 2em; line-height: 1; margin-right: 0.3em;">{{ note.emoji }}</span>
-    {% endif %}
-    <span style="font-size: 1.5em; font-weight: bold;"><a href="{{ note.url }}">{{ note.title }}</a></span>
-    <span style="margin-left: 0.5em;">| {{ note.description }}</span>
+  <div class="notes-tree">
+    {% comment %} Group notes by their directory path {% endcomment %}
+    {% assign notes_by_dir = site.notes | group_by_exp: "note", "note.path | split: '/' | pop | join: '/'" %}
+    {% assign sorted_dirs = notes_by_dir | sort: "name" %}
+
+    {% for dir_group in sorted_dirs %}
+      {% assign dir_path = dir_group.name | remove: "_notes" | remove_first: "/" %}
+      {% assign path_parts = dir_path | split: "/" %}
+      {% assign depth = path_parts.size %}
+      {% assign dir_name = path_parts | last %}
+
+      {% if dir_path != "" %}
+        {% comment %} Calculate nesting level based on path depth {% endcomment %}
+        {% assign depth_minus_one = depth | minus: 1 %}
+        {% assign indent_px = depth_minus_one | times: 24 %}
+
+        <div class="notes-folder depth-{{ depth }}" style="margin-left: {{ indent_px }}px;">
+          <div class="folder-header" onclick="this.parentElement.classList.toggle('collapsed')">
+            <i class="fa-solid fa-chevron-down folder-toggle"></i>
+            <i class="fa-solid fa-folder"></i>
+            <span class="folder-name">{{ dir_name }}</span>
+          </div>
+          <div class="folder-contents">
+            {% for note in dir_group.items %}
+              {% unless note.title == "README" or note.name == "README.md" %}
+                {% assign read_time = note.content | number_of_words | divided_by: 180 | plus: 1 %}
+                <div class="tree-item">
+                  <span class="tree-branch"></span>
+                  <div class="note-card">
+                    <div class="note-title-section">
+                      {% if note.image %}
+                        <img src="{{ note.image | relative_url }}" alt="icon" class="note-icon">
+                      {% elsif note.emoji %}
+                        <span class="note-emoji">{{ note.emoji }}</span>
+                      {% else %}
+                        <i class="fa-solid fa-file-lines note-file-icon"></i>
+                      {% endif %}
+                      <a href="{{ note.url }}" class="note-title">{{ note.title }}</a>
+                    </div>
+                    <div class="note-separator"></div>
+                    <div class="note-details">
+                      <p class="note-description">{{ note.description }}</p>
+                      <div class="note-meta">
+                        <span class="note-read-time">{{ read_time }} min read</span>
+                        <span class="note-kudos" data-note-id="{{ note.url | slugify }}">
+                          <i class="fa-solid fa-hands-clapping"></i>
+                          <span class="kudos-count">0</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        {% comment %} Root level notes {% endcomment %}
+        {% for note in dir_group.items %}
+          {% unless note.title == "README" or note.name == "README.md" %}
+            {% assign read_time = note.content | number_of_words | divided_by: 180 | plus: 1 %}
+            <div class="tree-item root-item">
+              <div class="note-card">
+                <div class="note-title-section">
+                  {% if note.image %}
+                    <img src="{{ note.image | relative_url }}" alt="icon" class="note-icon">
+                  {% elsif note.emoji %}
+                    <span class="note-emoji">{{ note.emoji }}</span>
+                  {% else %}
+                    <i class="fa-solid fa-file-lines note-file-icon"></i>
+                  {% endif %}
+                  <a href="{{ note.url }}" class="note-title">{{ note.title }}</a>
+                </div>
+                <div class="note-separator"></div>
+                <div class="note-details">
+                  <p class="note-description">{{ note.description }}</p>
+                  <div class="note-meta">
+                    <span class="note-read-time">{{ read_time }} min read</span>
+                    <span class="note-kudos" data-note-id="{{ note.url | slugify }}">
+                      <i class="fa-solid fa-hands-clapping"></i>
+                      <span class="kudos-count">0</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+
   </div>
-  <div style="color: gray; font-size: 0.9em; margin-left: 2.6em;">{{ read_time }} min read</div>
+  {% else %}
+  <p><em>No notes yet.</em></p>
+  {% endif %}
 </div>
-{% endfor %}
 
-{% if site.notes.size == 0 %}
-
-<p><em>No notes yet.</em></p>
-{% endif %}
+<script>
+  // Load kudos counts from localStorage for all note cards
+  document.querySelectorAll('.note-kudos').forEach(el => {
+    const noteId = el.dataset.noteId;
+    const count = localStorage.getItem('kudos_' + noteId) || '0';
+    el.querySelector('.kudos-count').textContent = count;
+  });
+</script>

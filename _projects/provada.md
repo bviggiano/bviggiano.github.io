@@ -1,11 +1,11 @@
 ---
 layout: page
 title: ProVADA
-description: Guided protein variant design through test-time compute.
+description: Conditional variant generation via ensemble-guided test-time steering
 img: assets/img/projects/provada_cover.png
 importance: 1
 category:
 related_publications: False
+github: https://github.com/SUwonglab/ProVADA
+redirect: https://github.com/SUwonglab/ProVADA
 ---
-
-<meta http-equiv="refresh" content="0; url=https://github.com/SUwonglab/ProVADA" />
