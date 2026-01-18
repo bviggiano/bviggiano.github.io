@@ -108,11 +108,28 @@ nav_order: 3
   {% endif %}
 </div>
 
-<script>
-  // Load kudos counts from localStorage for all note cards
-  document.querySelectorAll('.note-kudos').forEach(el => {
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCFVn3tg50WMlZEfMlOoPwfIW7zJTrHUS0",
+    authDomain: "personal-website-b8d26.firebaseapp.com",
+    databaseURL: "https://personal-website-b8d26-default-rtdb.firebaseio.com",
+    projectId: "personal-website-b8d26",
+    storageBucket: "personal-website-b8d26.firebasestorage.app",
+    messagingSenderId: "1018011428128",
+    appId: "1:1018011428128:web:a285f736e98770a283a345"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Load kudos counts from Firebase for all note cards
+  document.querySelectorAll('.note-kudos').forEach(async (el) => {
     const noteId = el.dataset.noteId;
-    const count = localStorage.getItem('kudos_' + noteId) || '0';
+    const snapshot = await get(ref(db, 'kudos/' + noteId));
+    const count = snapshot.exists() ? snapshot.val() : 0;
     el.querySelector('.kudos-count').textContent = count;
   });
 </script>
