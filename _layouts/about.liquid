@@ -68,6 +68,20 @@ layout: default
     <!-- Social -->
     {% if page.social %}
       <div class="social">
+        <div
+          class="flag-icon"
+          style="background-color: #FFEDD5; border: 3px dashed #FF6600; padding: 1.5em 2em; border-radius: 10px; display: inline-flex; align-items: center; gap: 1em; margin-bottom: 1em;"
+        >
+          <a
+            href="https://www.standwithminnesota.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="display: flex; align-items: center; gap: 1em; text-decoration: none; color: inherit;"
+          >
+            <img src="{{ '/assets/img/mn_flag.png' | relative_url }}" alt="Minnesota flag" style="height: 5em;">
+            <span style="font-size: 1.5em; font-weight: bold; color: #FF6600;">Stand with Minnesota</span>
+          </a>
+        </div>
         <div class="contact-icons">{% include social.liquid %}</div>
 
         <div class="contact-note">{{ site.contact_note }}</div>

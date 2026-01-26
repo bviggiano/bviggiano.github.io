@@ -20,4 +20,4 @@ My primary research interests revolve around developing methods that utilize mac
 
 I am very thankful to be supported by a T15 predoctoral training grant from the National Library of Medicine 🇺🇸, and by a MAC3 Data Science and Precision Medicine Fellowship.
 
-Prior to moving to the Bay Area, I completed my undergraduate studies at the University of Wisconsin-Madison 🦡, where I majored in Biomedical Engineering 🦾 and Computer Science 💻.
+Prior to moving to the Bay Area <img src="/assets/img/ca_flag.png" alt="California flag" style="height: 1.2em; vertical-align: middle;">, I completed my undergraduate studies at the University of Wisconsin-Madison 🦡, where I majored in Biomedical Engineering 🦾 and Computer Science 💻. Minnesota is my home state <img src="/assets/img/mn_flag.png" alt="Minnesota flag" style="height: 1.2em; vertical-align: middle;">.
