@@ -23,3 +23,5 @@ I am very thankful to be supported by a T15 predoctoral training grant from the 
 Prior to moving to the Bay Area <img src="/assets/img/ca_flag.png" alt="California flag" style="height: 1.2em; vertical-align: middle;">, I completed my undergraduate studies at the University of Wisconsin-Madison 🦡, where I majored in Biomedical Engineering 🦾 and Computer Science 💻.
 
 Minnesota is my home <img src="/assets/img/mn_flag.png" alt="Minnesota flag" style="height: 1.2em; vertical-align: middle;">.
+
+> I am so incredibly proud of my friends, family, and neighbors in the Minneapolis area who have come together and shown such resilience and solidarity in recent months. There are a huge number of local organizations working to serve the community, but they need our support. Please consider donating to some of them at [Stand with Minnesota](https://www.standwithminnesota.com/).

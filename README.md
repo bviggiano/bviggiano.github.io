@@ -23,3 +23,32 @@ To preview the site locally, run:
 This will start Docker Desktop (if needed), pull the latest images, and open your browser.
 
 The site will be available at [http://0.0.0.0:8080](http://0.0.0.0:8080)
+
+### To preview locally (no Docker)
+
+If you can't install Docker, you can run the site natively with Ruby and Jekyll.
+
+**1. Install rbenv and ruby-build:**
+
+```bash
+brew install rbenv ruby-build
+```
+
+**2. Install Ruby 3.3.5:**
+
+```bash
+rbenv install 3.3.5
+rbenv local 3.3.5
+```
+
+**3. Install dependencies and serve:**
+
+```bash
+gem install bundler
+bundle install
+bundle exec jekyll serve
+```
+
+The site will be available at [http://localhost:4000](http://localhost:4000)
+
+> **Note:** You may also need to install ImageMagick (`brew install imagemagick`) for responsive image generation, and Jupyter (`pip install jupyter`) if you have notebook content.
