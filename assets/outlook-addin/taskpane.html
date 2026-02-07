@@ -176,16 +176,39 @@
 
       function forwardEmail() {
         const forwardSubject = "Fwd: " + emailData.subject;
+        const MAX_BODY_SIZE = 30000; // Stay under 32KB limit
 
-        const forwardBody = `
+        // Strip images and clean up HTML to reduce size
+        let cleanBody = emailData.body
+          .replace(/<img[^>]*>/gi, "[image removed]")
+          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+
+        let forwardBody = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
           <p>---------- Forwarded message ----------</p>
           <p><strong>From:</strong> ${escapeHtml(emailData.from)}</p>
           <p><strong>Subject:</strong> ${escapeHtml(emailData.subject)}</p>
           <hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">
-          ${emailData.body}
+          ${cleanBody}
         </div>
       `;
+
+        // If still too large, truncate the body content
+        if (forwardBody.length > MAX_BODY_SIZE) {
+          const headerSize = 500; // Approximate size of the header
+          const maxContentSize = MAX_BODY_SIZE - headerSize;
+          cleanBody = cleanBody.substring(0, maxContentSize) + "...<p><em>[Content truncated due to size limits]</em></p>";
+          forwardBody = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          <p>---------- Forwarded message ----------</p>
+          <p><strong>From:</strong> ${escapeHtml(emailData.from)}</p>
+          <p><strong>Subject:</strong> ${escapeHtml(emailData.subject)}</p>
+          <hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">
+          ${cleanBody}
+        </div>
+      `;
+        }
 
         try {
           Office.context.mailbox.displayNewMessageForm({
