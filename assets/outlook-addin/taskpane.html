@@ -176,50 +176,59 @@
 
       function forwardEmail() {
         const forwardSubject = "Fwd: " + emailData.subject;
-        const MAX_BODY_SIZE = 30000; // Stay under 32KB limit
 
-        // Strip images and clean up HTML to reduce size
-        let cleanBody = emailData.body
-          .replace(/<img[^>]*>/gi, "[image removed]")
-          .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-          .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
+        // Convert HTML to plain text for the body
+        const plainTextBody = htmlToPlainText(emailData.body);
 
-        let forwardBody = `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          <p>---------- Forwarded message ----------</p>
-          <p><strong>From:</strong> ${escapeHtml(emailData.from)}</p>
-          <p><strong>Subject:</strong> ${escapeHtml(emailData.subject)}</p>
-          <hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">
-          ${cleanBody}
-        </div>
-      `;
+        // Build a simple forwarded message
+        let forwardBody =
+          "---------- Forwarded message ----------\n" +
+          "From: " +
+          emailData.from +
+          "\n" +
+          "Subject: " +
+          emailData.subject +
+          "\n" +
+          "---\n\n" +
+          plainTextBody;
 
-        // If still too large, truncate the body content
-        if (forwardBody.length > MAX_BODY_SIZE) {
-          const headerSize = 500; // Approximate size of the header
-          const maxContentSize = MAX_BODY_SIZE - headerSize;
-          cleanBody = cleanBody.substring(0, maxContentSize) + "...<p><em>[Content truncated due to size limits]</em></p>";
-          forwardBody = `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          <p>---------- Forwarded message ----------</p>
-          <p><strong>From:</strong> ${escapeHtml(emailData.from)}</p>
-          <p><strong>Subject:</strong> ${escapeHtml(emailData.subject)}</p>
-          <hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">
-          ${cleanBody}
-        </div>
-      `;
+        // Truncate if too long (keep well under limits)
+        const MAX_SIZE = 10000;
+        if (forwardBody.length > MAX_SIZE) {
+          forwardBody = forwardBody.substring(0, MAX_SIZE) + "\n\n[Content truncated]";
         }
 
         try {
-          Office.context.mailbox.displayNewMessageForm({
-            toRecipients: [FANTASTICAL_EMAIL],
-            subject: forwardSubject,
-            htmlBody: forwardBody,
-          });
-          showStatus("Compose window opened!", "success");
+          // Use displayNewMessageFormAsync with callback for better error handling
+          Office.context.mailbox.displayNewMessageFormAsync(
+            {
+              toRecipients: [FANTASTICAL_EMAIL],
+              subject: forwardSubject,
+              body: forwardBody,
+            },
+            function (asyncResult) {
+              if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+                showStatus("Error: " + asyncResult.error.message, "error");
+              } else {
+                showStatus("Compose window opened!", "success");
+              }
+            }
+          );
         } catch (error) {
           showStatus("Error: " + error.message, "error");
         }
+      }
+
+      function htmlToPlainText(html) {
+        if (!html) return "";
+        // Create a temporary element to convert HTML to text
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+        // Get text content and clean up whitespace
+        let text = temp.textContent || temp.innerText || "";
+        // Collapse multiple newlines/spaces
+        text = text.replace(/\n\s*\n/g, "\n\n").trim();
+        return text;
       }
 
       function showStatus(message, type) {
