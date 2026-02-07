@@ -187,20 +187,16 @@
         </div>
       `;
 
-        Office.context.mailbox.displayNewMessageFormAsync(
-          {
+        try {
+          Office.context.mailbox.displayNewMessageForm({
             toRecipients: [FANTASTICAL_EMAIL],
             subject: forwardSubject,
             htmlBody: forwardBody,
-          },
-          function (result) {
-            if (result.status === Office.AsyncResultStatus.Succeeded) {
-              showStatus("Compose window opened!", "success");
-            } else {
-              showStatus("Error: " + result.error.message, "error");
-            }
-          }
-        );
+          });
+          showStatus("Compose window opened!", "success");
+        } catch (error) {
+          showStatus("Error: " + error.message, "error");
+        }
       }
 
       function showStatus(message, type) {
