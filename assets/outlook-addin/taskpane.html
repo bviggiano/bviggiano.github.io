@@ -150,24 +150,16 @@
         document.getElementById("from").textContent = emailData.from || "Unknown";
         document.getElementById("preview").style.display = "block";
 
-        // Get email body
-        item.body.getAsync(Office.CoercionType.Html, function (result) {
+        // Get email body as plain text
+        item.body.getAsync(Office.CoercionType.Text, function (result) {
           if (result.status === Office.AsyncResultStatus.Succeeded) {
             emailData.body = result.value;
             showStatus("Ready to forward.", "success");
             document.getElementById("forwardBtn").disabled = false;
           } else {
-            // Try text format as fallback
-            item.body.getAsync(Office.CoercionType.Text, function (textResult) {
-              if (textResult.status === Office.AsyncResultStatus.Succeeded) {
-                emailData.body = "<pre>" + escapeHtml(textResult.value) + "</pre>";
-                showStatus("Ready to forward.", "success");
-                document.getElementById("forwardBtn").disabled = false;
-              } else {
-                showStatus("Could not load email body. You can still forward with subject only.", "info");
-                document.getElementById("forwardBtn").disabled = false;
-              }
-            });
+            showStatus("Could not load email body. You can still forward with subject only.", "info");
+            emailData.body = "";
+            document.getElementById("forwardBtn").disabled = false;
           }
         });
 
@@ -177,58 +169,35 @@
       function forwardEmail() {
         const forwardSubject = "Fwd: " + emailData.subject;
 
-        // Convert HTML to plain text for the body
-        const plainTextBody = htmlToPlainText(emailData.body);
-
-        // Build a simple forwarded message
-        let forwardBody =
-          "---------- Forwarded message ----------\n" +
-          "From: " +
-          emailData.from +
-          "\n" +
-          "Subject: " +
-          emailData.subject +
-          "\n" +
-          "---\n\n" +
-          plainTextBody;
-
-        // Truncate if too long (keep well under limits)
-        const MAX_SIZE = 10000;
-        if (forwardBody.length > MAX_SIZE) {
-          forwardBody = forwardBody.substring(0, MAX_SIZE) + "\n\n[Content truncated]";
+        // Truncate body if too long
+        let body = emailData.body || "";
+        if (body.length > 5000) {
+          body = body.substring(0, 5000) + "\n\n[Content truncated]";
         }
 
+        // Build simple HTML - escape text and convert newlines to <br>
+        const htmlBody =
+          "<p>---------- Forwarded message ----------<br>" +
+          "<b>From:</b> " +
+          escapeHtml(emailData.from) +
+          "<br>" +
+          "<b>Subject:</b> " +
+          escapeHtml(emailData.subject) +
+          "</p>" +
+          "<hr><p>" +
+          escapeHtml(body).replace(/\n/g, "<br>") +
+          "</p>";
+
         try {
-          // Use displayNewMessageFormAsync with callback for better error handling
-          Office.context.mailbox.displayNewMessageFormAsync(
-            {
-              toRecipients: [FANTASTICAL_EMAIL],
-              subject: forwardSubject,
-              body: forwardBody,
-            },
-            function (asyncResult) {
-              if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-                showStatus("Error: " + asyncResult.error.message, "error");
-              } else {
-                showStatus("Compose window opened!", "success");
-              }
-            }
-          );
+          Office.context.mailbox.displayNewMessageForm({
+            toRecipients: [FANTASTICAL_EMAIL],
+            subject: forwardSubject,
+            htmlBody: htmlBody,
+          });
+          showStatus("Compose window opened!", "success");
         } catch (error) {
           showStatus("Error: " + error.message, "error");
         }
-      }
-
-      function htmlToPlainText(html) {
-        if (!html) return "";
-        // Create a temporary element to convert HTML to text
-        const temp = document.createElement("div");
-        temp.innerHTML = html;
-        // Get text content and clean up whitespace
-        let text = temp.textContent || temp.innerText || "";
-        // Collapse multiple newlines/spaces
-        text = text.replace(/\n\s*\n/g, "\n\n").trim();
-        return text;
       }
 
       function showStatus(message, type) {
