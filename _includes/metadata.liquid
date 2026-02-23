@@ -117,6 +117,9 @@
       {% when 'hal_id' %}
         {% capture link %}https://cv.hal.science/{{ social[1] }}/{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
+      {% when 'huggingface_username' %}
+        {% capture link %}https://huggingface.co/{{ social[1] }}{% endcapture %}
+        {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'ieee_id' %}
         {% capture link %}https://ieeexplore.ieee.org/author/{{ social[1] }}/{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
@@ -241,4 +244,31 @@
         "@context": "https://schema.org"
     }
   </script>
+  {% if page.url == '/' %}
+    <!-- Person schema for homepage -->
+    <script type="application/ld+json">
+      {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "{{ author_name }}",
+          "url": "{{ site.url }}{{ site.baseurl }}/",
+          "image": "{{ site.url }}{{ site.baseurl }}/assets/img/prof_pic.jpg",
+          "jobTitle": "PhD Candidate",
+          "worksFor": {
+              "@type": "Organization",
+              "name": "Stanford University",
+              "url": "https://stanford.edu"
+          },
+          "alumniOf": {
+              "@type": "Organization",
+              "name": "University of Wisconsin-Madison",
+              "url": "https://www.wisc.edu"
+          },
+          "description": "{{ site.description | strip_newlines | strip | escape }}",
+          {% if sameaslinks != blank %}
+          "sameAs": {{ sameaslinks | jsonify }}
+          {% endif %}
+      }
+    </script>
+  {% endif %}
 {% endif %}

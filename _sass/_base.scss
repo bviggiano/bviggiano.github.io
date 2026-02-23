@@ -426,11 +426,31 @@ ul.task-list input[type="checkbox"] {
         transition-property: all 0.2s ease-in-out;
       }
 
+      .hf-icon-social {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        margin-left: -0.15em;
+        vertical-align: -0.125em;
+        background-color: var(--global-text-color);
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm-74 137c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm148 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm-74 199c-53.3 0-99.3-30.1-122.5-74.3-3.5-6.6.7-14.7 8.1-14.7h228.8c7.4 0 11.6 8.1 8.1 14.7-23.2 44.2-69.2 74.3-122.5 74.3z'/%3E%3C/svg%3E")
+          no-repeat center;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm-74 137c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm148 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm-74 199c-53.3 0-99.3-30.1-122.5-74.3-3.5-6.6.7-14.7 8.1-14.7h228.8c7.4 0 11.6 8.1 8.1 14.7-23.2 44.2-69.2 74.3-122.5 74.3z'/%3E%3C/svg%3E")
+          no-repeat center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        transition: background-color 0.2s ease-in-out;
+      }
+
       &:hover {
         text-decoration: none;
 
         i::before {
           color: var(--global-theme-color);
+        }
+
+        .hf-icon-social {
+          background-color: var(--global-theme-color);
         }
       }
     }

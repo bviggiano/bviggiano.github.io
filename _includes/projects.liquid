@@ -1,7 +1,7 @@
 <div class="col">
   <a
-    href="{% if project.redirect %}{{ project.redirect }}{% elsif project.github %}{{ project.github }}{% else %}{{ project.url | relative_url }}{% endif %}"
-    {% if project.redirect or project.github %}
+    href="{% if project.redirect %}{{ project.redirect }}{% elsif project.github %}{{ project.github }}{% elsif project.huggingface %}{{ project.huggingface }}{% else %}{{ project.url | relative_url }}{% endif %}"
+    {% if project.redirect or project.github or project.huggingface %}
       target="_blank" rel="noopener noreferrer"
     {% endif %}
   >
@@ -40,6 +40,34 @@
                   statsEl.innerHTML = `
                     <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
                     <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
+                  `;
+                }
+              })
+              .catch(() => {});
+          </script>
+        {% elsif project.huggingface %}
+          {% assign hf_path = project.huggingface | remove: 'https://huggingface.co/datasets/' | remove: 'https://huggingface.co/' %}
+          <h2 class="card-title"><span class="hf-icon">🤗</span> {{ hf_path }}</h2>
+          {% if project.description %}
+            <p class="card-text">{{ project.description }}</p>
+          {% else %}
+            <p class="card-text" id="hf-desc-{{ hf_path | slugify }}"></p>
+          {% endif %}
+          <div class="repo-stats" id="hf-stats-{{ hf_path | slugify }}"></div>
+          <script>
+            fetch('https://huggingface.co/api/datasets/{{ hf_path }}')
+              .then(response => response.json())
+              .then(data => {
+                {% unless project.description %}
+                if (data.description) {
+                  document.getElementById('hf-desc-{{ hf_path | slugify }}').textContent = data.description.split('\n')[0];
+                }
+                {% endunless %}
+                const statsEl = document.getElementById('hf-stats-{{ hf_path | slugify }}');
+                if (data.downloads !== undefined) {
+                  statsEl.innerHTML = `
+                    <span class="stat"><i class="fa-solid fa-download"></i> ${data.downloads.toLocaleString()}</span>
+                    <span class="stat"><i class="fa-solid fa-heart"></i> ${data.likes}</span>
                   `;
                 }
               })
