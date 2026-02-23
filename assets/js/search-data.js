@@ -60,6 +60,11 @@ ninja.data = [{
           description: "This is a test note",
           section: "Notes",handler: () => {
               window.location.href = "/notes/test/";
+            },},{id: "projects-aav2-capsid-viability-dataset",
+          title: 'AAV2 Capsid Viability Dataset',
+          description: "Preprocessed AAV2 capsid sequences with viability measurements for ML benchmarking",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/aav2_capsid_viability/";
             },},{id: "projects-pact",
           title: 'pact',
           description: "",
