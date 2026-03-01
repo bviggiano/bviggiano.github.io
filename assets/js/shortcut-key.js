@@ -1,1 +1,1 @@
-document.addEventListener("readystatechange",(()=>{if("interactive"===document.readyState){let e=navigator.platform.toUpperCase().indexOf("MAC")>=0,t=document.querySelector("#search-toggle .nav-link");t&&e&&(t.innerHTML='&#x2318; k <i class="ti ti-search"></i>')}}));
+let isMac=navigator.platform.toUpperCase().indexOf("MAC")>=0;if(isMac){let t=document.getElementById("search-shortcut-text");t&&(t.textContent="\u2318")}
