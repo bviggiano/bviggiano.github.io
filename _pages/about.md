@@ -18,7 +18,7 @@ I am currently a MS/PhD candidate at Stanford University 🌲 studying computer 
 
 My primary research interests revolve around developing methods that utilize machine learning and artificial intelligence to accelerate protein engineering approaches such as [directed evolution](https://en.wikipedia.org/wiki/Directed_evolution), and developing and exploring the capabilities of biology-focused [foundation models](https://en.wikipedia.org/wiki/Foundation_models).
 
-I am very thankful to be supported by a T15 predoctoral training grant from the National Library of Medicine 🇺🇸, and by a MAC3 Data Science and Precision Medicine Fellowship.
+I am very thankful to be supported by a T15 predoctoral training grant from the National Library of Medicine 🇺🇸⚕️, and by a MAC3 Data Science and Precision Medicine Fellowship🌊🐋.
 
 Prior to moving to the Bay Area <img src="/assets/img/ca_flag.png" alt="California flag" style="height: 1.2em; vertical-align: middle;">, I completed my undergraduate studies at the University of Wisconsin-Madison 🦡, where I majored in Biomedical Engineering 🦾 and Computer Science 💻.
 

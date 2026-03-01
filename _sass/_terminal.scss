@@ -1,0 +1,133 @@
+/*******************************************************************************
+ * Styles for the interactive terminal widget.
+ * Uses CSS variables to adapt to light/dark site theme.
+ ******************************************************************************/
+
+:root {
+  --term-bg: #e8f1f8;
+  --term-text: #2c3e50;
+  --term-prompt: #d97757;
+  --term-border: rgba(0, 0, 0, 0.08);
+  --term-welcome: #8fa8bf;
+  --term-dir: #2a7ab5;
+  --term-error: #c44040;
+  --term-scrollbar: rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="dark"] {
+  --term-bg: #1a1a2e;
+  --term-text: #e0e0e0;
+  --term-prompt: #d97757;
+  --term-border: #2a2a4a;
+  --term-welcome: #6a6a8a;
+  --term-dir: #7ec8e3;
+  --term-error: #e06070;
+  --term-scrollbar: #2a2a4a;
+}
+
+.terminal-wrapper {
+  background: var(--term-bg);
+  border-bottom: 1px solid var(--term-border);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 28px;
+}
+
+.terminal-body {
+  max-width: $max-content-width;
+  margin: 0 auto;
+  padding: 4px 15px;
+}
+
+.terminal-output {
+  max-height: 120px;
+  overflow-y: auto;
+  color: var(--term-text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  scrollbar-width: thin;
+  scrollbar-color: var(--term-scrollbar) var(--term-bg);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--term-bg);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--term-scrollbar);
+    border-radius: 3px;
+  }
+
+  &:empty {
+    display: none;
+  }
+
+  .welcome {
+    color: var(--term-welcome);
+    font-style: italic;
+  }
+
+  .dir-entry {
+    color: var(--term-dir);
+  }
+
+  .prompt-line {
+    color: var(--term-text);
+
+    .prompt {
+      color: var(--term-prompt);
+    }
+  }
+
+  .error {
+    color: var(--term-error);
+  }
+
+  .help-text {
+    color: var(--term-text);
+  }
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+  color: var(--term-text);
+
+  .prompt {
+    color: var(--term-prompt);
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--term-text);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
+    caret-color: var(--term-prompt);
+
+    &::placeholder {
+      color: var(--term-welcome);
+    }
+  }
+}
+
+// Mobile
+@media (max-width: 767px) {
+  .terminal-wrapper {
+    font-size: 12px;
+  }
+
+  .terminal-output {
+    max-height: 80px;
+  }
+}

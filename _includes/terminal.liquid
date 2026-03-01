@@ -1,0 +1,88 @@
+<!-- Interactive Terminal -->
+<div class="terminal-wrapper" id="terminal">
+  <div class="terminal-body">
+    <div class="terminal-output" id="terminal-output"></div>
+    <div class="terminal-input-line">
+      <span class="prompt" id="terminal-prompt">~$</span>
+      <input
+        type="text"
+        id="terminal-input"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder=""
+      >
+    </div>
+  </div>
+</div>
+
+<script>
+  // Build filesystem from Jekyll collections/pages at build time
+  window.TERMINAL_FS = {
+    "~": {
+      _url: "/",
+      _children: {
+        {%- comment -%}-- Publications --{%- endcomment -%}
+        "publications": { "_url": "/publications/", "_children": {} },
+
+        {%- comment -%}-- Blog with posts --{%- endcomment -%}
+        "blog": {
+          "_url": "/blog/",
+          "_children": {
+            {%- for post in site.posts -%}
+              "{{ post.title | slugify }}": { "_url": "{{ post.url }}", "_children": {} }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          }
+        },
+
+        {%- comment -%}-- Notes --{%- endcomment -%}
+        "notes": {
+          "_url": "/notes/",
+          "_children": {
+            {%- for note in site.notes -%}
+              "{{ note.title | slugify }}": { "_url": "{{ note.url }}", "_children": {} }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          }
+        },
+
+        {%- comment -%}-- Projects --{%- endcomment -%}
+        "projects": {
+          "_url": "/projects/",
+          "_children": {
+            {%- for project in site.projects -%}
+              "{{ project.title | slugify }}": { "_url": "{{ project.url }}", "_children": {} }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          }
+        },
+
+        {%- comment -%}-- Teaching --{%- endcomment -%}
+        "teaching": { "_url": "/teaching/", "_children": {} },
+
+        {%- comment -%}-- Socials (flat at root, marked with _social) --{%- endcomment -%}
+        {%- for social in site.data.socials -%}
+          {%- case social[0] -%}
+            {%- when 'email' -%}
+              "email": { "_url": "mailto:{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'github_username' -%}
+              "github": { "_url": "https://github.com/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'scholar_userid' -%}
+              "scholar": { "_url": "https://scholar.google.com/citations?user={{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'orcid_id' -%}
+              "orcid": { "_url": "https://orcid.org/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'x_username' -%}
+              "x": { "_url": "https://x.com/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'linkedin_username' -%}
+              "linkedin": { "_url": "https://www.linkedin.com/in/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'huggingface_username' -%}
+              "huggingface": { "_url": "https://huggingface.co/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'work_url' -%}
+              "lab": { "_url": "{{ social[1] }}", "_children": {}, "_social": true },
+          {%- endcase -%}
+        {%- endfor -%}
+        "_end": { "_url": "/", "_children": {}, "_hidden": true }
+      }
+    }
+  };
+</script>
+<script src="{{ '/assets/js/terminal.js' | relative_url }}" defer></script>

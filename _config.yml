@@ -10,7 +10,7 @@ contact_note:
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Hi everyone! 🏞️ I'm Ben. I'm currently a MS/PhD student at Stanford.
 footer_text: >
-  Template available at <a href="https://github.com/alshedivat/al-folio">al-folio</a>.
+  Built on <a href="https://github.com/alshedivat/al-folio">al-folio</a>. My modifications are available <a href="https://github.com/bviggiano/bviggiano.github.io">here</a>.
 keywords: ben-viggiano, bviggiano, protein-engineering, deep-learning, biology, machine-learning # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: 🏞️ # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
