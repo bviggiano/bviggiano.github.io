@@ -232,6 +232,15 @@
           ><i class="fa-brands fa-github" style="margin-right: 0.35em;"></i>GitHub</a
         >
       {% endif %}
+      {% if entry.pubmed %}
+        <a
+          href="{{ entry.pubmed }}"
+          class="btn btn-sm z-depth-0"
+          role="button"
+          style="background-color: #326599; color: white; border: none; font-size: 0.9rem;"
+          ><i class="ai ai-pubmed" style="margin-right: 0.35em;"></i>PubMed</a
+        >
+      {% endif %}
       {% if entry.code %}
         <a href="{{ entry.code }}" class="btn btn-sm z-depth-0" role="button">Code</a>
       {% endif %}

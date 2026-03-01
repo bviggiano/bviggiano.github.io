@@ -27,7 +27,11 @@
     {% when 'inspirehep_id' %}
       <a href="https://inspirehep.net/authors/{{ social[1] }}" title="Inspire HEP"><i class="ai ai-inspire"></i></a>
     {% when 'huggingface_username' %}
-      <a href="https://huggingface.co/{{ social[1] }}" title="Hugging Face"><span class="hf-icon-social"></span></a>
+      <a href="https://huggingface.co/{{ social[1] }}" title="Hugging Face">
+        <svg class="hf-icon-social" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path fill="currentColor" d="M256 48C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48zm-74 137c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm148 0c17.7 0 32 14.3 32 32s-14.3 32-32 32-32-14.3-32-32 14.3-32 32-32zm-74 199c-53.3 0-99.3-30.1-122.5-74.3-3.5-6.6.7-14.7 8.1-14.7h228.8c7.4 0 11.6 8.1 8.1 14.7-23.2 44.2-69.2 74.3-122.5 74.3z"/>
+        </svg>
+      </a>
     {% when 'instagram_id' %}
       <a href="https://instagram.com/{{ social[1] }}" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
     {% when 'kaggle_id' %}
@@ -89,7 +93,7 @@
     {% when 'wikipedia_id' %}
       <a href="https://wikipedia.org/wiki/User:{{ social[1] }}" title="Wikipedia"><i class="fa-brands fa-wikipedia-w"></i></a>
     {% when 'work_url' %}
-      <a href="{{ social[1] }}" title="Work"><i class="fa-solid fa-briefcase"></i></a>
+      <a href="{{ social[1] }}" title="Work"><i class="fa-solid fa-dna"></i></a>
     {% when 'x_username' %}
       <a href="https://twitter.com/{{ social[1] }}" title="X"><i class="fa-brands fa-x-twitter"></i></a>
     {% when 'youtube_id' %}

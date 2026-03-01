@@ -21,7 +21,7 @@
     {% include header.liquid %}
 
     <!-- Content -->
-    <div class="container mt-5" role="main">
+    <div class="container mt-5" id="main-content" role="main">
       {% if page.toc and page.toc.sidebar %}
         {% if page.toc.sidebar == 'right' %}
           <div class="row">
@@ -52,5 +52,10 @@
 
     <!-- JavaScripts -->
     {% include scripts.liquid %}
+    <script>
+      window.addEventListener('load', function () {
+        document.getElementById('main-content').classList.add('loaded');
+      });
+    </script>
   </body>
 </html>
