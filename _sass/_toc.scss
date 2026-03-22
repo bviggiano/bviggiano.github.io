@@ -1,0 +1,160 @@
+/******************************************************************************
+ * Auto Table of Contents (left sidebar) — tree structure
+ ******************************************************************************/
+
+$toc-line-color: var(--global-divider-color);
+$toc-active-color: var(--global-theme-color);
+$toc-indent: 16px;
+
+.auto-toc {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 10px;
+  max-width: 180px;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 10;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.auto-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.auto-toc-item {
+  margin: 0;
+  padding: 0;
+  position: relative;
+
+  // Vertical trunk line for h2 items
+  &.toc-h2 {
+    padding-left: $toc-indent;
+
+    // Vertical line connecting all h2s
+    &::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $toc-line-color;
+    }
+
+    // Remove line below the last h2 group
+    &:last-child::before {
+      bottom: 50%;
+    }
+
+    // Horizontal branch from trunk to text
+    &::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 50%;
+      width: 8px;
+      height: 2px;
+      background: $toc-line-color;
+    }
+  }
+
+  // h3 items: indented with branch from parent trunk
+  &.toc-h3 {
+    padding-left: calc(#{$toc-indent} + #{$toc-indent});
+    position: relative;
+
+    // Vertical line continuing from parent h2 trunk
+    &::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $toc-line-color;
+      transition: background 0.2s;
+    }
+
+    // Secondary vertical line for h3 grouping
+    &::after {
+      content: "";
+      position: absolute;
+      left: calc(4px + #{$toc-indent});
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $toc-line-color;
+      transition: background 0.2s;
+    }
+
+    &.active::before {
+      background: $toc-active-color;
+    }
+
+    &.active::after {
+      background: $toc-active-color;
+    }
+  }
+
+  // When h3 is the last child or followed by h2, trim the secondary line
+  &.toc-h3.toc-h3-last::after {
+    bottom: 50%;
+  }
+
+  // When h3 is last child overall, also trim the trunk
+  &.toc-h3:last-child::before {
+    bottom: 50%;
+  }
+  &.toc-h3:last-child::after {
+    bottom: 50%;
+  }
+
+  // Active state for h2 items: glow the tree lines
+  &.toc-h2.active {
+    &::before {
+      background: $toc-active-color;
+    }
+
+    &::after {
+      background: $toc-active-color;
+    }
+  }
+}
+
+.auto-toc-link {
+  display: block;
+  padding: 4px 0 4px 8px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--global-text-color-light);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $toc-active-color;
+    text-decoration: none;
+  }
+
+  &.active {
+    color: $toc-active-color;
+  }
+
+  &.current {
+    font-weight: 600;
+  }
+}
+
+// Hide on mobile and narrow screens where there's no room
+@media (max-width: 1200px) {
+  .auto-toc {
+    display: none;
+  }
+}
