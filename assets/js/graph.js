@@ -502,8 +502,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Only run simulation and fit on first load (no saved positions)
     if (!hasPositions) {
-      // Run simulation manually for a fixed number of ticks, then show instantly
-      for (var i = 0; i < 150; i++) simulation.tick();
+      // Temporarily increase centering strength for initial settling
+      simulation.force("x").strength(0.1);
+      simulation.force("y").strength(0.1);
+      for (var i = 0; i < 300; i++) simulation.tick();
+      // Restore gentle centering for ambient drift
+      simulation.force("x").strength(0.005);
+      simulation.force("y").strength(0.005);
       ticked();
       fitGraph(true);
       container.classList.add("rendered");
