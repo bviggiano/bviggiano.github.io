@@ -179,6 +179,17 @@
   ></script>
 {% endif %}
 
+{% if site.obsidian_graph.enabled %}
+  <!-- D3.js for Knowledge Graph -->
+  <script
+    defer
+    src="{{ site.third_party_libraries.d3.url.js }}"
+    integrity="{{ site.third_party_libraries.d3.integrity.js }}"
+    crossorigin="anonymous"
+  ></script>
+  <script defer src="{{ '/assets/js/graph.js' | relative_url | bust_file_cache }}" type="text/javascript"></script>
+{% endif %}
+
 <!-- Load Common JS -->
 <script src="{{ '/assets/js/no_defer.js' | relative_url | bust_file_cache }}"></script>
 <script defer src="{{ '/assets/js/common.js' | relative_url | bust_file_cache }}"></script>

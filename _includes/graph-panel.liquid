@@ -1,0 +1,17 @@
+{% if site.obsidian_graph.enabled %}
+  <aside class="graph-panel" id="graph-panel">
+    <div class="graph-panel-body" id="graph-body">
+      <svg id="knowledge-graph"></svg>
+    </div>
+  </aside>
+  <script>
+    // Immediately position graph panel to prevent flash between page transitions
+    (function () {
+      var saved = sessionStorage.getItem('graph-panel-top');
+      if (saved) {
+        document.documentElement.style.setProperty('--graph-panel-top', saved);
+        document.getElementById('graph-panel').classList.add('positioned');
+      }
+    })();
+  </script>
+{% endif %}

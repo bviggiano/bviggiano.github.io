@@ -1,0 +1,552 @@
+document.addEventListener("DOMContentLoaded", function () {
+  var panel = document.getElementById("graph-panel");
+  if (!panel) return;
+
+  var POSITIONS_KEY = "graph-node-positions";
+  var VIEWBOX_KEY = "graph-viewbox";
+  var ZOOM_KEY = "graph-zoom-transform";
+  var simulation = null;
+  var currentZoomTransform = null;
+
+  // Save graph state to sessionStorage
+  var lastZoomScale = 1,
+    lastPanX = 0,
+    lastPanY = 0;
+  function saveState() {
+    if (!simulation) return;
+    var positions = {};
+    simulation.nodes().forEach(function (n) {
+      positions[n.id] = { x: n.x, y: n.y };
+    });
+    sessionStorage.setItem(POSITIONS_KEY, JSON.stringify(positions));
+    var svgEl = document.getElementById("knowledge-graph");
+    if (svgEl) sessionStorage.setItem(VIEWBOX_KEY, svgEl.getAttribute("viewBox"));
+    if (currentZoomTransform) {
+      sessionStorage.setItem(
+        ZOOM_KEY,
+        JSON.stringify({
+          k: currentZoomTransform.k,
+          x: currentZoomTransform.x,
+          y: currentZoomTransform.y,
+        })
+      );
+    }
+  }
+
+  window.addEventListener("beforeunload", saveState);
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest("a[href]");
+    if (link && link.href && link.origin === window.location.origin) saveState();
+  });
+
+  // Position graph panel below navbar + terminal
+  var lastPanelTop = -1;
+  function updatePanelTop() {
+    var terminal = document.getElementById("terminal");
+    var navbar = document.getElementById("navbar");
+    var top = 0;
+    if (navbar) top += navbar.offsetHeight;
+    if (terminal) top += terminal.offsetHeight;
+    if (top !== lastPanelTop) {
+      lastPanelTop = top;
+      var topStr = top + "px";
+      document.documentElement.style.setProperty("--graph-panel-top", topStr);
+      sessionStorage.setItem("graph-panel-top", topStr);
+      panel.classList.add("positioned");
+    }
+  }
+  updatePanelTop();
+  window.addEventListener("resize", updatePanelTop);
+  var terminalEl = document.getElementById("terminal");
+  if (terminalEl && typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(updatePanelTop).observe(terminalEl);
+  }
+
+  // Init after layout settles
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      initGraph();
+    });
+  });
+
+  function initGraph() {
+    var baseUrl = document.querySelector('meta[name="baseurl"]');
+    var prefix = baseUrl ? baseUrl.getAttribute("content") : "";
+
+    d3.json(prefix + "/assets/json/graph-data.json")
+      .then(function (data) {
+        if (!data || !data.nodes || !data.links) return;
+        renderGraph(data);
+      })
+      .catch(function () {});
+  }
+
+  function renderGraph(data) {
+    var container = document.getElementById("graph-body");
+    var svg = d3.select("#knowledge-graph");
+
+    // SVG spans full viewport; viewBox matches
+    var width = window.innerWidth;
+    var height = container.clientHeight;
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    // Center of the graph panel area (between content edge and right screen edge)
+    var graphPanelWidth = 280;
+    var centerX = width - graphPanelWidth / 2;
+    var centerY = height / 2;
+
+    var currentPath = window.location.pathname;
+
+    var nodeColor = function (d) {
+      if (d.type === "post") return "#d97757";
+      if (d.type === "folder") return "#8b8b8b";
+      return "#2698ba";
+    };
+
+    // Restore saved positions
+    var savedPositions = {};
+    try {
+      var stored = sessionStorage.getItem(POSITIONS_KEY);
+      if (stored) savedPositions = JSON.parse(stored);
+    } catch (e) {}
+
+    var hasPositions = Object.keys(savedPositions).length > 0;
+
+    if (hasPositions) {
+      data.nodes.forEach(function (n) {
+        var saved = savedPositions[n.id];
+        if (saved) {
+          n.x = saved.x;
+          n.y = saved.y;
+          n.vx = 0;
+          n.vy = 0;
+        }
+      });
+    } else {
+      // Spread nodes out in a circle around the center so they don't start clustered
+      var angleStep = (2 * Math.PI) / data.nodes.length;
+      var radius = Math.max(200, data.nodes.length * 60);
+      data.nodes.forEach(function (n, i) {
+        n.x = centerX + radius * Math.cos(angleStep * i);
+        n.y = centerY + radius * Math.sin(angleStep * i);
+      });
+    }
+
+    var nodeById = {};
+    data.nodes.forEach(function (n) {
+      nodeById[n.id] = n;
+    });
+
+    var links = data.links.filter(function (l) {
+      return nodeById[l.source] && nodeById[l.target];
+    });
+
+    // Graph group with a background rect for zoom event capture
+    var g = svg.append("g");
+    var currentZoom = 1;
+
+    // Background rect inside g for capturing zoom/pan events
+    var zoomRect = g
+      .append("rect")
+      .attr("class", "zoom-rect")
+      .attr("x", width - graphPanelWidth)
+      .attr("y", 0)
+      .attr("width", graphPanelWidth)
+      .attr("height", height)
+      .attr("fill", "transparent");
+
+    // Panel bounds in SVG coordinates
+    var panelLeft = width - graphPanelWidth;
+    var panelRight = width;
+    var panelTop = 0;
+    var footerHeight = 50;
+    var panelBottom = height - footerHeight;
+    var nodeRadius = 14;
+
+    // Zoom only controls scale; panning is handled by translating node positions
+    var zoomScale = 1;
+    var panOffsetX = 0;
+    var panOffsetY = 0;
+    var suppressZoomHandler = false;
+
+    var zoom = d3
+      .zoom()
+      .scaleExtent([0.3, 6])
+      .on("zoom", function (event) {
+        zoomScale = event.transform.k;
+        panOffsetX = event.transform.x;
+        panOffsetY = event.transform.y;
+        currentZoomTransform = event.transform;
+        currentZoom = zoomScale;
+        if (!suppressZoomHandler) {
+          ticked();
+          if (label) {
+            var opacity = Math.max(0, Math.min(1, (currentZoom - 0.5) / 0.5));
+            label.attr("opacity", opacity).attr("display", opacity > 0 ? null : "none");
+          }
+        }
+      });
+    g.call(zoom);
+
+    // Clamp a node's screen position to stay within panel bounds
+    function clampX(screenX) {
+      return Math.max(panelLeft + nodeRadius, Math.min(panelRight - nodeRadius, screenX));
+    }
+    function clampY(screenY) {
+      return Math.max(panelTop + nodeRadius, Math.min(panelBottom - nodeRadius, screenY));
+    }
+    // Convert node sim position to clamped screen position
+    function screenX(d) {
+      return clampX(d.x * zoomScale + panOffsetX);
+    }
+    function screenY(d) {
+      return clampY(d.y * zoomScale + panOffsetY);
+    }
+
+    // Helper to apply zoom transform programmatically
+    function applyZoomTransform(transform, duration) {
+      if (duration) {
+        g.transition().duration(duration).ease(d3.easeCubicInOut).call(zoom.transform, transform);
+      } else {
+        g.call(zoom.transform, transform);
+      }
+    }
+
+    // Links
+    var link = g
+      .append("g")
+      .selectAll("line")
+      .data(links)
+      .join("line")
+      .attr("class", function (d) {
+        var cls = "graph-link";
+        if (d.type === "transclusion") cls += " link-transclusion";
+        if (d.type === "folder") cls += " link-folder";
+        return cls;
+      })
+      .attr("stroke-width", 1);
+
+    // Nodes
+    var node = g
+      .append("g")
+      .selectAll("circle")
+      .data(data.nodes)
+      .join("circle")
+      .attr("class", function (d) {
+        var cls = "graph-node";
+        if (d.url === currentPath) cls += " graph-node-current";
+        return cls;
+      })
+      .attr("r", function (d) {
+        return d.url === currentPath ? 14 : 12;
+      })
+      .attr("fill", function (d) {
+        return nodeColor(d);
+      })
+      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+    // Labels (visible when zoomed in)
+    var label = g
+      .append("g")
+      .selectAll("text")
+      .data(data.nodes)
+      .join("text")
+      .attr("class", "graph-label")
+      .text(function (d) {
+        return d.title;
+      })
+      .attr("display", "none")
+      .style("cursor", "pointer");
+
+    // Tooltip
+    var tooltip = d3.select("#graph-body").append("div").attr("class", "graph-tooltip").style("display", "none");
+
+    // Shared highlight/unhighlight for both nodes and labels
+    function highlightNode(event, d) {
+      tooltip.style("display", "block").text(d.title);
+
+      // Highlight the corresponding node circle
+      node
+        .filter(function (n) {
+          return n.id === d.id;
+        })
+        .attr("stroke", "#b509ac")
+        .attr("stroke-width", 3)
+        .style("filter", "brightness(1.3)");
+
+      // Highlight the corresponding label
+      label
+        .filter(function (n) {
+          return n.id === d.id;
+        })
+        .style("fill", "#b509ac")
+        .style("font-weight", "bold");
+
+      // Dim unconnected nodes and links
+      link.attr("stroke-opacity", function (l) {
+        return l.source.id === d.id || l.target.id === d.id ? 1 : 0.1;
+      });
+      node.attr("opacity", function (n) {
+        if (n.id === d.id) return 1;
+        return links.some(function (l) {
+          return (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id);
+        })
+          ? 1
+          : 0.2;
+      });
+      label.attr("opacity", function (n) {
+        if (n.id === d.id) return 1;
+        return links.some(function (l) {
+          return (l.source.id === d.id && l.target.id === n.id) || (l.target.id === d.id && l.source.id === n.id);
+        })
+          ? 1
+          : 0.2;
+      });
+    }
+
+    function moveTooltip(event) {
+      var rect = container.getBoundingClientRect();
+      tooltip.style("left", event.clientX - rect.left + 10 + "px").style("top", event.clientY - rect.top - 20 + "px");
+    }
+
+    function unhighlightNode() {
+      tooltip.style("display", "none");
+      node
+        .attr("stroke", function (d) {
+          return d.url === currentPath ? "#b509ac" : null;
+        })
+        .attr("stroke-width", function (d) {
+          return d.url === currentPath ? 2 : null;
+        })
+        .style("filter", null);
+      label.style("fill", null).style("font-weight", null);
+      link.attr("stroke-opacity", function (d) {
+        return d.type === "folder" ? 0.3 : 0.6;
+      });
+      node.attr("opacity", 1);
+      label.attr("opacity", 1);
+    }
+
+    function clickNode(event, d) {
+      if (d.url) window.location.href = d.url;
+    }
+
+    // Attach to nodes
+    node.on("mouseover", highlightNode).on("mousemove", moveTooltip).on("mouseout", unhighlightNode).on("click", clickNode);
+
+    // Attach to labels
+    label.on("mouseover", highlightNode).on("mousemove", moveTooltip).on("mouseout", unhighlightNode).on("click", clickNode);
+
+    // Tick handler - positions each element individually with clamping
+    function ticked() {
+      link
+        .attr("x1", function (d) {
+          return screenX(d.source);
+        })
+        .attr("y1", function (d) {
+          return screenY(d.source);
+        })
+        .attr("x2", function (d) {
+          return screenX(d.target);
+        })
+        .attr("y2", function (d) {
+          return screenY(d.target);
+        });
+
+      node
+        .attr("cx", function (d) {
+          return screenX(d);
+        })
+        .attr("cy", function (d) {
+          return screenY(d);
+        })
+        .attr("r", function (d) {
+          var base = d.url === currentPath ? 14 : 12;
+          return base * Math.max(zoomScale, 0.5);
+        });
+
+      var scaledFontSize = Math.max(11, 14 * Math.max(zoomScale, 0.5));
+      label
+        .attr("x", function (d) {
+          return screenX(d);
+        })
+        .attr("y", function (d) {
+          var base = d.url === currentPath ? 14 : 12;
+          return screenY(d) + base * Math.max(zoomScale, 0.5) + scaledFontSize + 4;
+        })
+        .style("font-size", scaledFontSize + "px");
+
+      link.attr("stroke-width", Math.max(1, zoomScale));
+    }
+
+    // Resolve link references before simulation so it doesn't reassign positions
+    links.forEach(function (l) {
+      if (typeof l.source === "string") l.source = nodeById[l.source];
+      if (typeof l.target === "string") l.target = nodeById[l.target];
+    });
+
+    // Create simulation stopped
+    simulation = d3
+      .forceSimulation(data.nodes)
+      .stop()
+      .force(
+        "link",
+        d3
+          .forceLink(links)
+          .id(function (d) {
+            return d.id;
+          })
+          .distance(60)
+      )
+      .force("charge", d3.forceManyBody().strength(-300).distanceMin(10))
+      .force("x", d3.forceX(centerX).strength(0.005))
+      .force("y", d3.forceY(centerY).strength(0.005))
+      .force("collide", d3.forceCollide(60))
+      .on("tick", ticked);
+
+    if (hasPositions) {
+      // Re-apply saved positions (simulation init may have overwritten them)
+      data.nodes.forEach(function (n) {
+        var saved = savedPositions[n.id];
+        if (saved) {
+          n.x = saved.x;
+          n.y = saved.y;
+          n.vx = 0;
+          n.vy = 0;
+        }
+      });
+
+      // Restore saved zoom transform silently (no handler trigger)
+      try {
+        var storedZoom = sessionStorage.getItem(ZOOM_KEY);
+        if (storedZoom) {
+          var sz = JSON.parse(storedZoom);
+          zoomScale = sz.k;
+          panOffsetX = sz.x;
+          panOffsetY = sz.y;
+          currentZoom = sz.k;
+        }
+      } catch (e) {}
+
+      // Sync D3 zoom state silently without triggering ticked()
+      suppressZoomHandler = true;
+      var syncT = d3.zoomIdentity.translate(panOffsetX, panOffsetY).scale(zoomScale);
+      g.call(zoom.transform, syncT);
+      suppressZoomHandler = false;
+
+      // Render once with exact saved values, then show instantly (no fade)
+      ticked();
+      var svgEl = document.getElementById("knowledge-graph");
+      svgEl.style.transition = "none";
+      svgEl.style.opacity = "1";
+      container.classList.add("rendered");
+      // Re-enable transition for future use
+      requestAnimationFrame(function () {
+        svgEl.style.transition = "";
+      });
+    }
+
+    // Zoom-to-fit: smoothly transition to show all nodes within panel
+    function fitGraph(instant) {
+      if (!data.nodes.length) return;
+
+      // Clear saved state so next page load starts fresh
+      sessionStorage.removeItem(POSITIONS_KEY);
+      sessionStorage.removeItem(ZOOM_KEY);
+      sessionStorage.removeItem(VIEWBOX_KEY);
+
+      var xExtent = d3.extent(data.nodes, function (d) {
+        return d.x;
+      });
+      var yExtent = d3.extent(data.nodes, function (d) {
+        return d.y;
+      });
+      var dx = xExtent[1] - xExtent[0] || 1;
+      var dy = yExtent[1] - yExtent[0] || 1;
+      var padding = 30;
+      var scale = Math.min((graphPanelWidth - padding * 2) / dx, (height - padding * 2) / dy, 0.35);
+      scale = Math.max(scale, 0.3);
+
+      // Center of all nodes in sim space
+      var simCx = (xExtent[0] + xExtent[1]) / 2;
+      var simCy = (yExtent[0] + yExtent[1]) / 2;
+
+      // We want: simCx * scale + offsetX = panelCenterX
+      var panelCenterX = panelLeft + graphPanelWidth / 2;
+      var panelCenterY = height / 2;
+      var offsetX = panelCenterX - simCx * scale;
+      var offsetY = panelCenterY - simCy * scale;
+
+      var t = d3.zoomIdentity.translate(offsetX, offsetY).scale(scale);
+      applyZoomTransform(t, instant ? 0 : 800);
+    }
+
+    // Auto-reset: fit graph after 3s of no interaction
+    var resetTimer = null;
+    function scheduleReset() {
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(fitGraph, 3000);
+    }
+
+    // Hook into zoom events to reset timer on any user-initiated zoom/pan
+    var originalZoomHandler = zoom.on("zoom");
+    zoom.on("zoom", function (event) {
+      originalZoomHandler.call(this, event);
+      if (event.sourceEvent) {
+        clearTimeout(resetTimer);
+        scheduleReset();
+      }
+    });
+    g.call(zoom);
+
+    // Only run simulation and fit on first load (no saved positions)
+    if (!hasPositions) {
+      // Run simulation manually for a fixed number of ticks, then show instantly
+      for (var i = 0; i < 150; i++) simulation.tick();
+      ticked();
+      fitGraph(true);
+      container.classList.add("rendered");
+    }
+
+    function dragstarted(event) {
+      clearTimeout(resetTimer);
+      if (!event.active) simulation.alphaTarget(0.1).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
+
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+      scheduleReset();
+    }
+  }
+
+  function resizeGraph() {
+    var container = document.getElementById("graph-body");
+    var svg = d3.select("#knowledge-graph");
+    var width = container.clientWidth;
+    var height = container.clientHeight;
+    svg.attr("viewBox", [0, 0, width, height]);
+    if (simulation) {
+      simulation.force("x", d3.forceX(width - 140).strength(0.02));
+      simulation.force("y", d3.forceY(height / 2).strength(0.02));
+      simulation.alpha(0.3).restart();
+    }
+  }
+
+  // Only handle resize after user has interacted (not on page load layout shifts)
+  var userHasInteracted = false;
+  document.getElementById("graph-panel").addEventListener("pointerdown", function () {
+    userHasInteracted = true;
+  });
+  window.addEventListener("resize", function () {
+    if (simulation && userHasInteracted) resizeGraph();
+  });
+});
