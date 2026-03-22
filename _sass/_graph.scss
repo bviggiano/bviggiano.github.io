@@ -1,0 +1,221 @@
+/******************************************************************************
+ * Knowledge Graph Panel
+ ******************************************************************************/
+
+// Enable cross-document view transitions for smooth page navigation
+@view-transition {
+  navigation: auto;
+}
+
+$graph-panel-width: 280px;
+$navbar-height: 57px;
+
+// Right-side graph panel (always visible on desktop)
+// Hidden until JS sets --graph-panel-top to prevent layout flash
+// view-transition-name keeps it visually stable across page navigations
+.graph-panel {
+  view-transition-name: graph-panel;
+  position: fixed;
+  top: var(--graph-panel-top);
+  right: 0;
+  width: $graph-panel-width;
+  height: calc(100vh - var(--graph-panel-top));
+  background: var(--global-bg-color);
+  border: none;
+  z-index: 1; // Behind page content so it never eclipses text/images
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  visibility: hidden; // Hidden until JS positions it
+
+  &.positioned {
+    visibility: visible;
+  }
+}
+
+.graph-panel-body {
+  flex: 1;
+  overflow: visible;
+  position: relative;
+
+  // Fade in SVG once graph.js has rendered nodes
+  svg {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  &.rendered svg {
+    opacity: 1;
+  }
+}
+
+#knowledge-graph {
+  // Extend SVG to full viewport width so nodes aren't clipped at the panel edge
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100vw;
+  height: 100%;
+  // SVG itself doesn't capture events; only specific children do
+  pointer-events: none;
+
+  // Graph group and its children capture events
+  g {
+    pointer-events: all;
+  }
+}
+
+// Invisible overlay within panel bounds to capture zoom/pan/drag events
+.graph-event-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+// Graph node tooltip
+.graph-tooltip {
+  position: absolute;
+  padding: 4px 8px;
+  background: var(--global-card-bg-color);
+  border: 1px solid var(--global-divider-color);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--global-text-color);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 910;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// SVG graph elements
+.graph-node {
+  cursor: pointer;
+  transition:
+    filter 0.2s,
+    stroke-width 0.2s;
+}
+
+.graph-node-current {
+  stroke: #b509ac;
+  stroke-width: 2px;
+}
+
+.graph-link {
+  stroke: var(--global-divider-color);
+  stroke-opacity: 0.6;
+
+  &.link-transclusion {
+    stroke-dasharray: 4 2;
+  }
+
+  &.link-folder {
+    stroke-opacity: 0.3;
+  }
+}
+
+.graph-label {
+  font-size: 12px;
+  fill: var(--global-text-color);
+  text-anchor: middle;
+  cursor: pointer;
+
+  &:hover {
+    fill: var(--global-theme-color);
+  }
+}
+
+// Wikilink styling in content
+a.wikilink {
+  color: var(--global-theme-color);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--global-theme-color);
+
+  &:hover {
+    border-bottom-style: solid;
+    text-decoration: none;
+  }
+}
+
+span.wikilink.broken {
+  color: var(--global-text-color-light);
+  border-bottom: 1px dashed var(--global-text-color-light);
+  cursor: help;
+}
+
+// Transclusion block styling
+.transclusion {
+  border-left: 3px solid var(--global-theme-color);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  background: var(--global-code-bg-color);
+  border-radius: 0 4px 4px 0;
+  position: relative;
+
+  &::before {
+    content: "Transcluded";
+    position: absolute;
+    top: -0.5rem;
+    left: 0.5rem;
+    font-size: 0.65rem;
+    color: var(--global-text-color-light);
+    background: var(--global-bg-color);
+    padding: 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Ensure main content and footer sit above the graph panel
+// background-clip prevents the background from extending into padding/margin
+#main-content {
+  position: relative;
+  z-index: 2;
+}
+
+footer {
+  position: relative;
+  z-index: 2;
+  background: var(--global-bg-color);
+}
+
+// Desktop: content sits next to the graph, navbar/terminal span full width
+// Align left edge with the navbar container, right edge stops before graph.
+@media (min-width: 768px) {
+  #main-content.container {
+    // Match the left position of the centered navbar container
+    margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
+    margin-right: calc(#{$graph-panel-width} + 2px);
+  }
+
+  footer .container {
+    margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
+    margin-right: calc(#{$graph-panel-width} + 2px);
+  }
+}
+
+// Mobile: graph sits in normal document flow at the bottom, centered
+@media (max-width: 767px) {
+  .graph-panel {
+    position: static;
+    width: 100%;
+    height: 300px;
+    margin-top: 2rem;
+    border-top: 1px solid var(--global-divider-color);
+    overflow: hidden;
+
+    // Override the full-viewport SVG for mobile
+    #knowledge-graph {
+      position: relative;
+      width: 100%;
+      right: auto;
+    }
+
+    // g group needs pointer events
+    g {
+      pointer-events: all;
+    }
+  }
+}
