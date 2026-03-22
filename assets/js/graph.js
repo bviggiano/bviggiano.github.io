@@ -85,14 +85,15 @@ document.addEventListener("DOMContentLoaded", function () {
     var container = document.getElementById("graph-body");
     var svg = d3.select("#knowledge-graph");
 
-    // SVG spans full viewport; viewBox matches
-    var width = window.innerWidth;
+    // Detect mobile vs desktop layout
+    var isMobile = window.innerWidth < 768;
+    var graphPanelWidth = isMobile ? container.clientWidth : 280;
+    var width = isMobile ? container.clientWidth : window.innerWidth;
     var height = container.clientHeight;
     svg.attr("viewBox", [0, 0, width, height]);
 
-    // Center of the graph panel area (between content edge and right screen edge)
-    var graphPanelWidth = 280;
-    var centerX = width - graphPanelWidth / 2;
+    // Center of the graph area
+    var centerX = isMobile ? width / 2 : width - graphPanelWidth / 2;
     var centerY = height / 2;
 
     var currentPath = window.location.pathname;

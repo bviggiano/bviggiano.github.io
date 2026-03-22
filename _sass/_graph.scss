@@ -196,7 +196,7 @@ footer {
   }
 }
 
-// Mobile: graph sits in normal document flow at the bottom
+// Mobile: graph sits in normal document flow at the bottom, centered
 @media (max-width: 767px) {
   .graph-panel {
     position: static;
@@ -204,5 +204,18 @@ footer {
     height: 300px;
     margin-top: 2rem;
     border-top: 1px solid var(--global-divider-color);
+    overflow: hidden;
+
+    // Override the full-viewport SVG for mobile
+    #knowledge-graph {
+      position: relative;
+      width: 100%;
+      right: auto;
+    }
+
+    // g group needs pointer events
+    g {
+      pointer-events: all;
+    }
   }
 }
