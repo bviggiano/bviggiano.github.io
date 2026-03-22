@@ -508,6 +508,42 @@ document.addEventListener("DOMContentLoaded", function () {
       container.classList.add("rendered");
     }
 
+    // Ambient drift: smooth arcing orbits using per-node phase offsets
+    data.nodes.forEach(function (n) {
+      n._driftPhaseX = Math.random() * Math.PI * 2;
+      n._driftPhaseY = Math.random() * Math.PI * 2;
+      n._driftSpeedX = 0.0003 + Math.random() * 0.0004;
+      n._driftSpeedY = 0.0003 + Math.random() * 0.0004;
+      n._driftRadius = 8 + Math.random() * 12;
+      n._baseX = n.x;
+      n._baseY = n.y;
+    });
+
+    var driftStartTime = null;
+    var driftDelay = 2000; // ms before drift begins
+    var driftEaseIn = 3000; // ms to ease in to full drift
+
+    function ambientDrift(timestamp) {
+      if (driftStartTime === null) driftStartTime = timestamp;
+      var elapsed = timestamp - driftStartTime;
+
+      // Ease in: 0 during delay, then ramp from 0 to 1 over easeIn period
+      var intensity = 0;
+      if (elapsed > driftDelay) {
+        intensity = Math.min(1, (elapsed - driftDelay) / driftEaseIn);
+      }
+
+      if (intensity > 0) {
+        data.nodes.forEach(function (n) {
+          n.x = n._baseX + Math.sin(elapsed * n._driftSpeedX + n._driftPhaseX) * n._driftRadius * intensity;
+          n.y = n._baseY + Math.cos(elapsed * n._driftSpeedY + n._driftPhaseY) * n._driftRadius * intensity;
+        });
+        ticked();
+      }
+      requestAnimationFrame(ambientDrift);
+    }
+    requestAnimationFrame(ambientDrift);
+
     function dragstarted(event) {
       clearTimeout(resetTimer);
       if (!event.active) simulation.alphaTarget(0.1).restart();

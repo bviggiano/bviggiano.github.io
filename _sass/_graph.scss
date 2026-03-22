@@ -2,12 +2,19 @@
  * Knowledge Graph Panel
  ******************************************************************************/
 
+// Enable cross-document view transitions for smooth page navigation
+@view-transition {
+  navigation: auto;
+}
+
 $graph-panel-width: 280px;
 $navbar-height: 57px;
 
 // Right-side graph panel (always visible on desktop)
 // Hidden until JS sets --graph-panel-top to prevent layout flash
+// view-transition-name keeps it visually stable across page navigations
 .graph-panel {
+  view-transition-name: graph-panel;
   position: fixed;
   top: var(--graph-panel-top);
   right: 0;
