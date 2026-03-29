@@ -17,8 +17,8 @@ $(document).ready(function () {
   });
   $("a").removeClass("waves-effect waves-light");
 
-  // bootstrap-toc
-  if ($("#toc-sidebar").length) {
+  // bootstrap-toc (skip if auto-toc will handle it)
+  if ($("#toc-sidebar").length && !document.getElementById("auto-toc")) {
     // remove related publications years from the TOC
     $(".publications h2").each(function () {
       $(this).attr("data-toc-skip", "");

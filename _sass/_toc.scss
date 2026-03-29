@@ -34,6 +34,23 @@ $toc-indent: 16px;
   padding: 0;
   position: relative;
 
+  // Page title at the top, no indentation or tree lines
+  &.toc-title {
+    padding-left: 0;
+    margin-bottom: 6px;
+
+    .auto-toc-link {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--global-text-color-light);
+      transition: color 0.2s;
+
+      &.active {
+        color: $toc-active-color;
+      }
+    }
+  }
+
   // Vertical trunk line for h2 items
   &.toc-h2 {
     padding-left: $toc-indent;
@@ -70,6 +87,17 @@ $toc-indent: 16px;
   &.toc-h3 {
     padding-left: calc(#{$toc-indent} + #{$toc-indent});
     position: relative;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      max-height 0.25s ease,
+      opacity 0.25s ease;
+    opacity: 0;
+
+    &.toc-visible {
+      max-height: 40px;
+      opacity: 1;
+    }
 
     // Vertical line continuing from parent h2 trunk
     &::before {
