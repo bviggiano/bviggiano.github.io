@@ -204,6 +204,12 @@ document.addEventListener("DOMContentLoaded", function () {
       if (boldId && headingMap[boldId]) {
         headingMap[boldId].classList.add("current");
         headingMap[boldId].parentElement.classList.add("current");
+        // If current heading is an h3, also bold its parent h2
+        var ph2 = parentH2[boldId];
+        if (ph2 && ph2.id !== boldId && headingMap[ph2.id]) {
+          headingMap[ph2.id].classList.add("current");
+          headingMap[ph2.id].parentElement.classList.add("current");
+        }
       }
 
       // Show/hide h3 items: visible when their parent h2 is active

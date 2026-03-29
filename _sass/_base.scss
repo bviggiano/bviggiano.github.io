@@ -1614,12 +1614,12 @@ nav[data-toggle="toc"] {
 
 #toc-sidebar {
   position: fixed;
-  top: var(--graph-panel-top, 80px);
+  top: 50%;
   max-width: 200px;
   max-height: calc(100vh - var(--graph-panel-top, 80px) - 40px);
   overflow-y: auto;
   z-index: 10;
-  transform: translateX(-100%);
+  transform: translateX(-100%) translateY(-50%);
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
