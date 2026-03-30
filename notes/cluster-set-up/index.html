@@ -1,0 +1,365 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> How to set up a new computational cluster | Ben Viggiano </title> <meta name="author" content="Ben Viggiano"> <meta name="description" content="A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication."> <meta name="keywords" content="ben-viggiano, bviggiano, protein-engineering, deep-learning, biology, machine-learning"> <meta property="og:site_name" content="Ben Viggiano"> <meta property="og:type" content="article"> <meta property="og:title" content="Ben Viggiano | How to set up a new computational cluster"> <meta property="og:url" content="https://bviggiano.github.io/notes/cluster-set-up/"> <meta property="og:description" content="A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication."> <meta property="og:image" content="https://bviggiano.github.io/assets/img/prof_pic.jpg"> <meta property="og:locale" content="en"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="How to set up a new computational cluster"> <meta name="twitter:description" content="A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication."> <meta name="twitter:image" content="https://bviggiano.github.io/assets/img/prof_pic.jpg"> <meta name="twitter:site" content="@bviggiano_13"> <meta name="twitter:creator" content="@bviggiano_13"> <script type="application/ld+json">
+    {
+        "author":
+        {
+            "@type": "Person",
+            "name": "Ben Viggiano"
+        },
+        "url": "https://bviggiano.github.io/notes/cluster-set-up/",
+        "@type": "BlogPosting",
+        "description": "A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.",
+        "headline": "How to set up a new computational cluster",
+        
+        "sameAs": ["https://github.com/bviggiano","https://orcid.org/0000-0003-1510-7567","https://scholar.google.com/citations?user=pAj9eCoAAAAJ","https://ashleylab.stanford.edu/","https://twitter.com/bviggiano_13","https://huggingface.co/bviggiano"],
+        
+        "name": "Ben Viggiano",
+        "@context": "https://schema.org"
+    }
+  </script> <meta name="baseurl" content=""> <link rel="stylesheet" href="/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link rel="stylesheet" href="/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5"> <link rel="stylesheet" href="/assets/css/scholar-icons.css?62b2ac103a88034e6882a5be5f3e2772"> <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link defer href="/assets/css/bootstrap-toc.min.css?6f5af0bb9aab25d79b2448143cbeaa88" rel="stylesheet"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%8F%9E%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://bviggiano.github.io/notes/cluster-set-up/"> <script src="/assets/js/theme.js?a81d82887dd692e91686b43de4542f18"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title" href="/" style="font-weight: 300;"> Ben Viggiano </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/blog/index.html">blog </a> </li> <li class="nav-item active"> <a class="nav-link" href="/notes/">notes <span class="sr-only">(current)</span> </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/teaching/">teaching </a> </li> <li class="nav-item"> <button id="search-toggle" title="Search" onclick="openSearchModal()"> <span class="nav-link"><span id="search-shortcut-text">ctrl</span> k <i class="ti ti-search"></i></span> </button> <script>
+                if (navigator.platform.toUpperCase().indexOf('MAC') >= 0) {
+                  document.getElementById('search-shortcut-text').textContent = '\u2318';
+                }
+              </script> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="ti ti-sun-moon" id="light-toggle-system"></i> <i class="ti ti-moon-filled" id="light-toggle-dark"></i> <i class="ti ti-sun-filled" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="terminal-wrapper" id="terminal"> <div class="terminal-body"> <div class="terminal-output" id="terminal-output"></div> <div class="terminal-input-line"> <span class="prompt" id="terminal-prompt">~$</span> <input type="text" id="terminal-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder=""> </div> </div> </div> <script>
+  // Build filesystem from Jekyll collections/pages at build time
+  window.TERMINAL_FS = {
+    "~": {
+      _url: "/",
+      _children: {"publications": { "_url": "/publications/", "_children": {} },"blog": {
+          "_url": "/blog/",
+          "_children": {}
+        },"notes": {
+          "_url": "/notes/",
+          "_children": {"how-to-set-up-a-new-computational-cluster.md": { "_url": "/notes/cluster-set-up/", "_file": true }}
+        },"projects": {
+          "_url": "/projects/",
+          "_children": {"aav2-capsid-viability-dataset": { "_url": "/projects/aav2_capsid_viability/", "_children": {} },"pact": { "_url": "/projects/pact/", "_children": {} },"provada": { "_url": "/projects/provada/", "_children": {} }}
+        },"teaching": { "_url": "/teaching/", "_children": {} },"email": { "_url": "mailto:viggiano@stanford.edu", "_children": {}, "_social": true },"github": { "_url": "https://github.com/bviggiano", "_children": {}, "_social": true },"orcid": { "_url": "https://orcid.org/0000-0003-1510-7567", "_children": {}, "_social": true },"scholar": { "_url": "https://scholar.google.com/citations?user=pAj9eCoAAAAJ", "_children": {}, "_social": true },"lab": { "_url": "https://ashleylab.stanford.edu/", "_children": {}, "_social": true },"x": { "_url": "https://x.com/bviggiano_13", "_children": {}, "_social": true },"huggingface": { "_url": "https://huggingface.co/bviggiano", "_children": {}, "_social": true },"_end": { "_url": "/", "_children": {}, "_hidden": true }
+      }
+    }
+  };
+</script> <script src="/assets/js/terminal.js" defer></script> <div class="container mt-5" id="main-content" role="main"> <nav id="toc-sidebar"></nav> <button class="toc-mobile-tab" id="toc-mobile-tab" aria-label="Toggle table of contents"></button> <div class="toc-mobile-overlay" id="toc-mobile-overlay"></div> <nav id="auto-toc" class="auto-toc"></nav> <div class="post"> <header class="post-header"> <div class="ai-context-menu"> <button class="ai-context-btn" id="ai-context-btn" title="Copy or open in AI"> <i class="fa-regular fa-copy"></i> <span>Copy page</span> <i class="fa-solid fa-chevron-down ai-context-chevron"></i> </button> <div class="ai-context-dropdown" id="ai-context-dropdown"> <button class="ai-context-option" data-action="copy"> <div class="ai-context-option-icon"><i class="fa-regular fa-copy"></i></div> <div class="ai-context-option-text"> <div class="ai-context-option-title">Copy page</div> <div class="ai-context-option-desc">Copy as Markdown for LLMs</div> </div> </button> <div class="ai-context-divider"></div> <button class="ai-context-option" data-action="claude"> <div class="ai-context-option-icon"> <svg width="16" height="16" viewbox="0 0 24 24" fill="#D97706"> <path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z"></path> </svg> </div> <div class="ai-context-option-text"> <div class="ai-context-option-title">Open in Claude</div> <div class="ai-context-option-desc">Ask questions about this page</div> </div> <i class="fa-solid fa-arrow-up-right-from-square ai-context-external"></i> </button> <button class="ai-context-option" data-action="chatgpt"> <div class="ai-context-option-icon"> <svg width="16" height="16" viewbox="0 0 24 24" fill="currentColor"> <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.998 5.998 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"></path> </svg> </div> <div class="ai-context-option-text"> <div class="ai-context-option-title">Open in ChatGPT</div> <div class="ai-context-option-desc">Ask questions about this page</div> </div> <i class="fa-solid fa-arrow-up-right-from-square ai-context-external"></i> </button> <button class="ai-context-option" data-action="gemini"> <div class="ai-context-option-icon"> <svg width="16" height="16" viewbox="0 0 24 24"> <defs><lineargradient id="gem-grad" x1="0" y1="0" x2="24" y2="24" gradientunits="userSpaceOnUse"><stop offset="0" stop-color="#EA4335"></stop><stop offset=".35" stop-color="#F9AB00"></stop><stop offset=".65" stop-color="#4285F4"></stop><stop offset="1" stop-color="#34A853"></stop></lineargradient></defs><path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="url(#gem-grad)"></path> </svg> </div> <div class="ai-context-option-text"> <div class="ai-context-option-title">Open in Gemini</div> <div class="ai-context-option-desc">Ask questions about this page</div> </div> <i class="fa-solid fa-arrow-up-right-from-square ai-context-external"></i> </button> </div> </div> <script>
+  (function () {
+    var btn = document.getElementById('ai-context-btn');
+    var dropdown = document.getElementById('ai-context-dropdown');
+    if (!btn || !dropdown) return;
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function () {
+      dropdown.classList.remove('open');
+    });
+
+    dropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+
+    function getPageMarkdown() {
+      var title = document.querySelector('.post-title');
+      var content = document.getElementById('markdown-content');
+      var text = '';
+      if (title) text += '# ' + title.textContent.trim() + '\n\n';
+      if (content) text += content.innerText;
+      return text;
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      // Fallback for non-secure contexts (e.g. localhost HTTP)
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    function showCopied() {
+      var label = btn.querySelector('span');
+      var original = label.textContent;
+      label.textContent = 'Copied!';
+      setTimeout(function () {
+        label.textContent = original;
+      }, 1500);
+    }
+
+    var options = dropdown.querySelectorAll('.ai-context-option');
+    options.forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        var action = opt.getAttribute('data-action');
+        var md = getPageMarkdown();
+        dropdown.classList.remove('open');
+
+        if (action === 'copy') {
+          copyToClipboard(md).then(showCopied);
+        } else {
+          var prompt = 'I am sharing a page from my notes. Please read it and be ready to answer questions about it.\n\n' + md;
+          copyToClipboard(prompt).then(function () {
+            showCopied();
+            var urls = {
+              claude: 'https://claude.ai/new',
+              chatgpt: 'https://chatgpt.com/',
+              gemini: 'https://gemini.google.com/app',
+            };
+            if (urls[action]) window.open(urls[action], '_blank');
+          });
+        }
+      });
+    });
+  })();
+</script> <h1 class="post-title">How to set up a new computational cluster</h1> <p class="post-meta"> Created on March 28, 2026 </p> <p class="post-tags"> <i class="fa-solid fa-calendar fa-sm"></i> 2026   ·   <i class="fa-solid fa-hashtag fa-sm"></i> how-to </p> </header> <article class="post-content"> <div id="markdown-content"> <p>One of the most common questions I get from students just starting out in AI/ML research or computational biology is how to get set up on that new computational cluster they just got access to. Over the years, I’ve done this enough times that I started keeping a step-by-step guide I follow every time I get access to a new system to ensure I complete every step of my process. After getting a few requests to help with this in the last few weeks, I decided to publish my guide as a note here.</p> <p>There are a few important things to keep in mind when reading this:</p> <ol> <li>These are all just preferences! There are many tools you can use and many ways to get set up on a cluster. This is mostly just what I prefer.</li> <li>This is not a static document and I don’t treat it as such! Over the years I’ve added quite a bit to it as my practices change or as I find new shortcuts, and with the incredible new abilities of modern AI tools, it’s been changing much more rapidly.</li> </ol> <p><small>I hope you find this helpful or learn a trick or two. Additionally, if you have thoughts on a better way to do <em>anything</em> in this note, please don’t hesitate to <a href="https://github.com/bviggiano/bviggiano.github.io/issues/new" rel="external nofollow noopener" target="_blank">tell me about it here</a>! Cheers!</small></p> <h2 id="step-0-set-up-a-coding-agent-of-your-choice">Step 0: Set up a coding agent of your choice</h2> <p>Before we do anything with the cluster, the number one piece of advice I can give is <em>use a coding agent</em>. They are amazingly helpful and can likely do a lot of the steps in this document for you if you give them this note as an input. My personal favorite is <a href="https://claude.ai/code" rel="external nofollow noopener" target="_blank">Claude Code</a>! I would set this up on your local machine before we even get started. We’ll also set it up on the cluster itself in <a href="#step-4-set-up-claude-code">Step 4</a>.</p> <h2 id="step-1-test-your-ssh-connection">Step 1: Test your SSH connection</h2> <p>Before we start configuring anything, let’s make sure you can actually connect to the cluster. You’ll need two things: your <strong>username</strong> (the one assigned by the cluster, which may not be the same as your local machine’s username) and the cluster’s <strong>hostname</strong>. The hostname is the network address of the cluster’s login server, and it’s usually provided in the welcome email or onboarding docs you received when your account was created. Some examples from Stanford are <code class="language-plaintext highlighter-rouge">sc.stanford.edu</code> (SAIL) and <code class="language-plaintext highlighter-rouge">login.sherlock.stanford.edu</code> (Sherlock).</p> <p>Throughout this doc, I’ll use a few different Stanford clusters as examples. Open a terminal on your local machine and try connecting:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ssh &lt;username&gt;@&lt;hostname&gt;</span>
+ssh viggiano@login.sherlock.stanford.edu
+</code></pre></div></div> <p>You should be prompted for your password. Enter it, and if everything is working you’ll land in a shell on the cluster. Type <code class="language-plaintext highlighter-rouge">exit</code> to disconnect and come back to your local machine. If this doesn’t work, double check the hostname and username with whoever gave you access!</p> <p>Now that we know the connection works, we can move on to getting set up!</p> <h2 id="step-2-add-the-cluster-to-your-ssh-config">Step 2: Add the cluster to your SSH config</h2> <p>Typing out <code class="language-plaintext highlighter-rouge">ssh &lt;username&gt;@hostname</code> every time you want to connect is really annoying, and hostnames are generally annoyingly hard to remember. Instead, we can define short nicknames for various clusters through the use of an SSH config file.</p> <ol> <li> <p><em>On your local machine</em>, open (or create) the <code class="language-plaintext highlighter-rouge">~/.ssh/config</code> file:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>vim ~/.ssh/config
+</code></pre></div> </div> </li> <li> <p>Add an entry for the cluster you are getting set up that looks like this:</p> <div class="language-text highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>Host sherlock  # &lt;-- This is the nickname the cluster will use!
+    HostName login.sherlock.stanford.edu  # &lt;-- The hostname
+    User viggiano                         # &lt;-- Your cluster username (may not be the same as your local username)
+</code></pre></div> </div> </li> </ol> <p>Now we can connect with just:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh sherlock
+</code></pre></div></div> <p>This nickname also works with <code class="language-plaintext highlighter-rouge">scp</code>, <code class="language-plaintext highlighter-rouge">rsync</code>, <code class="language-plaintext highlighter-rouge">sftp</code>, and any other tool that uses SSH under the hood. IDEs like VSCode/Cursor will also automatically pick up all of your configured hosts, so the cluster will appear in their Remote SSH dropdown as an option to connect to.</p> <p>You can add as many entries as you want:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host sumo
+    HostName sumo.stanford.edu
+    User viggiano
+
+Host sail
+    HostName sc.stanford.edu
+    User viggiano
+</code></pre></div></div> <h2 id="step-3-set-up-ssh-keys">Step 3: Set up SSH keys</h2> <p>Next we will set up our <code class="language-plaintext highlighter-rouge">ssh keys</code>! Every time you connect to a cluster, the server needs to verify that you are who you say you are. By default, this means typing your password on every single connection. SSH keys let you skip that entirely. They work using a <strong>key pair</strong>: a private key that stays on your local machine and a public key that you give to the cluster. Once the cluster has your public key, it can verify your identity automatically. <strong>NOTE:</strong> Some clusters do not allow this step or handle it for you automatically. This is common on shared systems where admins enforce password-based or two-factor authentication for security. Notably, Stanford’s Sherlock cluster does not support SSH key authentication.</p> <details> <summary>Quick Aside: Setting up SSH Keys</summary> <p>SSH keys live in the <code class="language-plaintext highlighter-rouge">~/.ssh/</code> directory on your local machine. You can check what’s there by running:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-al</span> ~/.ssh/
+</code></pre></div> </div> <p>If you already have ssh keys, you will most likely see something like the following:</p> <ul> <li> <code class="language-plaintext highlighter-rouge">id_ed25519</code> is your <strong>private key</strong>. <em>Never share this with anyone.</em> </li> <li> <code class="language-plaintext highlighter-rouge">id_ed25519.pub</code> is your <strong>public key</strong>. This is what you copy to remote servers.</li> <li> <code class="language-plaintext highlighter-rouge">known_hosts</code> this is an auto-maintained file that keeps track of servers you’ve connected to before.</li> </ul> <p>If you don’t see any keys, you should create one using the <code class="language-plaintext highlighter-rouge">ssh-keygen</code> command:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>ssh-keygen <span class="nt">-t</span> ed25519
+</code></pre></div> </div> <p>(When running <code class="language-plaintext highlighter-rouge">ssh-keygen</code>, press Enter through the prompts to accept the default file location and skip the passphrase.)</p> <p>Your public key is just a single line of text:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ~/.ssh/id_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... bviggiano@local-machine
+</code></pre></div> </div> <p>Your private key will look like this and should <strong>never</strong> be shared:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ~/.ssh/id_ed25519
+<span class="nt">-----BEGIN</span> OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAA...
+...many more lines...
+<span class="nt">-----END</span> OPENSSH PRIVATE KEY-----
+</code></pre></div> </div> </details> <p>Once you have a key pair, you can run <code class="language-plaintext highlighter-rouge">ssh-copy-id</code> <em>from your local machine</em> to automatically copy your public key to the cluster:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ssh-copy-id &lt;cluster-nickname&gt;</span>
+ssh-copy-id sail
+</code></pre></div></div> <p>You’ll be asked for your password one last time. After that, you should be able to connect without it.</p> <h2 id="step-4-set-up-claude-code">Step 4: Set up Claude Code</h2> <p><a href="https://docs.anthropic.com/en/docs/claude-code" rel="external nofollow noopener" target="_blank">Claude Code</a> is Anthropic’s CLI tool for working with Claude directly in your terminal. It can help you navigate unfamiliar codebases, debug issues, write scripts, and even run through the remaining steps in this guide interactively.</p> <p>Some clusters have it pre-installed as a module. On Sherlock, for example, you can simply run:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module load claude-code
+</code></pre></div></div> <p>Otherwise, you can install it directly with a single command:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-fsSL</span> https://claude.ai/install.sh | bash
+</code></pre></div></div> <p>Run <code class="language-plaintext highlighter-rouge">claude</code> to launch it and follow the authentication prompts. Once set up, you can ask it to help with anything from “set up my conda environment” to “why is my CUDA job failing.”</p> <p>I highly recommend helping Claude get familiar with your new cluster by giving it links to the cluster’s documentation. Claude Code has a memory file called <code class="language-plaintext highlighter-rouge">CLAUDE.md</code> that it reads at the start of every session. You can ask it to save useful cluster details there so it remembers them for future conversations:</p> <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello Claude! You are currently being run on the &lt;cluster-name-here&gt; cluster. Please take a look at this documentation website &lt;url-here&gt; to get familiar with how the cluster is set up. Add a summary of what you find to your global CLAUDE.md on this system.
+</code></pre></div></div> <h2 id="step-5-install-miniconda">Step 5: Install Miniconda</h2> <p><a href="https://docs.anaconda.com/miniconda/" rel="external nofollow noopener" target="_blank">Miniconda</a> is a lightweight installer for conda, the package and environment manager most commonly used in the ML and data science communities. It lets you create isolated Python environments for different projects, which is essential on shared clusters where you don’t have root access. I also use alternatives such as <a href="https://mamba.readthedocs.io/" rel="external nofollow noopener" target="_blank">Mamba</a> (a faster drop-in replacement) and <a href="https://github.com/astral-sh/uv" rel="external nofollow noopener" target="_blank">uv</a> (a newer, Rust-based <code class="language-plaintext highlighter-rouge">pip</code> replacement), but I’d recommend using Miniconda to start since it’s the most widely used and is generally what most users already have set up.</p> <p>Here is a step by step guide for getting Miniconda set-up:</p> <ol> <li>First, we need to download and run the installer on the cluster. The example below is for Linux x86_64, which is the most common cluster architecture. You can check yours by running <code class="language-plaintext highlighter-rouge">uname -m</code> on the cluster. If it’s something other than <code class="language-plaintext highlighter-rouge">x86_64</code>, find the right installer at the <a href="https://docs.anaconda.com/miniconda/#latest-miniconda-installer-links" rel="external nofollow noopener" target="_blank">Miniconda downloads page</a>.</li> </ol> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+<span class="nb">chmod</span> +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+</code></pre></div></div> <ol> <li> <p>The installer will show you a very long license agreement. Scroll through (hold Enter) and accept at the end with <code class="language-plaintext highlighter-rouge">y</code>.</p> </li> <li> <p>You will see the following message:</p> </li> </ol> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Miniconda3 will now be installed into this location:
+
+/sailhome/viggiano/miniconda3
+  - Press ENTER to confirm the location
+  - Press CTRL-C to abort the installation
+  - Or specify a different location below
+
+<span class="o">[</span>/sailhome/viggiano/miniconda3] <span class="o">&gt;&gt;&gt;</span> /scr-ssd/viggiano/miniconda3
+</code></pre></div></div> <ol> <li> <p>When prompted “Do you wish to update your shell profile to automatically initialize conda?”, select <code class="language-plaintext highlighter-rouge">yes</code>. This ensures conda is available every time you open a new terminal.</p> </li> <li> <p>Miniconda is now installed. We can now remove the installer file</p> </li> </ol> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">rm </span>Miniconda3-latest-Linux-x86_64.sh
+</code></pre></div></div> <p>You can now create new environments via:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda create <span class="nt">-n</span> env-name <span class="nv">python</span><span class="o">=</span>3.10
+</code></pre></div></div> <h2 id="step-6-manage-storage">Step 6: Manage storage</h2> <p>Most clusters give your home directory (<code class="language-plaintext highlighter-rouge">~</code>) a limited quota. For example, Sherlock limits <code class="language-plaintext highlighter-rouge">$HOME</code> to just <strong>15 GB</strong>. When you use packages like <a href="https://huggingface.co/docs/transformers/" rel="external nofollow noopener" target="_blank">HuggingFace Transformers</a>, <a href="https://pytorch.org/" rel="external nofollow noopener" target="_blank">PyTorch</a>, or <a href="https://wandb.ai/" rel="external nofollow noopener" target="_blank">Weights &amp; Biases</a>, model weights and cache files are automatically downloaded to subdirectories of your home directory (e.g., <code class="language-plaintext highlighter-rouge">~/.cache/huggingface/</code>, <code class="language-plaintext highlighter-rouge">~/.cache/torch/</code>, <code class="language-plaintext highlighter-rouge">~/.cache/wandb/</code>), which can fill up your quota quickly.</p> <p>Clusters typically offer multiple storage locations, and it’s important to understand what your options are so you can place files accordingly.</p> <p>On Sherlock, the main options are:</p> <table> <thead> <tr> <th>Filesystem</th> <th>Path</th> <th>Speed</th> <th>Quota</th> </tr> </thead> <tbody> <tr> <td> <strong>Home</strong> (<code class="language-plaintext highlighter-rouge">$HOME</code>)</td> <td><code class="language-plaintext highlighter-rouge">/home/users/$USER/</code></td> <td>Fast</td> <td>15 GB</td> </tr> <tr> <td> <strong>Group Home</strong> (<code class="language-plaintext highlighter-rouge">$GROUP_HOME</code>)</td> <td><code class="language-plaintext highlighter-rouge">/home/groups/&lt;PI&gt;/</code></td> <td>Fast</td> <td>1 TB shared</td> </tr> <tr> <td> <strong>Scratch</strong> (<code class="language-plaintext highlighter-rouge">$SCRATCH</code>)</td> <td><code class="language-plaintext highlighter-rouge">/scratch/users/$USER/</code></td> <td>Fast</td> <td>Large (auto-purges after 90 days if you don’t use the file)</td> </tr> <tr> <td> <strong>Oak</strong> (<code class="language-plaintext highlighter-rouge">$OAK</code>)</td> <td><code class="language-plaintext highlighter-rouge">/oak/stanford/groups/&lt;PI&gt;/</code></td> <td>Slow</td> <td>Large</td> </tr> </tbody> </table> <p>Your cluster will have its own storage layout; check with your admin or docs. The key principle is the same: if you have limited storage, keep large, growing directories off of <code class="language-plaintext highlighter-rouge">$HOME</code>. Shared storage locations usually have a convention for how users organize their directories. Take a look at what others on your cluster have done (e.g., <code class="language-plaintext highlighter-rouge">ls $GROUP_HOME</code>) and create a directory for yourself following the same pattern. A common convention is to use your username (e.g., <code class="language-plaintext highlighter-rouge">mkdir $GROUP_HOME/$USER</code>).</p> <h3 id="set-up-symlinks-for-cache-locations">Set up Symlinks for Cache locations</h3> <p>A <strong>symlink</strong> (symbolic link) is a special file that acts as a pointer to another location on the filesystem. To any program reading or writing files, a symlink looks and behaves exactly like a normal directory; the difference is that the actual data lives elsewhere. This means you can keep <code class="language-plaintext highlighter-rouge">~/.cache</code> in your home directory as far as any tool is concerned, but the files are really stored on a larger filesystem:</p> <p>Here are some common examples of folders I’d recommend setting up symlink locations for:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ln -s &lt;target-on-larger-storage&gt; &lt;path-in-home&gt;</span>
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nv">$GROUP_HOME</span>/viggiano/.cache ~/.cache
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nv">$GROUP_HOME</span>/viggiano/.local ~/.local
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nv">$GROUP_HOME</span>/viggiano/.conda ~/.conda
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nv">$GROUP_HOME</span>/viggiano/.cursor-server ~/.cursor-server
+<span class="nb">ln</span> <span class="nt">-s</span> <span class="nv">$GROUP_HOME</span>/viggiano/.vscode-server ~/.vscode-server
+</code></pre></div></div> <p>You can verify the symlinks are set up correctly by running <code class="language-plaintext highlighter-rouge">ls -al ~</code>. You should see something like this:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-al</span> ~
+lrwxrwxrwx  1 viggiano viggiano   35 Mar 29 12:00 .cache -&gt; /home/groups/mylab/viggiano/.cache
+lrwxrwxrwx  1 viggiano viggiano   35 Mar 29 12:00 .local -&gt; /home/groups/mylab/viggiano/.local
+lrwxrwxrwx  1 viggiano viggiano   35 Mar 29 12:00 .conda -&gt; /home/groups/mylab/viggiano/.conda
+lrwxrwxrwx  1 viggiano viggiano   42 Mar 29 12:00 .cursor-server -&gt; /home/groups/mylab/viggiano/.cursor-server
+lrwxrwxrwx  1 viggiano viggiano   42 Mar 29 12:00 .vscode-server -&gt; /home/groups/mylab/viggiano/.vscode-server
+</code></pre></div></div> <p>The <code class="language-plaintext highlighter-rouge">-&gt;</code> arrow tells you each directory is a symlink pointing to its target on the larger filesystem.</p> <h3 id="redirect-where-conda-environments-are-saved">Redirect where conda environments are saved</h3> <p>Conda environments can also get pretty big quickly. You can tell conda to store them on a larger filesystem by default:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda config <span class="nt">--prepend</span> envs_dirs /home/groups/&lt;PI&gt;/viggiano/envs
+</code></pre></div></div> <p>Now <code class="language-plaintext highlighter-rouge">conda create -n my-env python=3.10</code> will create the environment on the larger filesystem, and <code class="language-plaintext highlighter-rouge">conda activate my-env</code> still works by name from anywhere.</p> <details> <summary>Other useful conda config commands</summary> <ul> <li>Show all configured environment directories: <ul> <li><code class="language-plaintext highlighter-rouge">conda config --show envs_dirs</code></li> </ul> </li> <li>Add a directory to the <em>end</em> of the list (lowest priority): <ul> <li><code class="language-plaintext highlighter-rouge">conda config --append envs_dirs /path/to/your/new/envs/location</code></li> </ul> </li> <li>Remove a specific directory from the list: <ul> <li><code class="language-plaintext highlighter-rouge">conda config --remove envs_dirs /path/to/remove</code></li> </ul> </li> </ul> </details> <h2 id="step-7-customize-shell-functionality">Step 7: Customize shell functionality</h2> <p>One of the most powerful things I have started doing is writing custom shell functions that automate repetitive tasks. Your <code class="language-plaintext highlighter-rouge">~/.bashrc</code> (or <code class="language-plaintext highlighter-rouge">~/.zshrc</code>) runs every time you open a new shell session, making it the perfect place to add aliases, helper functions, and environment variables that make your life easier on the cluster. Here are a few I’ve found really useful.</p> <h3 id="bashrc-functions"> <code class="language-plaintext highlighter-rouge">.bashrc</code> functions</h3> <h4 id="create_workspace_file---generate-a-vs-codecursor-workspace-file-for-the-current-directory"> <code class="language-plaintext highlighter-rouge">create_workspace_file</code> - Generate a VS Code/Cursor workspace file for the current directory</h4> <p>Setting up workspace files for VS Code/Cursor by hand is tedious. This function generates a <code class="language-plaintext highlighter-rouge">.code-workspace</code> file for your current directory and saves it to <code class="language-plaintext highlighter-rouge">~/workspaces</code>. You can then open it directly from the terminal with <code class="language-plaintext highlighter-rouge">cursor ~/workspaces/my-project.code-workspace</code>.</p> <details> <summary>Show function</summary> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>create_workspace_file<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">current_dir</span><span class="o">=</span><span class="si">$(</span><span class="nb">basename</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span><span class="si">)</span>
+    <span class="nb">local </span><span class="nv">current_path</span><span class="o">=</span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span>
+    <span class="nb">local </span><span class="nv">target_dir</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/workspaces"</span>
+    <span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$target_dir</span><span class="s2">"</span>
+    <span class="nb">local </span><span class="nv">workspace_file</span><span class="o">=</span><span class="s2">"</span><span class="nv">$target_dir</span><span class="s2">/</span><span class="nv">$current_dir</span><span class="s2">.code-workspace"</span>
+    <span class="nb">cat</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$workspace_file</span><span class="s2">"</span> <span class="o">&lt;&lt;</span><span class="no">EOL</span><span class="sh">
+{
+    "folders": [
+        {
+            "path": "</span><span class="nv">$current_path</span><span class="sh">"
+        }
+    ],
+    "settings": {}
+}
+</span><span class="no">EOL
+</span>    <span class="nb">echo</span> <span class="s2">"Workspace file created at: </span><span class="nv">$workspace_file</span><span class="s2">"</span>
+<span class="o">}</span>
+</code></pre></div> </div> </details> <h4 id="gpu-users---see-who-is-using-which-gpus"> <code class="language-plaintext highlighter-rouge">gpu-users</code> - See who is using which GPUs</h4> <p>On clusters that don’t use SLURM for GPU allocation (where users share GPUs directly), it can be helpful to see which users are running processes on which GPUs before you launch a job. This function displays which users currently have processes using the various visible GPUs.</p> <details> <summary>Show function</summary> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>gpu-users<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"GPU</span><span class="se">\t</span><span class="s2">PID</span><span class="se">\t</span><span class="s2">USER</span><span class="se">\t</span><span class="s2">PROCESS"</span>
+    nvidia-smi <span class="nt">--query-compute-apps</span><span class="o">=</span>gpu_uuid,pid,process_name <span class="nt">--format</span><span class="o">=</span>csv,noheader,nounits |
+    <span class="k">while </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">','</span> <span class="nb">read</span> <span class="nt">-r</span> gpu_uuid pid pname<span class="p">;</span> <span class="k">do
+        </span><span class="nv">pid</span><span class="o">=</span><span class="si">$(</span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$pid</span><span class="s2">"</span> | <span class="nb">tr</span> <span class="nt">-d</span> <span class="s1">'[:space:]'</span><span class="si">)</span>
+        <span class="o">[</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$pid</span><span class="s2">"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="k">continue
+        if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$pid</span><span class="s2">"</span> <span class="o">=</span>~ ^[0-9]+<span class="nv">$ </span><span class="o">]]</span><span class="p">;</span> <span class="k">then
+            </span><span class="nv">user</span><span class="o">=</span><span class="si">$(</span>ps <span class="nt">-o</span> <span class="nv">user</span><span class="o">=</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$pid</span><span class="s2">"</span> 2&gt;/dev/null<span class="si">)</span>
+            <span class="k">if</span> <span class="o">[</span> <span class="nt">-n</span> <span class="s2">"</span><span class="nv">$user</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+                </span><span class="nv">gpu_id</span><span class="o">=</span><span class="si">$(</span>nvidia-smi <span class="nt">--query-gpu</span><span class="o">=</span>gpu_uuid,index <span class="nt">--format</span><span class="o">=</span>csv,noheader | <span class="nb">grep</span> <span class="s2">"</span><span class="nv">$gpu_uuid</span><span class="s2">"</span> | <span class="nb">awk</span> <span class="nt">-F</span><span class="s1">','</span> <span class="s1">'{print $2}'</span> | xargs<span class="si">)</span>
+                <span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="nv">$gpu_id</span><span class="se">\t</span><span class="nv">$pid</span><span class="se">\t</span><span class="nv">$user</span><span class="se">\t</span><span class="nv">$pname</span><span class="s2">"</span>
+            <span class="k">fi
+        fi
+    done</span> | <span class="nb">sort</span> <span class="nt">-k1</span>,1n
+<span class="o">}</span>
+</code></pre></div> </div> </details> <h3 id="tmux">tmux</h3> <p><a href="https://github.com/tmux/tmux" rel="external nofollow noopener" target="_blank">tmux</a> is a terminal multiplexer that lets you run persistent sessions on the cluster. If your SSH connection drops, your tmux session keeps running and you can reattach to it. I’d recommend adding the following to <code class="language-plaintext highlighter-rouge">~/.tmux.conf</code> to enable mouse scrolling and selection:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Enable mouse support (allows clicking and dragging to select)</span>
+<span class="nb">set</span> <span class="nt">-g</span> mouse on
+</code></pre></div></div> <details> <summary>Basic tmux commands</summary> <table> <thead> <tr> <th>Command</th> <th>Description</th> </tr> </thead> <tbody> <tr> <td><code class="language-plaintext highlighter-rouge">tmux new -s mysession</code></td> <td>Create a new named session</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">tmux attach -t mysession</code></td> <td>Reattach to an existing session</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">tmux ls</code></td> <td>List all active sessions</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">Ctrl+b d</code></td> <td>Detach from current session (session keeps running)</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">Ctrl+b c</code></td> <td>Create a new window within a session</td> </tr> <tr> <td> <code class="language-plaintext highlighter-rouge">Ctrl+b n</code> / <code class="language-plaintext highlighter-rouge">Ctrl+b p</code> </td> <td>Switch to next / previous window</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">Ctrl+b %</code></td> <td>Split pane vertically</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">Ctrl+b "</code></td> <td>Split pane horizontally</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">Ctrl+b arrow keys</code></td> <td>Switch between panes</td> </tr> <tr> <td><code class="language-plaintext highlighter-rouge">exit</code></td> <td>Close the current pane or window</td> </tr> </tbody> </table> <p>A typical workflow: start a tmux session, kick off a long-running training job, detach with <code class="language-plaintext highlighter-rouge">Ctrl+b d</code>, close your laptop, and reattach later with <code class="language-plaintext highlighter-rouge">tmux attach -t mysession</code> to check on progress.</p> </details> <h3 id="launch-scripts-advanced">Launch scripts (Advanced)</h3> <p>Once you’re comfortable with tmux, a natural next step is writing small launch scripts that combine tmux with resource allocation. On clusters that use SLURM, I’ll often write a script that requests GPU resources and drops me into a tmux session in one command. Here’s an example:</p> <details> <summary>Example: GPU launch script</summary> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="c">#!/usr/bin/env bash</span>
+<span class="c"># Usage: launch_gpu [NUM_GPUS] [PARTITION]</span>
+<span class="c"># Example: launch_gpu 2 gpu</span>
+
+<span class="nv">NUM_GPUS</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">1</span><span class="k">:-</span><span class="nv">1</span><span class="k">}</span><span class="s2">"</span>
+<span class="nv">PARTITION</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">2</span><span class="k">:-</span><span class="nv">gpu</span><span class="k">}</span><span class="s2">"</span>
+
+<span class="c"># Auto-name sessions: gpu_session_1, gpu_session_2, etc.</span>
+<span class="nv">SESSION_COUNT</span><span class="o">=</span><span class="si">$(</span>tmux list-sessions 2&gt;/dev/null | <span class="nb">wc</span> <span class="nt">-l</span><span class="si">)</span>
+<span class="nv">SESSION_NAME</span><span class="o">=</span><span class="s2">"gpu_session_</span><span class="k">$((</span>SESSION_COUNT <span class="o">+</span> <span class="m">1</span><span class="k">))</span><span class="s2">"</span>
+
+<span class="c"># Create a tmux session and request an interactive SLURM job inside it</span>
+tmux new-session <span class="nt">-d</span> <span class="nt">-s</span> <span class="s2">"</span><span class="nv">$SESSION_NAME</span><span class="s2">"</span>
+tmux send-keys <span class="nt">-t</span> <span class="s2">"</span><span class="nv">$SESSION_NAME</span><span class="s2">"</span> <span class="s2">"srun --partition=</span><span class="nv">$PARTITION</span><span class="s2"> --gpus=</span><span class="nv">$NUM_GPUS</span><span class="s2"> --cpus-per-task=8 --mem=32G --time=8:00:00 --pty bash"</span> C-m
+
+<span class="nb">echo</span> <span class="s2">"Launched session: </span><span class="nv">$SESSION_NAME</span><span class="s2">"</span>
+tmux attach <span class="nt">-t</span> <span class="s2">"</span><span class="nv">$SESSION_NAME</span><span class="s2">"</span>
+</code></pre></div> </div> </details> <p>This script auto-names each session, requests an interactive GPU job via SLURM, and attaches you to the tmux session. Adjust the partition name, memory, CPU, and time limits to match your cluster. Save it somewhere on your PATH (e.g., <code class="language-plaintext highlighter-rouge">~/.local/bin/launch_gpu</code>) and make it executable with <code class="language-plaintext highlighter-rouge">chmod +x</code>.</p> <p><small><strong>Heads up:</strong> The resource values above (GPUs, CPUs, memory, time) are just defaults. Before running something like this, talk to your advisor or ask Claude Code about what resources are appropriate for your specific workflow and cluster. Requesting too much wastes shared resources; requesting too little and your job will fail or run slowly.</small></p> <h2 id="step-8-git-and-github-setup">Step 8: Git and GitHub setup</h2> <p>You’ll almost certainly want to push and pull code on the cluster. This requires authenticating with GitHub from the cluster, which is a separate step from the SSH key setup in Step 3 (that was for connecting <em>to</em> the cluster; this is for connecting <em>from</em> the cluster to GitHub).</p> <h3 id="install-the-github-cli">Install the GitHub CLI</h3> <p>The <a href="https://cli.github.com/" rel="external nofollow noopener" target="_blank">GitHub CLI</a> (<code class="language-plaintext highlighter-rouge">gh</code>) is one of my favorite tools. It lets you interact with GitHub entirely from the terminal: create PRs, browse repos, review issues, manage workflows, and more. Most importantly for our purposes, it handles git authentication seamlessly so you never have to manually deal with tokens or credentials when pushing and pulling.</p> <p>The easiest way to install is with <code class="language-plaintext highlighter-rouge">brew install gh</code>, but you usually don’t have permission to use <code class="language-plaintext highlighter-rouge">brew</code> on a cluster. I’d recommend downloading the binary directly and placing it on your PATH. This way <code class="language-plaintext highlighter-rouge">gh</code> is always available regardless of which conda environment is active:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check https://github.com/cli/cli/releases for the latest version</span>
+wget https://github.com/cli/cli/releases/download/v2.89.0/gh_2.89.0_linux_amd64.tar.gz
+<span class="nb">tar </span>xzf gh_<span class="k">*</span>.tar.gz
+
+<span class="c"># Move the binary somewhere on your PATH</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> ~/.local/bin
+<span class="nb">cp </span>gh_<span class="k">*</span>/bin/gh ~/.local/bin/
+
+<span class="c"># Clean up</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> gh_<span class="k">*</span>
+</code></pre></div></div> <p>Make sure <code class="language-plaintext highlighter-rouge">~/.local/bin</code> is on your PATH by adding this to your <code class="language-plaintext highlighter-rouge">~/.bashrc</code> if it isn’t already:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/.local/bin:</span><span class="nv">$PATH</span><span class="s2">"</span>
+</code></pre></div></div> <details> <summary>Alternative: install via conda</summary> <p>You can also install <code class="language-plaintext highlighter-rouge">gh</code> through conda, but note that it will only be available when that specific environment is active:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>conda activate base
+conda <span class="nb">install </span>gh <span class="nt">--channel</span> conda-forge
+</code></pre></div> </div> </details> <h3 id="authenticate-with-github">Authenticate with GitHub</h3> <p>The <code class="language-plaintext highlighter-rouge">gh</code> CLI can handle authentication for you. Run:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gh auth login
+</code></pre></div></div> <p>Select HTTPS when prompted, then choose “Paste an authentication token” and generate a new token at <a href="https://github.com/settings/tokens" rel="external nofollow noopener" target="_blank">github.com/settings/tokens</a>. Once authenticated, run:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gh auth setup-git
+</code></pre></div></div> <p>This configures git to use <code class="language-plaintext highlighter-rouge">gh</code> as a credential helper, so you won’t be asked for credentials when pushing or pulling.</p> <details> <summary>Alternative: SSH authentication with GitHub</summary> <p>The HTTPS approach above is all you need, but if you prefer using <code class="language-plaintext highlighter-rouge">git@github.com:...</code> SSH URLs instead, you can add your SSH key to GitHub. Generate one on the cluster if you don’t have one already:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"viggiano@stanford.edu"</span>
+</code></pre></div> </div> <p>Copy your public key:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> ~/.ssh/id_ed25519.pub
+</code></pre></div> </div> <p>Then add it at <a href="https://github.com/settings/keys" rel="external nofollow noopener" target="_blank">github.com/settings/keys</a> by clicking “New SSH Key” and pasting the contents. Test the connection:</p> <div class="language-bash highlighter-rouge"> <div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-T</span> git@github.com
+</code></pre></div> </div> </details> <h3 id="configure-git">Configure git</h3> <p>Set your identity and preferences. Here are some I like to set:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> user.email <span class="s2">"viggiano@stanford.edu"</span>
+git config <span class="nt">--global</span> user.name <span class="s2">"Ben Viggiano"</span>
+git config <span class="nt">--global</span> init.defaultBranch main
+git config <span class="nt">--global</span> core.editor <span class="s2">"vim"</span>
+</code></pre></div></div> <h3 id="set-up-a-global-gitignore">Set up a global .gitignore</h3> <p>A global gitignore lets you exclude files across all repos without adding them to each project’s <code class="language-plaintext highlighter-rouge">.gitignore</code>. Create the file:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vim ~/.gitignore_global
+</code></pre></div></div> <p>Example <code class="language-plaintext highlighter-rouge">~/.gitignore_global</code>:</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dev_notebook.ipynb
+</code></pre></div></div> <p>Then tell git to use it:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config <span class="nt">--global</span> core.excludesfile <span class="s1">'~/.gitignore_global'</span>
+</code></pre></div></div> <h2 id="step-9-authenticate-with-ml-services">Step 9: Authenticate with ML services</h2> <p>If you’re doing ML work, you’ll likely need to authenticate with a few external services to download models or track experiments.</p> <h3 id="huggingface">HuggingFace</h3> <p><a href="https://huggingface.co/" rel="external nofollow noopener" target="_blank">HuggingFace</a> is the largest open-source hub for ML models, datasets, and tools. Many popular models (like <a href="https://huggingface.co/meta-llama" rel="external nofollow noopener" target="_blank">Llama</a>, <a href="https://huggingface.co/mistralai" rel="external nofollow noopener" target="_blank">Mistral</a>, and <a href="https://huggingface.co/google" rel="external nofollow noopener" target="_blank">Gemma</a>) are “gated,” meaning you need to create a HuggingFace account and accept the model’s license on its page before you can download it. Once you’ve done that, you’ll need to authenticate on the cluster.</p> <p>Install the HuggingFace CLI and log in:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-LsSf</span> https://hf.co/cli/install.sh | bash
+hf auth login
+</code></pre></div></div> <p>Alternatively, you can set the token directly in your environment (useful for non-interactive scripts):</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">HF_TOKEN</span><span class="o">=</span>hf_...
+</code></pre></div></div> <p>You can generate a token at <a href="https://huggingface.co/settings/tokens" rel="external nofollow noopener" target="_blank">huggingface.co/settings/tokens</a>. Verify it worked:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>huggingface-cli <span class="nb">whoami</span>
+</code></pre></div></div> <h3 id="weights--biases">Weights &amp; Biases</h3> <p><a href="https://wandb.ai/" rel="external nofollow noopener" target="_blank">Weights &amp; Biases</a> (W&amp;B) is a popular platform for tracking ML experiments. It logs your training metrics, hyperparameters, and outputs to a web dashboard, making it easy to compare runs and share results with collaborators. Install and log in:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>wandb
+wandb login
+</code></pre></div></div> <p>You’ll be prompted for your API key, which you can find at <a href="https://wandb.ai/authorize" rel="external nofollow noopener" target="_blank">wandb.ai/authorize</a>.</p> <h2 id="summary">Summary</h2> <p>That’s it! Here’s a quick recap of everything we covered:</p> <table> <thead> <tr> <th>Step</th> <th>What</th> <th>Why</th> </tr> </thead> <tbody> <tr> <td><a href="#step-0-set-up-a-coding-agent-of-your-choice">0</a></td> <td>Set up a coding agent</td> <td>Helps you through the rest of the steps</td> </tr> <tr> <td><a href="#step-1-test-your-ssh-connection">1</a></td> <td>Test your SSH connection</td> <td>Make sure you can actually reach the cluster</td> </tr> <tr> <td><a href="#step-2-add-the-cluster-to-your-ssh-config">2</a></td> <td>Add cluster to SSH config</td> <td>Connect with a short nickname instead of the full hostname</td> </tr> <tr> <td><a href="#step-3-set-up-ssh-keys">3</a></td> <td>Set up SSH keys</td> <td>Skip password entry on every connection</td> </tr> <tr> <td><a href="#step-4-set-up-claude-code">4</a></td> <td>Set up Claude Code</td> <td>AI assistance directly on the cluster</td> </tr> <tr> <td><a href="#step-5-install-miniconda">5</a></td> <td>Install Miniconda</td> <td>Manage Python environments without root access</td> </tr> <tr> <td><a href="#step-6-manage-storage">6</a></td> <td>Manage storage</td> <td>Keep large files off your limited home directory</td> </tr> <tr> <td><a href="#step-7-customize-shell-functionality">7</a></td> <td>Customize your shell</td> <td>Automate repetitive tasks with shell functions</td> </tr> <tr> <td><a href="#step-8-git-and-github-setup">8</a></td> <td>Git and GitHub setup</td> <td>Push and pull code from the cluster</td> </tr> <tr> <td><a href="#step-9-authenticate-with-ml-services">9</a></td> <td>Authenticate with ML services</td> <td>Download gated models and track experiments</td> </tr> </tbody> </table> <p>If you have suggestions for improving this guide, please <a href="https://github.com/bviggiano/bviggiano.github.io/issues/new" rel="external nofollow noopener" target="_blank">open an issue</a>!</p> </div> </article> <div class="kudos-container"> <button class="kudos-button" id="kudos-btn"> <span class="kudos-count" id="kudos-count">0</span> <span class="kudos-text">kudos</span> </button> <span class="kudos-label">Click or hold to give kudos!</span> </div> <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+      import { getDatabase, ref, get, set, runTransaction } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+      const firebaseConfig = {
+        apiKey: 'AIzaSyCFVn3tg50WMlZEfMlOoPwfIW7zJTrHUS0',
+        authDomain: 'personal-website-b8d26.firebaseapp.com',
+        databaseURL: 'https://personal-website-b8d26-default-rtdb.firebaseio.com',
+        projectId: 'personal-website-b8d26',
+        storageBucket: 'personal-website-b8d26.firebasestorage.app',
+        messagingSenderId: '1018011428128',
+        appId: '1:1018011428128:web:a285f736e98770a283a345',
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const pageId = 'notes-cluster-set-up';
+      const kudosRef = ref(db, 'kudos/' + pageId);
+      const emojis = ['🚀', '👏', '🙏'];
+      let holdInterval = null;
+      let holdTimeout = null;
+      let pendingKudos = 0;
+      let debounceTimeout = null;
+
+      // Load initial count from Firebase
+      get(kudosRef).then((snapshot) => {
+        const count = snapshot.exists() ? snapshot.val() : 0;
+        document.getElementById('kudos-count').textContent = count;
+      });
+
+      function flushKudos() {
+        if (pendingKudos === 0) return;
+        const toAdd = pendingKudos;
+        pendingKudos = 0;
+        runTransaction(kudosRef, (current) => (current || 0) + toAdd);
+      }
+
+      function giveKudos() {
+        const btn = document.getElementById('kudos-btn');
+        const countEl = document.getElementById('kudos-count');
+
+        // Update UI immediately
+        countEl.textContent = parseInt(countEl.textContent) + 1;
+        pendingKudos++;
+
+        // Debounce the Firebase write
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(flushKudos, 500);
+
+        // Create floating emoji
+        const emoji = document.createElement('span');
+        emoji.className = 'kudos-float';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 50 - 25 + 'px';
+        btn.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 700);
+      }
+
+      function startHold() {
+        giveKudos();
+        holdTimeout = setTimeout(() => {
+          holdInterval = setInterval(giveKudos, 400);
+        }, 300);
+      }
+
+      function stopHold() {
+        if (holdTimeout) {
+          clearTimeout(holdTimeout);
+          holdTimeout = null;
+        }
+        if (holdInterval) {
+          clearInterval(holdInterval);
+          holdInterval = null;
+        }
+        flushKudos();
+      }
+
+      const btn = document.getElementById('kudos-btn');
+      btn.addEventListener('mousedown', startHold);
+      btn.addEventListener('mouseup', stopHold);
+      btn.addEventListener('mouseleave', stopHold);
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startHold();
+      });
+      btn.addEventListener('touchend', stopHold);
+    </script> <div class="contribute-notice"> <i class="fa-brands fa-github"></i> <span>Found an issue or want to contribute? <a href="https://github.com/bviggiano/bviggiano.github.io" target="_blank" rel="noopener noreferrer">GitHub issues and PRs are welcome!</a></span> </div> </div> </div> <aside class="graph-panel" id="graph-panel"> <div class="graph-panel-body" id="graph-body"> <svg id="knowledge-graph"></svg> </div> </aside> <script>
+    // Immediately position graph panel to prevent flash between page transitions
+    (function () {
+      var saved = sessionStorage.getItem('graph-panel-top');
+      if (saved) {
+        document.documentElement.style.setProperty('--graph-panel-top', saved);
+        document.getElementById('graph-panel').classList.add('positioned');
+      }
+    })();
+  </script> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 Ben Viggiano. Built on <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a>. My modifications are available <a href="https://github.com/bviggiano/bviggiano.github.io" rel="external nofollow noopener" target="_blank">here</a>. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?a0db7e5d5c70cc3252b3138b0c91dcaf" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/js/zoom.js?d20c26ffd7f755fc839699ad57dddc06"></script> <script defer src="/assets/js/bootstrap-toc.min.js?c82ff4de8b0955d6ff14f5b05eed7eb6"></script> <script defer src="https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/d3.min.js" integrity="sha256-1rA678n2xEx7x4cTZ5x4wpUCj6kUMZEZ5cxLSVSFWxw=" crossorigin="anonymous"></script> <script defer src="/assets/js/graph.js?c592df90875b5b683e8d1cb54038a23c" type="text/javascript"></script> <script defer src="/assets/js/toc-scroll.js?7e317dca5a8c8fb671aa24547f626190" type="text/javascript"></script> <script src="/assets/js/no_defer.js?2781658a0a2b13ed609542042a859126"></script> <script defer src="/assets/js/common.js?c81d5ac97f131ffd18be26d6a1edd3fb"></script> <script defer src="/assets/js/copy_code.js?c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/js/mathjax-setup.js?a5bb4e6a542c546dd929b24b8b236dfd"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6" crossorigin="anonymous"></script> <script async src="https://www.googletagmanager.com/gtag/js?id=G-JNHTLQGV80"></script> <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-JNHTLQGV80');
+  </script> <script defer src="/assets/js/google-analytics-setup.js"></script> <script defer src="/assets/js/progress-bar.js?2f30e0e6801ea8f5036fa66e1ab0a71a" type="text/javascript"></script> <script src="/assets/js/vanilla-back-to-top.min.js?f40d453793ff4f64e238e420181a1d17"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/js/search/ninja-keys.min.js?a3446f084dcaecc5f75aa1757d087dcf"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/js/search-setup.js?6c304f7b1992d4b60f7a07956e52f04a"></script> <script src="/assets/js/search-data.js"></script> <script src="/assets/js/shortcut-key.js?cc89ebc5dca67852bc1ddcac17083e88"></script> <script>
+      window.addEventListener('load', function () {
+        document.getElementById('main-content').classList.add('loaded');
+      });
+    </script> </body> </html>

@@ -44,22 +44,11 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/teaching/";
           },
-        },{id: "post-test-post",
-        
-          title: "Test Post",
-        
-        description: "Test blog post",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/blog/test/";
-          
-        },
-      },{id: "notes-test-note",
-          title: 'Test Note!',
-          description: "This is a test note",
+        },{id: "notes-how-to-set-up-a-new-computational-cluster",
+          title: 'How to set up a new computational cluster',
+          description: "A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.",
           section: "Notes",handler: () => {
-              window.location.href = "/notes/test/";
+              window.location.href = "/notes/cluster-set-up/";
             },},{id: "projects-aav2-capsid-viability-dataset",
           title: 'AAV2 Capsid Viability Dataset',
           description: "Preprocessed AAV2 capsid sequences with viability measurements for ML benchmarking",
