@@ -562,4 +562,8 @@ wandb login
 
 You'll be prompted for your API key, which you can find at [wandb.ai/authorize](https://wandb.ai/authorize).
 
+## Summary
+
 That's it! Thanks for reading. If you have suggestions for improving this guide, please [open an issue](https://github.com/bviggiano/bviggiano.github.io/issues/new)!
+
+Thanks to [Jake Silberg](https://jsilbergds.github.io/) for reviewing an early version of this post and giving feedback.
