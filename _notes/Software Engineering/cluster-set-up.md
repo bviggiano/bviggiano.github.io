@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Getting set up on that new cluster
+title: How to set up a new computational cluster
 date: 2026-03-28
 description: A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.
 tags:
@@ -151,7 +151,7 @@ Run `claude` to launch it and follow the authentication prompts. Once set up, yo
 I highly recommend helping Claude get familiar with your new cluster by giving it links to the cluster's documentation. Claude Code has a memory file called `CLAUDE.md` that it reads at the start of every session. You can ask it to save useful cluster details there so it remembers them for future conversations:
 
 ```text
-Hello Claude! You are currently being run on <cluster-name-here>. Please take a look at this documentation website <url-here> to get familiar with how the cluster is set up. Add a summary of what you find to your global CLAUDE.md on this system.
+Hello Claude! You are currently being run on the <cluster-name-here> cluster. Please take a look at this documentation website <url-here> to get familiar with how the cluster is set up. Add a summary of what you find to your global CLAUDE.md on this system.
 ```
 
 ## Step 5: Install Miniconda
