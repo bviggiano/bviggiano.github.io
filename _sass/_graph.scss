@@ -187,12 +187,12 @@ footer {
   #main-content.container {
     // Match the left position of the centered navbar container
     margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
-    margin-right: calc(#{$graph-panel-width} + 2px);
+    margin-right: ($graph-panel-width + 2px);
   }
 
   footer .container {
     margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
-    margin-right: calc(#{$graph-panel-width} + 2px);
+    margin-right: ($graph-panel-width + 2px);
   }
 }
 

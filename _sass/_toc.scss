@@ -95,7 +95,7 @@ $toc-indent: 16px;
 
   // h3 items: indented with branch from parent trunk
   &.toc-h3 {
-    padding-left: calc(#{$toc-indent} + #{$toc-indent});
+    padding-left: ($toc-indent * 2);
     position: relative;
     max-height: 40px;
     opacity: 1;
@@ -116,7 +116,7 @@ $toc-indent: 16px;
     &::after {
       content: "";
       position: absolute;
-      left: calc(4px + #{$toc-indent});
+      left: (4px + $toc-indent);
       top: 0;
       bottom: 0;
       width: 2px;
@@ -128,7 +128,7 @@ $toc-indent: 16px;
     .auto-toc-link::before {
       content: "";
       position: absolute;
-      left: calc(4px + #{$toc-indent});
+      left: (4px + $toc-indent);
       top: 50%;
       width: 8px;
       height: 2px;
