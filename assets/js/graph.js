@@ -528,6 +528,53 @@ document.addEventListener("DOMContentLoaded", function () {
     var driftStartTime = null;
     var driftDelay = 2000; // ms before drift begins
     var driftEaseIn = 3000; // ms to ease in to full drift
+    var draggedNode = null;
+
+    // Soft collision: applies gentle spring-like repulsion each frame.
+    // The dragged node is treated as immovable so others yield to it.
+    var collisionDist = 60;
+    var collisionStrength = 0.15; // fraction of overlap corrected per frame
+    function resolveCollisions() {
+      for (var a = 0; a < data.nodes.length; a++) {
+        for (var b = a + 1; b < data.nodes.length; b++) {
+          var na = data.nodes[a],
+            nb = data.nodes[b];
+          var dx = nb.x - na.x,
+            dy = nb.y - na.y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < collisionDist && dist > 0.1) {
+            var push = (collisionDist - dist) * collisionStrength;
+            var nx = dx / dist,
+              ny = dy / dist;
+            var aFixed = na === draggedNode;
+            var bFixed = nb === draggedNode;
+            if (aFixed) {
+              // Only push b away
+              nb.x += nx * push;
+              nb.y += ny * push;
+              nb._baseX += nx * push;
+              nb._baseY += ny * push;
+            } else if (bFixed) {
+              // Only push a away
+              na.x -= nx * push;
+              na.y -= ny * push;
+              na._baseX -= nx * push;
+              na._baseY -= ny * push;
+            } else {
+              var halfPush = push / 2;
+              na.x -= nx * halfPush;
+              na.y -= ny * halfPush;
+              na._baseX -= nx * halfPush;
+              na._baseY -= ny * halfPush;
+              nb.x += nx * halfPush;
+              nb.y += ny * halfPush;
+              nb._baseX += nx * halfPush;
+              nb._baseY += ny * halfPush;
+            }
+          }
+        }
+      }
+    }
 
     function ambientDrift(timestamp) {
       if (driftStartTime === null) driftStartTime = timestamp;
@@ -541,11 +588,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (intensity > 0) {
         data.nodes.forEach(function (n) {
+          if (n === draggedNode) return;
           n.x = n._baseX + Math.sin(elapsed * n._driftSpeedX + n._driftPhaseX) * n._driftRadius * intensity;
           n.y = n._baseY + Math.cos(elapsed * n._driftSpeedY + n._driftPhaseY) * n._driftRadius * intensity;
         });
-        ticked();
       }
+      resolveCollisions();
+      ticked();
       requestAnimationFrame(ambientDrift);
     }
     requestAnimationFrame(ambientDrift);
@@ -553,6 +602,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function dragstarted(event) {
       clearTimeout(resetTimer);
       if (!event.active) simulation.alphaTarget(0.1).restart();
+      draggedNode = event.subject;
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     }
@@ -560,12 +610,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function dragged(event) {
       event.subject.fx = event.x;
       event.subject.fy = event.y;
+      event.subject.x = event.x;
+      event.subject.y = event.y;
     }
 
     function dragended(event) {
       if (!event.active) simulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
+      // Update base position so drift orbits around the new location
+      event.subject._baseX = event.subject.x;
+      event.subject._baseY = event.subject.y;
+      draggedNode = null;
       scheduleReset();
     }
   }
@@ -573,12 +629,32 @@ document.addEventListener("DOMContentLoaded", function () {
   function resizeGraph() {
     var container = document.getElementById("graph-body");
     var svg = d3.select("#knowledge-graph");
-    var width = container.clientWidth;
-    var height = container.clientHeight;
-    svg.attr("viewBox", [0, 0, width, height]);
+    var isMobileNow = window.innerWidth < 768;
+    var newGraphPanelWidth = isMobileNow ? container.clientWidth : 280;
+    var newWidth = isMobileNow ? container.clientWidth : window.innerWidth;
+    var newHeight = container.clientHeight;
+    svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+
+    // Update panel bounds used by clamping
+    panelLeft = newWidth - newGraphPanelWidth;
+    panelRight = newWidth;
+    panelBottom = newHeight - footerHeight;
+    centerX = isMobileNow ? newWidth / 2 : newWidth - newGraphPanelWidth / 2;
+    centerY = newHeight / 2;
+
+    // Update zoom rect
+    zoomRect.attr("x", panelLeft).attr("width", newGraphPanelWidth).attr("height", newHeight);
+
     if (simulation) {
-      simulation.force("x", d3.forceX(width - 140).strength(0.02));
-      simulation.force("y", d3.forceY(height / 2).strength(0.02));
+      simulation.force("x", d3.forceX(centerX).strength(0.02));
+      simulation.force("y", d3.forceY(centerY).strength(0.02));
+
+      // Update base positions to recenter
+      data.nodes.forEach(function (n) {
+        n._baseX = n.x;
+        n._baseY = n.y;
+      });
+
       simulation.alpha(0.3).restart();
     }
   }

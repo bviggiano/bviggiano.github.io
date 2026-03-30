@@ -36,14 +36,10 @@
             </div>
           </div>
         {% else %}
-          <div class="row">
-            <!-- sidebar, which will move to the top on a small screen -->
-            <div class="col-sm-3">
-              <nav id="toc-sidebar" class="sticky-top"></nav>
-            </div>
-            <!-- main content area -->
-            <div class="col-sm-9">{{ content }}</div>
-          </div>
+          <nav id="toc-sidebar"></nav>
+          <button class="toc-mobile-tab" id="toc-mobile-tab" aria-label="Toggle table of contents"></button>
+          <div class="toc-mobile-overlay" id="toc-mobile-overlay"></div>
+          {{ content }}
         {% endif %}
       {% else %}
         {{ content }}

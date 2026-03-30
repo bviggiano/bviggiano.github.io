@@ -34,6 +34,23 @@ $toc-indent: 16px;
   padding: 0;
   position: relative;
 
+  // Page title at the top, no indentation or tree lines
+  &.toc-title {
+    padding-left: 0;
+    margin-bottom: 6px;
+
+    .auto-toc-link {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--global-text-color-light);
+      transition: color 0.2s;
+
+      &.active {
+        color: $toc-active-color;
+      }
+    }
+  }
+
   // Vertical trunk line for h2 items
   &.toc-h2 {
     padding-left: $toc-indent;
@@ -47,6 +64,7 @@ $toc-indent: 16px;
       bottom: 0;
       width: 2px;
       background: $toc-line-color;
+      transition: background 0.4s ease;
     }
 
     // Remove line below the last h2 group
@@ -63,6 +81,15 @@ $toc-indent: 16px;
       width: 8px;
       height: 2px;
       background: $toc-line-color;
+      transition: background 0.4s ease;
+    }
+
+    &.active::before {
+      background: $toc-active-color;
+    }
+
+    &.active::after {
+      background: $toc-active-color;
     }
   }
 
@@ -70,6 +97,8 @@ $toc-indent: 16px;
   &.toc-h3 {
     padding-left: calc(#{$toc-indent} + #{$toc-indent});
     position: relative;
+    max-height: 40px;
+    opacity: 1;
 
     // Vertical line continuing from parent h2 trunk
     &::before {
@@ -80,7 +109,7 @@ $toc-indent: 16px;
       bottom: 0;
       width: 2px;
       background: $toc-line-color;
-      transition: background 0.2s;
+      transition: background 0.4s ease;
     }
 
     // Secondary vertical line for h3 grouping
@@ -92,7 +121,19 @@ $toc-indent: 16px;
       bottom: 0;
       width: 2px;
       background: $toc-line-color;
-      transition: background 0.2s;
+      transition: background 0.4s ease;
+    }
+
+    // Horizontal branch from secondary trunk to text
+    .auto-toc-link::before {
+      content: "";
+      position: absolute;
+      left: calc(4px + #{$toc-indent});
+      top: 50%;
+      width: 8px;
+      height: 2px;
+      background: $toc-line-color;
+      transition: background 0.4s ease;
     }
 
     &.active::before {
@@ -100,6 +141,10 @@ $toc-indent: 16px;
     }
 
     &.active::after {
+      background: $toc-active-color;
+    }
+
+    &.active .auto-toc-link::before {
       background: $toc-active-color;
     }
   }
@@ -115,17 +160,6 @@ $toc-indent: 16px;
   }
   &.toc-h3:last-child::after {
     bottom: 50%;
-  }
-
-  // Active state for h2 items: glow the tree lines
-  &.toc-h2.active {
-    &::before {
-      background: $toc-active-color;
-    }
-
-    &::after {
-      background: $toc-active-color;
-    }
   }
 }
 
