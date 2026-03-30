@@ -242,21 +242,13 @@ ul.task-list input[type="checkbox"] {
 }
 
 // Page fade-in on navigation
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .container[role="main"] {
   opacity: 0;
+  transition: opacity 0.4s ease-out;
 }
 
 .container[role="main"].loaded {
-  animation: fadeIn 0.4s ease-out forwards;
+  opacity: 1;
 }
 
 // Navbar customization
@@ -2001,6 +1993,13 @@ figure.cover {
   right: 0;
   top: 0;
   z-index: 20;
+
+  @media (max-width: 768px) {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 4px;
+  }
 }
 
 .post-header {

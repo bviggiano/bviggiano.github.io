@@ -20,7 +20,13 @@ There are a few important things to keep in mind when reading this:
 
 ## Step 0: Set up a coding agent of your choice
 
-Before we do anything with the cluster, the number one piece of advice I can give is _use a coding agent_. They are amazingly helpful and can likely do a lot of the steps in this document for you if you give them this note as an input. My personal favorite is [Claude Code](https://claude.ai/code)! I would set this up on your local machine before we even get started. We'll also set it up on the cluster itself in [Step 4](#step-4-set-up-claude-code).
+Before we do anything with the cluster, the number one piece of advice I can give is _use a coding agent_. They are amazingly helpful and can likely do a lot of the steps in this document for you if you give them this note as an input. My personal favorite is [Claude Code](https://claude.ai/code), Anthropic's CLI tool for working with Claude directly in the terminal. To get started:
+
+1. Head to [claude.ai](https://claude.ai) and create an account if you don't have one already.
+2. Subscribe to a [Pro or Max plan](https://claude.ai/upgrade). This is orders of magnitude cheaper than paying per-token through the API, and it gives you generous Claude Code usage. (You _can_ also use an [API key](https://console.anthropic.com/) if you prefer, but the subscription is the way to go for most people.)
+3. Install Claude Code on your local machine by running `curl -fsSL https://claude.ai/install.sh | bash`, then launch it with `claude`.
+
+I would set this up on your local machine before we even get started. We'll also set it up on the cluster itself in [Step 4](#step-4-set-up-claude-code).
 
 ## Step 1: Test your SSH connection
 
@@ -134,7 +140,25 @@ You'll be asked for your password one last time. After that, you should be able 
 
 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) is Anthropic's CLI tool for working with Claude directly in your terminal. It can help you navigate unfamiliar codebases, debug issues, write scripts, and even run through the remaining steps in this guide interactively.
 
-Some clusters have it pre-installed as a module. On Sherlock, for example, you can simply run:
+Some clusters have it pre-installed as a **module**. Modules are a system that cluster admins use to manage shared software installations so that users don't have to install common tools themselves. Before installing anything on a cluster, it's worth checking whether it's already available as a module.
+
+<details markdown="1">
+<summary>Quick Aside: The module system</summary>
+
+Here are some useful commands for working with modules:
+
+```bash
+module avail              # List all available modules
+module spider <name>      # Search for a specific module (e.g., module spider python)
+module load <name>        # Load a module into your current session
+module list               # Show currently loaded modules
+```
+
+Some modules have dependencies on other modules. For example, you might need to `module load biology` before you can `module load ncbi-tools`. The `module spider` command will usually tell you about these dependencies.
+
+</details>
+
+On Sherlock, for example, Claude Code is available as a module:
 
 ```bash
 module load claude-code
@@ -162,34 +186,34 @@ Here is a step by step guide for getting Miniconda set-up:
 
 1. First, we need to download and run the installer on the cluster. The example below is for Linux x86_64, which is the most common cluster architecture. You can check yours by running `uname -m` on the cluster. If it's something other than `x86_64`, find the right installer at the [Miniconda downloads page](https://docs.anaconda.com/miniconda/#latest-miniconda-installer-links).
 
-```bash
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod +x Miniconda3-latest-Linux-x86_64.sh
-./Miniconda3-latest-Linux-x86_64.sh
-```
+   ```bash
+   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   chmod +x Miniconda3-latest-Linux-x86_64.sh
+   ./Miniconda3-latest-Linux-x86_64.sh
+   ```
 
 2. The installer will show you a very long license agreement. Scroll through (hold Enter) and accept at the end with `y`.
 
 3. You will see the following message:
 
-```bash
-Miniconda3 will now be installed into this location:
+   ```bash
+   Miniconda3 will now be installed into this location:
 
-/sailhome/viggiano/miniconda3
-  - Press ENTER to confirm the location
-  - Press CTRL-C to abort the installation
-  - Or specify a different location below
+   /sailhome/viggiano/miniconda3
+     - Press ENTER to confirm the location
+     - Press CTRL-C to abort the installation
+     - Or specify a different location below
 
-[/sailhome/viggiano/miniconda3] >>> /scr-ssd/viggiano/miniconda3
-```
+   [/sailhome/viggiano/miniconda3] >>> /scr-ssd/viggiano/miniconda3
+   ```
 
 4. When prompted "Do you wish to update your shell profile to automatically initialize conda?", select `yes`. This ensures conda is available every time you open a new terminal.
 
-5. Miniconda is now installed. We can now remove the installer file
+5. Miniconda is now installed. We can now remove the installer file:
 
-```bash
-rm Miniconda3-latest-Linux-x86_64.sh
-```
+   ```bash
+   rm Miniconda3-latest-Linux-x86_64.sh
+   ```
 
 You can now create new environments via:
 
@@ -538,21 +562,4 @@ wandb login
 
 You'll be prompted for your API key, which you can find at [wandb.ai/authorize](https://wandb.ai/authorize).
 
-## Summary
-
-That's it! Here's a quick recap of everything we covered:
-
-| Step                                              | What                          | Why                                                        |
-| ------------------------------------------------- | ----------------------------- | ---------------------------------------------------------- |
-| [0](#step-0-set-up-a-coding-agent-of-your-choice) | Set up a coding agent         | Helps you through the rest of the steps                    |
-| [1](#step-1-test-your-ssh-connection)             | Test your SSH connection      | Make sure you can actually reach the cluster               |
-| [2](#step-2-add-the-cluster-to-your-ssh-config)   | Add cluster to SSH config     | Connect with a short nickname instead of the full hostname |
-| [3](#step-3-set-up-ssh-keys)                      | Set up SSH keys               | Skip password entry on every connection                    |
-| [4](#step-4-set-up-claude-code)                   | Set up Claude Code            | AI assistance directly on the cluster                      |
-| [5](#step-5-install-miniconda)                    | Install Miniconda             | Manage Python environments without root access             |
-| [6](#step-6-manage-storage)                       | Manage storage                | Keep large files off your limited home directory           |
-| [7](#step-7-customize-shell-functionality)        | Customize your shell          | Automate repetitive tasks with shell functions             |
-| [8](#step-8-git-and-github-setup)                 | Git and GitHub setup          | Push and pull code from the cluster                        |
-| [9](#step-9-authenticate-with-ml-services)        | Authenticate with ML services | Download gated models and track experiments                |
-
-If you have suggestions for improving this guide, please [open an issue](https://github.com/bviggiano/bviggiano.github.io/issues/new)!
+That's it! Thanks for reading. If you have suggestions for improving this guide, please [open an issue](https://github.com/bviggiano/bviggiano.github.io/issues/new)!
