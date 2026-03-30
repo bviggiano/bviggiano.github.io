@@ -39,7 +39,7 @@ Now that we know the connection works, we can move on to getting set up!
 
 ## Step 2: Add the cluster to your SSH config
 
-Typing out `ssh <username>@hostname` everytime you want to connect is really annoying, and hostnames are generally annoyingly hard to remember. Instead, we can define short nicknames for various clusters through the use of an SSH config file.
+Typing out `ssh <username>@hostname` every time you want to connect is really annoying, and hostnames are generally annoyingly hard to remember. Instead, we can define short nicknames for various clusters through the use of an SSH config file.
 
 1. _On your local machine_, open (or create) the `~/.ssh/config` file:
 
@@ -156,7 +156,7 @@ Hello Claude! You are currently being run on the <cluster-name-here> cluster. Pl
 
 ## Step 5: Install Miniconda
 
-[Miniconda](https://docs.anaconda.com/miniconda/) is a lightweight installer for conda, the package and environment manager most commonly used in the ML and data science communities. It lets you create isolated Python environments for different projects, which is essential on shared clusters where you don't have root access. I also use alternatives such as [Mamba](https://mamba.readthedocs.io/) (a faster drop-in replacement) and [uv](https://github.com/astral-sh/uv) (a newer, Rust-based `pip` replacement), but I'd recommend using Miniconda to start since it's the most widely and is generally what most users already have set up.
+[Miniconda](https://docs.anaconda.com/miniconda/) is a lightweight installer for conda, the package and environment manager most commonly used in the ML and data science communities. It lets you create isolated Python environments for different projects, which is essential on shared clusters where you don't have root access. I also use alternatives such as [Mamba](https://mamba.readthedocs.io/) (a faster drop-in replacement) and [uv](https://github.com/astral-sh/uv) (a newer, Rust-based `pip` replacement), but I'd recommend using Miniconda to start since it's the most widely used and is generally what most users already have set up.
 
 Here is a step by step guide for getting Miniconda set-up:
 
@@ -188,7 +188,7 @@ Miniconda3 will now be installed into this location:
 5. Miniconda is now installed. We can now remove the installer file
 
 ```bash
-`rm Miniconda3-latest-Linux-x86_64.sh`
+rm Miniconda3-latest-Linux-x86_64.sh
 ```
 
 You can now create new environments via:
@@ -216,7 +216,7 @@ Your cluster will have its own storage layout; check with your admin or docs. Th
 
 ### Set up Symlinks for Cache locations
 
-A **Symlinks** (symbolic links) is a special file that acts as a pointer to another location on the filesystem. To any program reading or writing files, a symlink looks and behaves exactly like a normal directory; the difference is that the actual data lives elsewhere. This means you can keep `~/.cache` in your home directory as far as any tool is concerned, but the files are really stored on a larger filesystem:
+A **symlink** (symbolic link) is a special file that acts as a pointer to another location on the filesystem. To any program reading or writing files, a symlink looks and behaves exactly like a normal directory; the difference is that the actual data lives elsewhere. This means you can keep `~/.cache` in your home directory as far as any tool is concerned, but the files are really stored on a larger filesystem:
 
 Here are some common examples of folders I'd recommend setting up symlink locations for:
 
@@ -272,7 +272,7 @@ One of the most powerful things I have started doing is writing custom shell fun
 
 #### `create_workspace_file` - Generate a VS Code/Cursor workspace file for the current directory
 
-Setting up workspace files for VS Code/Cursor by hand is tedious. This function generates a `.code-workspace` file for your current directory and saves it to `~/workspaces`. You can then open it from directly from the terminal with `cursor ~/workspaces/my-project.code-workspace`.
+Setting up workspace files for VS Code/Cursor by hand is tedious. This function generates a `.code-workspace` file for your current directory and saves it to `~/workspaces`. You can then open it directly from the terminal with `cursor ~/workspaces/my-project.code-workspace`.
 
 <details markdown="1">
 <summary>Show function</summary>
