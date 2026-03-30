@@ -13,9 +13,13 @@ Write blog posts as `.ipynb` files. Code cells, outputs, and plots render inline
 1. Place your notebook in `assets/jupyter/`
 2. In a blog post's markdown, embed it:
 
+{% raw %}
+
 ```liquid
 {% jupyter_notebook "assets/jupyter/my_post.ipynb" %}
 ```
+
+{% endraw %}
 
 Plugin: `jekyll-jupyter-notebook` (already enabled in `_config.yml`).
 
@@ -26,9 +30,13 @@ Embed audio players in any post or page using the `audio.liquid` include.
 1. Place audio files in `assets/audio/`
 2. Use:
 
+{% raw %}
+
 ```liquid
 {% include audio.liquid path="assets/audio/my_file.mp3" controls=true %}
 ```
+
+{% endraw %}
 
 Supports: `autoplay`, `controls`, `loop`, `muted`, `caption`.
 
@@ -39,9 +47,13 @@ Embed local video files or YouTube/Vimeo iframes.
 1. Place video files in `assets/video/`
 2. Use:
 
+{% raw %}
+
 ```liquid
 {% include video.liquid path="assets/video/my_video.mp4" controls=true %}
 ```
+
+{% endraw %}
 
 For YouTube/Vimeo, pass the embed URL as `path` and it renders as an iframe.
 
@@ -99,9 +111,13 @@ The `bib.liquid` layout matches these against your `papers.bib` entries and adds
 
 Embed tweets in posts. The plugin caches tweet HTML in `.tweet-cache/`.
 
+{% raw %}
+
 ```liquid
 {% twitter https://twitter.com/user/status/123456789 %}
 ```
+
+{% endraw %}
 
 ## Book Reviews
 
