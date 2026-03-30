@@ -629,12 +629,32 @@ document.addEventListener("DOMContentLoaded", function () {
   function resizeGraph() {
     var container = document.getElementById("graph-body");
     var svg = d3.select("#knowledge-graph");
-    var width = container.clientWidth;
-    var height = container.clientHeight;
-    svg.attr("viewBox", [0, 0, width, height]);
+    var isMobileNow = window.innerWidth < 768;
+    var newGraphPanelWidth = isMobileNow ? container.clientWidth : 280;
+    var newWidth = isMobileNow ? container.clientWidth : window.innerWidth;
+    var newHeight = container.clientHeight;
+    svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+
+    // Update panel bounds used by clamping
+    panelLeft = newWidth - newGraphPanelWidth;
+    panelRight = newWidth;
+    panelBottom = newHeight - footerHeight;
+    centerX = isMobileNow ? newWidth / 2 : newWidth - newGraphPanelWidth / 2;
+    centerY = newHeight / 2;
+
+    // Update zoom rect
+    zoomRect.attr("x", panelLeft).attr("width", newGraphPanelWidth).attr("height", newHeight);
+
     if (simulation) {
-      simulation.force("x", d3.forceX(width - 140).strength(0.02));
-      simulation.force("y", d3.forceY(height / 2).strength(0.02));
+      simulation.force("x", d3.forceX(centerX).strength(0.02));
+      simulation.force("y", d3.forceY(centerY).strength(0.02));
+
+      // Update base positions to recenter
+      data.nodes.forEach(function (n) {
+        n._baseX = n.x;
+        n._baseY = n.y;
+      });
+
       simulation.alpha(0.3).restart();
     }
   }

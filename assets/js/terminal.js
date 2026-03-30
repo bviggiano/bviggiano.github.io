@@ -167,6 +167,9 @@
       case "cd":
         cmdCd(arg);
         break;
+      case "open":
+        cmdOpen(arg);
+        break;
       case "help":
         cmdHelp();
         break;
@@ -195,11 +198,17 @@
       if (children[name]._hidden) continue;
       if (children[name]._social) {
         socials.push(name);
-      } else {
+      } else if (!children[name]._file) {
         dirs.push(name);
       }
     }
-    if (dirs.length === 0 && socials.length === 0) {
+    var files = [];
+    for (var name in children) {
+      if (children[name]._hidden) continue;
+      if (children[name]._social) continue;
+      if (children[name]._file) files.push(name);
+    }
+    if (dirs.length === 0 && files.length === 0 && socials.length === 0) {
       input.placeholder = "nothing deeper here";
       return;
     }
@@ -208,6 +217,15 @@
         dirs
           .map(function (n) {
             return '<span class="dir-entry">' + escapeHtml(n) + "/</span>";
+          })
+          .join("  ")
+      );
+    }
+    if (files.length > 0) {
+      appendHtml(
+        files
+          .map(function (n) {
+            return '<span class="file-entry">' + escapeHtml(n) + "</span>";
           })
           .join("  ")
       );
@@ -236,6 +254,11 @@
       appendText("cd: no such directory: " + arg, "error");
       return;
     }
+    if (node._file) {
+      appendText("cd: not a directory: " + arg, "error");
+      appendText("hint: use open " + arg, "help-text");
+      return;
+    }
 
     var targetUrl = node._url;
 
@@ -258,11 +281,34 @@
     }
   }
 
+  function cmdOpen(arg) {
+    if (!arg) {
+      appendText("usage: open <file>", "error");
+      return;
+    }
+    var target = resolvePath(arg);
+    var node = getNode(target);
+    if (!node) {
+      appendText("open: no such file: " + arg, "error");
+      return;
+    }
+    if (!node._file) {
+      appendText("open: not a file: " + arg, "error");
+      appendText("hint: use cd " + arg, "help-text");
+      return;
+    }
+    cwd = target;
+    updatePrompt();
+    output.innerHTML = "";
+    navigateWithState(node._url);
+  }
+
   function cmdHelp() {
     var lines = [
       "Available commands:",
       "  ls [path]     List directory contents",
       "  cd <path>     Change directory (navigates the page)",
+      "  open <file>   Open a file (navigates to the page)",
       "  theme [mode]  Toggle or set theme (dark/light/system)",
       "  help          Show this help",
       "  clear         Clear terminal output",
@@ -331,7 +377,7 @@
     var cmd = parts[0];
 
     if (parts.length <= 1) {
-      var cmds = ["ls", "cd", "theme", "help", "clear"];
+      var cmds = ["ls", "cd", "open", "theme", "help", "clear"];
       var matches = cmds.filter(function (c) {
         return c.indexOf(cmd) === 0;
       });
@@ -341,7 +387,7 @@
       return;
     }
 
-    if (cmd === "cd" || cmd === "ls") {
+    if (cmd === "cd" || cmd === "ls" || cmd === "open") {
       var arg = parts.slice(1).join(" ");
       var lastSlash = arg.lastIndexOf("/");
       var dirPart, prefix;
@@ -369,6 +415,10 @@
         appendHtml(
           matches
             .map(function (n) {
+              var child = node._children[n];
+              if (child._file) {
+                return '<span class="file-entry">' + escapeHtml(n) + "</span>";
+              }
               return '<span class="dir-entry">' + escapeHtml(n) + "/</span>";
             })
             .join("  ")

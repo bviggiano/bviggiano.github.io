@@ -31,7 +31,7 @@
           "_url": "/blog/",
           "_children": {
             {%- for post in site.posts -%}
-              "{{ post.title | slugify }}": { "_url": "{{ post.url }}", "_children": {} }{% unless forloop.last %},{% endunless %}
+              "{{ post.title | slugify }}.md": { "_url": "{{ post.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
             {%- endfor -%}
           }
         },
@@ -41,7 +41,7 @@
           "_url": "/notes/",
           "_children": {
             {%- for note in site.notes -%}
-              "{{ note.title | slugify }}": { "_url": "{{ note.url }}", "_children": {} }{% unless forloop.last %},{% endunless %}
+              "{{ note.title | slugify }}.md": { "_url": "{{ note.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
             {%- endfor -%}
           }
         },

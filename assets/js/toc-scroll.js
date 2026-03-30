@@ -55,6 +55,23 @@ document.addEventListener("DOMContentLoaded", function () {
     list.appendChild(titleLi);
   }
 
+  // When a TOC link is clicked, pin that heading as current until the user scrolls manually
+  var pinnedId = null;
+  window.addEventListener(
+    "wheel",
+    function () {
+      pinnedId = null;
+    },
+    { passive: true }
+  );
+  window.addEventListener(
+    "touchmove",
+    function () {
+      pinnedId = null;
+    },
+    { passive: true }
+  );
+
   var headingsArr = Array.prototype.slice.call(headings);
   headingsArr.forEach(function (h, i) {
     var isH3 = h.tagName === "H3";
@@ -76,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     a.addEventListener("click", function (e) {
       e.preventDefault();
+      pinnedId = h.id;
       h.scrollIntoView({ behavior: "smooth", block: "start" });
       history.pushState(null, null, "#" + h.id);
     });
@@ -88,6 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Highlight all visible sections with IntersectionObserver
   var tocLinks = tocNav.querySelectorAll(".auto-toc-item:not(.toc-title) .auto-toc-link");
+  var tocItems = Array.prototype.slice.call(tocNav.querySelectorAll(".auto-toc-item:not(.toc-title)"));
   var titleLink = tocNav.querySelector(".toc-title .auto-toc-link");
   var headingMap = {};
   var visibleHeadings = new Set();
@@ -176,29 +195,32 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Mark the "current" (bold) heading:
-      // If 2 or fewer visible, bold the topmost; otherwise bold the one closest to center
-      var visibleArr = [];
-      headingsArr.forEach(function (h) {
-        if (visibleHeadings.has(h.id)) visibleArr.push(h);
-      });
-
+      // If a heading was clicked, pin it; otherwise pick the topmost visible
       var boldId = null;
-      if (visibleArr.length > 0 && visibleArr.length <= 2) {
-        boldId = visibleArr[0].id;
-      } else if (visibleArr.length > 2) {
-        var viewCenter = window.scrollY + window.innerHeight / 2;
-        var closestDist = Infinity;
-        visibleArr.forEach(function (h) {
-          var dist = Math.abs(h.getBoundingClientRect().top + window.scrollY - viewCenter);
-          if (dist < closestDist) {
-            closestDist = dist;
-            boldId = h.id;
-          }
-        });
+      if (pinnedId && headingMap[pinnedId]) {
+        boldId = pinnedId;
       } else {
-        // No visible headings; bold the fallback active one
-        var activeLinks = tocNav.querySelectorAll(".auto-toc-link.active");
-        if (activeLinks.length > 0) boldId = activeLinks[0].href.split("#")[1];
+        var visibleArr = [];
+        headingsArr.forEach(function (h) {
+          if (visibleHeadings.has(h.id)) visibleArr.push(h);
+        });
+
+        if (visibleArr.length > 0 && visibleArr.length <= 2) {
+          boldId = visibleArr[0].id;
+        } else if (visibleArr.length > 2) {
+          var viewCenter = window.scrollY + window.innerHeight / 2;
+          var closestDist = Infinity;
+          visibleArr.forEach(function (h) {
+            var dist = Math.abs(h.getBoundingClientRect().top + window.scrollY - viewCenter);
+            if (dist < closestDist) {
+              closestDist = dist;
+              boldId = h.id;
+            }
+          });
+        } else {
+          var activeLinks = tocNav.querySelectorAll(".auto-toc-link.active");
+          if (activeLinks.length > 0) boldId = activeLinks[0].href.split("#")[1];
+        }
       }
 
       if (boldId && headingMap[boldId]) {
@@ -212,20 +234,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
-      // Show/hide h3 items: visible when their parent h2 is active
-      var tocItems = tocNav.querySelectorAll(".auto-toc-item");
-      var sectionActive = false;
+      // Propagate active to all sibling h3s when any h3 in the group is active
+      var h3Group = [];
+      function activateGroup() {
+        var hasActive = h3Group.some(function (item) {
+          return item.classList.contains("active");
+        });
+        if (hasActive) {
+          h3Group.forEach(function (item) {
+            item.classList.add("active");
+            item.querySelector(".auto-toc-link").classList.add("active");
+          });
+        }
+      }
       tocItems.forEach(function (item) {
         if (item.classList.contains("toc-h2")) {
-          sectionActive = item.classList.contains("active");
+          activateGroup();
+          h3Group = [];
         } else if (item.classList.contains("toc-h3")) {
-          if (sectionActive) {
-            item.classList.add("toc-visible");
-          } else {
-            item.classList.remove("toc-visible");
-          }
+          h3Group.push(item);
         }
       });
+      activateGroup();
     },
     {
       rootMargin: "-80px 0px -20% 0px",
@@ -236,4 +266,30 @@ document.addEventListener("DOMContentLoaded", function () {
   headings.forEach(function (h) {
     observer.observe(h);
   });
+
+  // Mobile TOC toggle
+  var mobileTab = document.getElementById("toc-mobile-tab");
+  var mobileOverlay = document.getElementById("toc-mobile-overlay");
+  if (mobileTab && tocSidebar && mobileOverlay) {
+    mobileTab.addEventListener("click", function () {
+      tocSidebar.classList.add("toc-mobile-open");
+      mobileOverlay.classList.add("toc-mobile-overlay-active");
+      mobileTab.classList.add("toc-tab-hidden");
+    });
+
+    function closeMobileToc() {
+      tocSidebar.classList.remove("toc-mobile-open");
+      mobileOverlay.classList.remove("toc-mobile-overlay-active");
+      mobileTab.classList.remove("toc-tab-hidden");
+    }
+
+    mobileOverlay.addEventListener("click", closeMobileToc);
+
+    // Close on link click (navigate to section)
+    tocNav.addEventListener("click", function (e) {
+      if (e.target.classList.contains("auto-toc-link")) {
+        closeMobileToc();
+      }
+    });
+  }
 });

@@ -37,6 +37,8 @@
           </div>
         {% else %}
           <nav id="toc-sidebar"></nav>
+          <button class="toc-mobile-tab" id="toc-mobile-tab" aria-label="Toggle table of contents"></button>
+          <div class="toc-mobile-overlay" id="toc-mobile-overlay"></div>
           {{ content }}
         {% endif %}
       {% else %}
