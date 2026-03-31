@@ -44,8 +44,8 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/teaching/";
           },
-        },{id: "notes-how-to-get-set-up-a-new-computational-cluster",
-          title: 'How to get set up a new computational cluster',
+        },{id: "notes-how-to-get-set-up-on-a-new-computational-cluster",
+          title: 'How to get set up on a new computational cluster',
           description: "A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.",
           section: "Notes",handler: () => {
               window.location.href = "/notes/cluster-set-up/";
