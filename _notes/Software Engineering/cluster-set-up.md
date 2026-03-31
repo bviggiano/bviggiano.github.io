@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to get set up a new computational cluster
+title: How to get set up on a new computational cluster
 date: 2026-03-28
 description: A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.
 tags:
