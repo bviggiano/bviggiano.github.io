@@ -44,9 +44,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/teaching/";
           },
-        },{id: "notes-how-to-get-set-up-on-a-new-computational-cluster",
-          title: 'How to get set up on a new computational cluster',
-          description: "A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.",
+        },{id: "notes-how-to-get-set-up-on-a-new-machine",
+          title: 'How to get set up on a new machine',
+          description: "A guide for configuring your set up on a cluster, from SSH keys to conda environments to git authentication.",
           section: "Notes",handler: () => {
               window.location.href = "/notes/cluster-set-up/";
             },},{id: "projects-aav2-capsid-viability-dataset",
