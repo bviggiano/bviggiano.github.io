@@ -98,6 +98,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var currentPath = window.location.pathname;
 
+    // If current page has a node, filter to only show its neighborhood
+    var currentNode = data.nodes.find(function (n) {
+      return n.url === currentPath;
+    });
+    if (currentNode) {
+      var maxHops = 2;
+      var neighborIds = {};
+      neighborIds[currentNode.id] = true;
+      var frontier = [currentNode.id];
+      for (var hop = 0; hop < maxHops; hop++) {
+        var nextFrontier = [];
+        data.links.forEach(function (l) {
+          var src = typeof l.source === "string" ? l.source : l.source.id;
+          var tgt = typeof l.target === "string" ? l.target : l.target.id;
+          for (var fi = 0; fi < frontier.length; fi++) {
+            if (src === frontier[fi] && !neighborIds[tgt]) {
+              neighborIds[tgt] = true;
+              nextFrontier.push(tgt);
+            }
+            if (tgt === frontier[fi] && !neighborIds[src]) {
+              neighborIds[src] = true;
+              nextFrontier.push(src);
+            }
+          }
+        });
+        frontier = nextFrontier;
+      }
+      data.nodes = data.nodes.filter(function (n) {
+        return neighborIds[n.id];
+      });
+      data.links = data.links.filter(function (l) {
+        var src = typeof l.source === "string" ? l.source : l.source.id;
+        var tgt = typeof l.target === "string" ? l.target : l.target.id;
+        return neighborIds[src] && neighborIds[tgt];
+      });
+    }
+
     var nodeColor = function (d) {
       if (d.type === "post") return "#d97757";
       if (d.type === "folder") return "#8b8b8b";
@@ -239,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return cls;
       })
       .attr("r", function (d) {
-        return d.url === currentPath ? 14 : 12;
+        return d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
       })
       .attr("fill", function (d) {
         return nodeColor(d);
@@ -362,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return screenY(d);
         })
         .attr("r", function (d) {
-          var base = d.url === currentPath ? 14 : 12;
+          var base = d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
           return base * Math.max(zoomScale, 0.5);
         });
 
@@ -372,7 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return screenX(d);
         })
         .attr("y", function (d) {
-          var base = d.url === currentPath ? 14 : 12;
+          var base = d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
           return screenY(d) + base * Math.max(zoomScale, 0.5) + scaledFontSize + 4;
         })
         .style("font-size", scaledFontSize + "px");
@@ -399,10 +436,10 @@ document.addEventListener("DOMContentLoaded", function () {
           })
           .distance(60)
       )
-      .force("charge", d3.forceManyBody().strength(-300).distanceMin(10))
+      .force("charge", d3.forceManyBody().strength(-30))
       .force("x", d3.forceX(centerX).strength(0.005))
       .force("y", d3.forceY(centerY).strength(0.005))
-      .force("collide", d3.forceCollide(60))
+      .force("collide", d3.forceCollide(20))
       .on("tick", ticked);
 
     if (hasPositions) {
@@ -532,7 +569,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Soft collision: applies gentle spring-like repulsion each frame.
     // The dragged node is treated as immovable so others yield to it.
-    var collisionDist = 60;
+    var collisionDist = 20;
     var collisionStrength = 0.15; // fraction of overlap corrected per frame
     function resolveCollisions() {
       for (var a = 0; a < data.nodes.length; a++) {

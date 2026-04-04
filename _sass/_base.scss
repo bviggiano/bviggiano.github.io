@@ -2162,6 +2162,34 @@ figure.cover {
   }
 }
 
+// Figure captions with auto-numbering
+article.post-content {
+  counter-reset: figure;
+
+  figure {
+    figcaption.caption {
+      counter-increment: figure;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--global-text-color-light);
+      margin-top: 0.5rem;
+
+      &::before {
+        content: "Figure " counter(figure) ". ";
+        font-weight: 600;
+      }
+    }
+
+    // Keep caption under floated figures
+    &.float-right,
+    &.float-left {
+      figcaption.caption {
+        clear: both;
+      }
+    }
+  }
+}
+
 // Post content spacing
 article.post-content {
   line-height: 1.8;

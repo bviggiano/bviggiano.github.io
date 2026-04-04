@@ -151,6 +151,20 @@
   ></script>
 {% endif %}
 
+{% if page.wikipedia_preview %}
+  <!-- Wikipedia Preview -->
+  <script
+    src="{{ site.third_party_libraries.wikipedia-preview.url.js }}"
+    integrity="{{ site.third_party_libraries.wikipedia-preview.integrity.js }}"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      wikipediaPreview.init({ detectLinks: true, lang: 'en', prefersColorScheme: 'detect' });
+    });
+  </script>
+{% endif %}
+
 {% if page.typograms %}
   <!-- Typograms -->
   <script src="{{ '/assets/js/typograms.js' | relative_url | bust_file_cache }}"></script>

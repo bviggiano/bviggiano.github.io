@@ -60,6 +60,10 @@ layout: default
     </p>
   </header>
 
+  {% if page.header_image %}
+    {% include figure.liquid path=page.header_image class="img-fluid rounded z-depth-1" avoid_scaling=true %}
+  {% endif %}
+
   <article class="post-content">
     {% if page.toc and page.toc.beginning %}
       <div id="table-of-contents">
