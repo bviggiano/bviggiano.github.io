@@ -2119,6 +2119,49 @@ figure.cover {
   margin: 4px 8px;
 }
 
+// Hero banner with blurred mirrored edges
+.hero-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 160px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  background: var(--global-bg-color);
+
+  .hero-banner-center {
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .hero-banner-edge {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    filter: blur(20px) brightness(0.85);
+    opacity: 0.7;
+    overflow: hidden;
+    position: relative;
+
+    canvas {
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+  }
+
+  .hero-banner-left canvas {
+    right: 0;
+  }
+
+  .hero-banner-right canvas {
+    left: 0;
+  }
+}
+
 // Post content spacing
 article.post-content {
   line-height: 1.8;

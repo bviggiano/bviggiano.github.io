@@ -513,6 +513,12 @@ third_party_libraries:
     url:
       js: "https://cdn.jsdelivr.net/npm/masonry-layout@{{version}}/dist/masonry.pkgd.min.js"
     version: "4.2.2"
+  mol3d:
+    integrity:
+      js: "sha256-BrbS/H1BjovvYqMsykQ3P/IbK3h703dhPdQDk5Sk6f8="
+    url:
+      js: "https://cdn.jsdelivr.net/npm/3dmol@{{version}}/build/3Dmol-min.js"
+    version: "2.4.2"
   mdb:
     integrity:
       css: "sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw="

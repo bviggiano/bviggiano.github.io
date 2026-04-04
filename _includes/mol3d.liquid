@@ -1,0 +1,69 @@
+{% assign viewer_id = include.id | default: include.pdb | default: include.file | slugify | prepend: 'mol3d-' %}
+{% assign mol_width = include.width | default: '100%' %}
+{% assign mol_height = include.height | default: '400px' %}
+{% assign mol_style = include.style | default: 'cartoon' %}
+{% assign mol_color = include.color | default: 'spectrum' %}
+
+<figure>
+  <div
+    id="{{ viewer_id }}"
+    style="width: {{ mol_width }}; height: {{ mol_height }}; position: relative;"
+    class="mol3d-viewer"
+  ></div>
+  {% if include.caption %}
+    <figcaption class="caption">{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>
+
+<script>
+  (function () {
+    function initViewer() {
+      if (typeof $3Dmol === "undefined") {
+        setTimeout(initViewer, 100);
+        return;
+      }
+      var element = document.getElementById("{{ viewer_id }}");
+      var viewer = $3Dmol.createViewer(element, { backgroundColor: "white" });
+
+      function applyDefaults() {
+        {% if include.code %}
+          {{ include.code }}
+        {% else %}
+          viewer.setStyle({ {{ mol_style }}: { color: "{{ mol_color }}" } });
+          viewer.zoomTo();
+        {% endif %}
+        viewer.render();
+        {% if include.spin %}
+          viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
+          element.addEventListener("mousedown", function () { viewer.spin(false); });
+          element.addEventListener("mouseup", function () {
+            viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
+          });
+          element.addEventListener("touchstart", function () { viewer.spin(false); });
+          element.addEventListener("touchend", function () {
+            viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
+          });
+        {% endif %}
+      }
+
+      {% if include.file %}
+        fetch("{{ include.file | relative_url }}")
+          .then(function (r) { return r.text(); })
+          .then(function (data) {
+            viewer.addModel(data, "{{ include.file | split: '.' | last }}");
+            applyDefaults();
+          });
+      {% elsif include.pdb %}
+        $3Dmol.download("pdb:{{ include.pdb }}", viewer, {}, function () {
+          applyDefaults();
+        });
+      {% endif %}
+    }
+
+    if (document.readyState === "complete") {
+      initViewer();
+    } else {
+      window.addEventListener("load", initViewer);
+    }
+  })();
+</script>

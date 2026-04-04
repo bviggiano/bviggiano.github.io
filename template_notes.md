@@ -23,6 +23,81 @@ Write blog posts as `.ipynb` files. Code cells, outputs, and plots render inline
 
 Plugin: `jekyll-jupyter-notebook` (already enabled in `_config.yml`).
 
+## 3D Protein Structure Visualization
+
+Two approaches for embedding interactive 3D molecular viewers.
+
+### Approach 1: Liquid Include (3Dmol.js)
+
+Add `mol3d: true` to your post's front matter, then use the `mol3d.liquid` include.
+
+**Simple usage** (loads from RCSB PDB):
+
+{% raw %}
+
+```liquid
+{% include mol3d.liquid pdb="1CRN" style="cartoon" color="spectrum" %}
+```
+
+{% endraw %}
+
+**With spinning and caption:**
+
+{% raw %}
+
+```liquid
+{% include mol3d.liquid pdb="1CRN" spin="true" caption="Crambin" %}
+```
+
+{% endraw %}
+
+**Custom code** (mirrors py3Dmol API):
+
+{% raw %}
+
+```liquid
+{% capture mol_code %}
+viewer.setStyle({cartoon: {color: 'spectrum'}});
+viewer.addSurface($3Dmol.VDW, {opacity: 0.7, color: 'white'});
+viewer.zoomTo();
+{% endcapture %}
+{% include mol3d.liquid pdb="1CRN" code=mol_code %}
+```
+
+{% endraw %}
+
+**Loading from a local file:**
+
+{% raw %}
+
+```liquid
+{% include mol3d.liquid file="assets/pdb/my_protein.pdb" style="stick" color="chainHetatm" %}
+```
+
+{% endraw %}
+
+Parameters: `pdb`, `file`, `style` (default: cartoon), `color` (default: spectrum),
+`width` (default: 100%), `height` (default: 400px), `code`, `caption`, `id`,
+`spin` (true for default speed, or a number for custom speed).
+
+### Approach 2: Jupyter Notebook with py3Dmol
+
+For full Python control, use py3Dmol in a Jupyter notebook. py3Dmol outputs
+self-contained HTML with inline 3Dmol.js, so it renders correctly when embedded.
+
+1. Install py3Dmol: `pip install py3Dmol`
+2. Write and run your notebook with py3Dmol code
+3. Place the notebook in `assets/jupyter/`
+4. Embed in a post (no `mol3d: true` frontmatter needed):
+
+{% raw %}
+
+```liquid
+{% jupyter_notebook "assets/jupyter/protein_analysis.ipynb" %}
+```
+
+{% endraw %}
+
 ## Audio Embedding
 
 Embed audio players in any post or page using the `audio.liquid` include.
