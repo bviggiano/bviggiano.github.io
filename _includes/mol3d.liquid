@@ -1,4 +1,4 @@
-{% assign viewer_id = include.id | default: include.pdb | default: include.file | slugify | prepend: 'mol3d-' %}
+{% assign viewer_id = include.id | default: include.pdb | default: include.pdbs | default: include.file | slugify | prepend: 'mol3d-' %}
 {% assign mol_width = include.width | default: '100%' %}
 {% assign mol_height = include.height | default: '400px' %}
 {% assign mol_style = include.style | default: 'cartoon' %}
@@ -11,7 +11,7 @@
     class="mol3d-viewer"
   ></div>
   {% if include.caption %}
-    <figcaption class="caption">{{ include.caption }}</figcaption>
+    <figcaption class="caption">{{ include.caption | markdownify | remove: '<p>' | remove: '</p>' }}</figcaption>
   {% endif %}
 </figure>
 
@@ -25,37 +25,179 @@
       var element = document.getElementById("{{ viewer_id }}");
       var viewer = $3Dmol.createViewer(element, { backgroundColor: "white" });
 
-      function applyDefaults() {
+      // Shade a hex color darker or lighter by a factor (-1 to 1)
+      function shade(hex, f) {
+        hex = hex.replace("#", "");
+        var r = parseInt(hex.substring(0, 2), 16);
+        var g = parseInt(hex.substring(2, 4), 16);
+        var b = parseInt(hex.substring(4, 6), 16);
+        if (f > 0) { r += (255 - r) * f; g += (255 - g) * f; b += (255 - b) * f; }
+        else { r *= (1 + f); g *= (1 + f); b *= (1 + f); }
+        return "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+      }
+      var elemShade = {C: 0, N: -0.35, O: -0.2, S: -0.45, H: 0.25};
+
+      function applyStyle() {
         {% if include.code %}
           {{ include.code }}
+        {% elsif include.palette %}
+          var palette = "{{ include.palette }}".split(",");
+          var chains = {};
+          var idx = 0;
+          viewer.selectedAtoms({}).forEach(function (a) {
+            var key = a.model + ":" + a.chain;
+            if (!(key in chains)) { chains[key] = idx++; }
+          });
+          viewer.setStyle({}, {});
+          var surfaceChains = {};
+          viewer.selectedAtoms({}).forEach(function (a) {
+            var key = a.model + ":" + a.chain;
+            if (!surfaceChains[key]) {
+              surfaceChains[key] = true;
+              viewer.addSurface($3Dmol.SurfaceType.VDW, {
+                colorfunc: function(atom) {
+                  var k = atom.model + ":" + atom.chain;
+                  var b = palette[chains[k] % palette.length];
+                  var s = elemShade[atom.elem] || 0;
+                  return shade(b, s);
+                }
+              }, {model: a.model, chain: a.chain});
+            }
+          });
         {% else %}
           viewer.setStyle({ {{ mol_style }}: { color: "{{ mol_color }}" } });
-          viewer.zoomTo();
-        {% endif %}
-        viewer.render();
-        {% if include.spin %}
-          viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
-          element.addEventListener("mousedown", function () { viewer.spin(false); });
-          element.addEventListener("mouseup", function () {
-            viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
-          });
-          element.addEventListener("touchstart", function () { viewer.spin(false); });
-          element.addEventListener("touchend", function () {
-            viewer.spin({% if include.spin == "true" %}true{% else %}"y", {{ include.spin }}{% endif %});
-          });
         {% endif %}
       }
 
-      {% if include.file %}
+      function finalize() {
+        applyStyle();
+        viewer.zoomTo();
+
+        {% if include.scale %}
+          var atoms = viewer.selectedAtoms({});
+          if (atoms.length) {
+            var view = viewer.getView();
+            var bb = {minX: Infinity, maxX: -Infinity};
+            atoms.forEach(function (a) {
+              if (a.x < bb.minX) bb.minX = a.x;
+              if (a.x > bb.maxX) bb.maxX = a.x;
+            });
+            var molWidth = bb.maxX - bb.minX || 1;
+            view[3] = view[3] * ({{ include.scale }} / molWidth);
+            viewer.setView(view);
+          }
+        {% endif %}
+
+        viewer.render();
+
+        // Auto-reset after inactivity
+        var initialView = viewer.getView();
+        var resetTimer = null;
+        function scheduleReset() {
+          clearTimeout(resetTimer);
+          resetTimer = setTimeout(function () {
+            viewer.setView(initialView, 1000);
+            {% if include.spin %}
+              viewer.spin("y", {% if include.spin == "true" %}0.3{% else %}{{ include.spin }}{% endif %});
+            {% endif %}
+          }, 3000);
+        }
+
+        {% if include.spin %}
+          viewer.spin("y", {% if include.spin == "true" %}0.3{% else %}{{ include.spin }}{% endif %});
+        {% endif %}
+
+        element.addEventListener("mousedown", function () {
+          clearTimeout(resetTimer);
+          {% if include.spin %}viewer.spin(false);{% endif %}
+        });
+        element.addEventListener("mouseup", function () { scheduleReset(); });
+        element.addEventListener("touchstart", function () {
+          clearTimeout(resetTimer);
+          {% if include.spin %}viewer.spin(false);{% endif %}
+        });
+        element.addEventListener("touchend", function () { scheduleReset(); });
+        element.addEventListener("wheel", function () {
+          clearTimeout(resetTimer);
+          {% if include.spin %}viewer.spin(false);{% endif %}
+          scheduleReset();
+        });
+      }
+
+      {% if include.pdbs %}
+        // Multi-model: load multiple PDB structures and arrange them
+        var pdbIds = "{{ include.pdbs }}".split(",");
+        {% if include.positions %}
+          var posData = "{{ include.positions }}".split(";").map(function (p) {
+            var xyz = p.split(","); return {x: +xyz[0], y: +xyz[1], z: +xyz[2]};
+          });
+        {% endif %}
+        var loaded = 0;
+
+        function loadNext() {
+          if (loaded >= pdbIds.length) {
+            {% unless include.positions %}
+              // Auto-arrange: place models side by side along the X axis
+              var spacing = 10;
+              var offsetX = 0;
+              for (var m = 0; m < pdbIds.length; m++) {
+                var model = viewer.getModel(m);
+                var atoms = model.selectedAtoms({});
+                if (!atoms.length) continue;
+                // Compute bounding box and center
+                var minX = Infinity, maxX = -Infinity;
+                var minY = Infinity, maxY = -Infinity;
+                var minZ = Infinity, maxZ = -Infinity;
+                var cx = 0, cy = 0, cz = 0;
+                atoms.forEach(function (a) {
+                  cx += a.x; cy += a.y; cz += a.z;
+                  if (a.x < minX) minX = a.x; if (a.x > maxX) maxX = a.x;
+                  if (a.y < minY) minY = a.y; if (a.y > maxY) maxY = a.y;
+                  if (a.z < minZ) minZ = a.z; if (a.z > maxZ) maxZ = a.z;
+                });
+                cx /= atoms.length; cy /= atoms.length; cz /= atoms.length;
+                var width = maxX - minX;
+                // Translate: center at (offsetX + width/2, 0, 0)
+                var dx = offsetX + width / 2 - cx;
+                var dy = -cy;
+                var dz = -cz;
+                atoms.forEach(function (a) { a.x += dx; a.y += dy; a.z += dz; });
+                offsetX += width + spacing;
+              }
+            {% else %}
+              // Explicit positions: translate each model's center to the given position
+              for (var m = 0; m < pdbIds.length; m++) {
+                var model = viewer.getModel(m);
+                var atoms = model.selectedAtoms({});
+                if (!atoms.length) continue;
+                var cx = 0, cy = 0, cz = 0;
+                atoms.forEach(function (a) { cx += a.x; cy += a.y; cz += a.z; });
+                cx /= atoms.length; cy /= atoms.length; cz /= atoms.length;
+                var target = posData[m] || {x: 0, y: 0, z: 0};
+                var dx = target.x - cx, dy = target.y - cy, dz = target.z - cz;
+                atoms.forEach(function (a) { a.x += dx; a.y += dy; a.z += dz; });
+              }
+            {% endunless %}
+            finalize();
+            return;
+          }
+          $3Dmol.download("pdb:" + pdbIds[loaded].trim(), viewer, {}, function () {
+            loaded++;
+            loadNext();
+          });
+        }
+        loadNext();
+
+      {% elsif include.file %}
         fetch("{{ include.file | relative_url }}")
           .then(function (r) { return r.text(); })
           .then(function (data) {
             viewer.addModel(data, "{{ include.file | split: '.' | last }}");
-            applyDefaults();
+            finalize();
           });
       {% elsif include.pdb %}
         $3Dmol.download("pdb:{{ include.pdb }}", viewer, {}, function () {
-          applyDefaults();
+          finalize();
         });
       {% endif %}
     }
