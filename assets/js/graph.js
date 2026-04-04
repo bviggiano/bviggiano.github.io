@@ -630,20 +630,20 @@ document.addEventListener("DOMContentLoaded", function () {
     var container = document.getElementById("graph-body");
     var svg = d3.select("#knowledge-graph");
     var isMobileNow = window.innerWidth < 768;
-    var newGraphPanelWidth = isMobileNow ? container.clientWidth : 280;
-    var newWidth = isMobileNow ? container.clientWidth : window.innerWidth;
-    var newHeight = container.clientHeight;
-    svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+    graphPanelWidth = isMobileNow ? container.clientWidth : 280;
+    width = isMobileNow ? container.clientWidth : window.innerWidth;
+    height = container.clientHeight;
+    svg.attr("viewBox", [0, 0, width, height]);
 
     // Update panel bounds used by clamping
-    panelLeft = newWidth - newGraphPanelWidth;
-    panelRight = newWidth;
-    panelBottom = newHeight - footerHeight;
-    centerX = isMobileNow ? newWidth / 2 : newWidth - newGraphPanelWidth / 2;
-    centerY = newHeight / 2;
+    panelLeft = width - graphPanelWidth;
+    panelRight = width;
+    panelBottom = height - footerHeight;
+    centerX = isMobileNow ? width / 2 : width - graphPanelWidth / 2;
+    centerY = height / 2;
 
     // Update zoom rect
-    zoomRect.attr("x", panelLeft).attr("width", newGraphPanelWidth).attr("height", newHeight);
+    zoomRect.attr("x", panelLeft).attr("width", graphPanelWidth).attr("height", height);
 
     if (simulation) {
       simulation.force("x", d3.forceX(centerX).strength(0.02));
@@ -657,14 +657,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
       simulation.alpha(0.3).restart();
     }
+
+    fitGraph();
   }
 
-  // Only handle resize after user has interacted (not on page load layout shifts)
-  var userHasInteracted = false;
-  document.getElementById("graph-panel").addEventListener("pointerdown", function () {
-    userHasInteracted = true;
-  });
+  // Debounce resize to avoid thrashing during continuous resizing
+  var resizeTimer = null;
   window.addEventListener("resize", function () {
-    if (simulation && userHasInteracted) resizeGraph();
+    if (!simulation) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resizeGraph, 150);
   });
 });

@@ -1,8 +1,8 @@
 ---
 layout: post
-title: How to get set up on a new computational cluster
+title: How to get set up on a new machine
 date: 2026-03-28
-description: A guide for configuring a new computational cluster account, from SSH keys to conda environments to git authentication.
+description: A guide for configuring your set up on a cluster, from SSH keys to conda environments to git authentication.
 tags:
   - how-to
 toc:
@@ -298,9 +298,6 @@ One of the most powerful things I have started doing is writing custom shell fun
 
 Setting up workspace files for VS Code/Cursor by hand is tedious. This function generates a `.code-workspace` file for your current directory and saves it to `~/workspaces`. You can then open it directly from the terminal with `cursor ~/workspaces/my-project.code-workspace`.
 
-<details markdown="1">
-<summary>Show function</summary>
-
 ```bash
 create_workspace_file() {
     local current_dir=$(basename "$PWD")
@@ -322,14 +319,9 @@ EOL
 }
 ```
 
-</details>
-
 #### `gpu-users` - See who is using which GPUs
 
 On clusters that don't use SLURM for GPU allocation (where users share GPUs directly), it can be helpful to see which users are running processes on which GPUs before you launch a job. This function displays which users currently have processes using the various visible GPUs.
-
-<details markdown="1">
-<summary>Show function</summary>
 
 ```bash
 gpu-users() {
@@ -348,8 +340,6 @@ gpu-users() {
     done | sort -k1,1n
 }
 ```
-
-</details>
 
 ### tmux
 

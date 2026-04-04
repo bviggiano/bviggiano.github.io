@@ -1645,11 +1645,11 @@ nav[data-toggle="toc"] {
   top: 50%;
   transform: translateY(-50%);
   z-index: 99;
-  width: 12px;
-  height: 60px;
+  width: 20px;
+  height: 80px;
   background: var(--global-theme-color);
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 6px 6px 0;
   cursor: pointer;
   padding: 0;
   opacity: 0.7;
@@ -1660,18 +1660,18 @@ nav[data-toggle="toc"] {
   &:hover,
   &:active {
     opacity: 1;
-    width: 14px;
+    width: 24px;
   }
 
   // Three horizontal lines
   &::before {
     content: "";
     position: absolute;
-    left: 2px;
+    left: 4px;
     top: 50%;
     transform: translateY(-50%);
-    width: 8px;
-    height: 18px;
+    width: 12px;
+    height: 22px;
     border-top: 2px solid white;
     border-bottom: 2px solid white;
     box-sizing: border-box;
@@ -1680,10 +1680,10 @@ nav[data-toggle="toc"] {
   &::after {
     content: "";
     position: absolute;
-    left: 2px;
+    left: 4px;
     top: 50%;
     transform: translateY(-50%);
-    width: 8px;
+    width: 12px;
     height: 0;
     border-top: 2px solid white;
   }
@@ -2004,6 +2004,14 @@ figure.cover {
 
 .post-header {
   position: relative;
+
+  h1.post-title {
+    padding-right: 130px;
+
+    @media (max-width: 768px) {
+      padding-right: 0;
+    }
+  }
 }
 
 .ai-context-btn {
