@@ -60,6 +60,9 @@ pagination:
 <div class="col mb-4">
 <a href="{{ post.url | relative_url }}">
 <div class="card hoverable">
+{% if post.header_image %}
+<img class="card-img-top featured-hero-preview" src="{{ post.header_image | relative_url }}" alt="{{ post.title }}">
+{% endif %}
 <div class="row g-0">
 <div class="col-md-12">
 <div class="card-body">
@@ -114,6 +117,16 @@ pagination:
     {% assign categories = post.categories | join: "" %}
 
     <li>
+
+<div class="post-entry {% if post.header_image %}has-hero{% endif %}">
+{% if post.header_image %}
+<div class="post-hero-thumb">
+  <a href="{{ post.url | relative_url }}">
+    <img src="{{ post.header_image | relative_url }}" alt="{{ post.title }}">
+  </a>
+</div>
+{% endif %}
+<div class="post-entry-content">
 
 {% if post.thumbnail %}
 
@@ -176,6 +189,8 @@ pagination:
   </div>
 </div>
 {% endif %}
+</div>
+</div>
     </li>
 
     {% endfor %}

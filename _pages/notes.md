@@ -40,6 +40,9 @@ nav_order: 3
                 <div class="tree-item">
                   <span class="tree-branch"></span>
                   <div class="note-card">
+                    {% if note.header_image %}
+                      <img src="{{ note.header_image | relative_url }}" alt="" class="note-hero-thumb">
+                    {% endif %}
                     <div class="note-title-section">
                       {% if note.image %}
                         <img src="{{ note.image | relative_url }}" alt="icon" class="note-icon">
@@ -74,6 +77,9 @@ nav_order: 3
             {% assign read_time = note.content | number_of_words | divided_by: 180 | plus: 1 %}
             <div class="tree-item root-item">
               <div class="note-card">
+                {% if note.header_image %}
+                  <img src="{{ note.header_image | relative_url }}" alt="" class="note-hero-thumb">
+                {% endif %}
                 <div class="note-title-section">
                   {% if note.image %}
                     <img src="{{ note.image | relative_url }}" alt="icon" class="note-icon">

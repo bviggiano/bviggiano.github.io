@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var svg = d3.select("#knowledge-graph");
 
     // Detect mobile vs desktop layout
-    var isMobile = window.innerWidth < 768;
+    var isMobile = window.innerWidth < 1200;
     var graphPanelWidth = isMobile ? container.clientWidth : 280;
     var width = isMobile ? container.clientWidth : window.innerWidth;
     var height = container.clientHeight;
@@ -666,7 +666,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function resizeGraph() {
     var container = document.getElementById("graph-body");
     var svg = d3.select("#knowledge-graph");
-    var isMobileNow = window.innerWidth < 768;
+    var isMobileNow = window.innerWidth < 1200;
     graphPanelWidth = isMobileNow ? container.clientWidth : 280;
     width = isMobileNow ? container.clientWidth : window.innerWidth;
     height = container.clientHeight;

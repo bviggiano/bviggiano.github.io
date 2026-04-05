@@ -6,49 +6,11 @@ description: A guide for configuring your set up on a cluster, from SSH keys to 
 tags:
   - how-to
 og_image: /assets/img/cluster-setup-hero.png
+header_image: assets/img/cluster-setup-hero.gif
+header_tile_image: assets/img/cluster-setup-hero.png
 toc:
   sidebar: left
 ---
-
-<div class="hero-banner">
-  <div class="hero-banner-edge hero-banner-left"><canvas></canvas></div>
-  <img class="hero-banner-center" src="{{ 'assets/img/cluster-setup-hero.gif' | relative_url }}" alt="Cat typing on laptop">
-  <div class="hero-banner-edge hero-banner-right"><canvas></canvas></div>
-</div>
-
-<script>
-(function () {
-  var img = new Image();
-  img.onload = function () {
-    document.querySelectorAll('.hero-banner-edge canvas').forEach(function (canvas) {
-      var container = canvas.parentElement;
-      var h = container.offsetHeight;
-      var w = container.offsetWidth;
-      var tileW = Math.round(img.width * (h / img.height));
-      canvas.height = h;
-      canvas.width = w;
-      var ctx = canvas.getContext('2d');
-      var x = container.classList.contains('hero-banner-left') ? w : 0;
-      var dir = container.classList.contains('hero-banner-left') ? -1 : 1;
-      var i = 0;
-      while (container.classList.contains('hero-banner-left') ? x > -tileW : x < w) {
-        ctx.save();
-        if (i % 2 === 1) {
-          ctx.translate(x + tileW, 0);
-          ctx.scale(-1, 1);
-          ctx.drawImage(img, 0, 0, tileW, h);
-        } else {
-          ctx.drawImage(img, x, 0, tileW, h);
-        }
-        ctx.restore();
-        x += tileW * dir;
-        i++;
-      }
-    });
-  };
-  img.src = "{{ 'assets/img/cluster-setup-hero.png' | relative_url }}";
-})();
-</script>
 
 One of the most common questions I get from students just starting out in AI/ML research or computational biology is how to get set up on that new computational cluster they just got access to. Over the years, I've done this enough times that I started keeping a step-by-step guide I follow every time I get access to a new system to ensure I complete every step of my process. After getting a few requests to help with this in the last few weeks, I decided to publish my guide as a note here.
 

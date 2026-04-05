@@ -20,8 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("resize", positionToc);
   }
 
-  // Collect h2 and h3 headings
-  var headings = content.querySelectorAll("h2, h3");
+  // Collect headings based on toc_depth (default: h2, h3 only)
+  var tocDepth = content.getAttribute("data-toc-depth") || "3";
+  var selector = "h2, h3" + (parseInt(tocDepth) >= 4 ? ", h4" : "");
+  var headings = content.querySelectorAll(selector);
   if (headings.length < 2) {
     tocNav.style.display = "none";
     return;
@@ -75,14 +77,23 @@ document.addEventListener("DOMContentLoaded", function () {
   var headingsArr = Array.prototype.slice.call(headings);
   headingsArr.forEach(function (h, i) {
     var isH3 = h.tagName === "H3";
+    var isH4 = h.tagName === "H4";
     var li = document.createElement("li");
-    li.className = "auto-toc-item" + (isH3 ? " toc-h3" : " toc-h2");
+    li.className = "auto-toc-item" + (isH4 ? " toc-h4" : isH3 ? " toc-h3" : " toc-h2");
 
-    // Mark last h3 before next h2 (or end of list)
+    // Mark last h3 before next h2 (or end of list), but only if no h4 children follow
     if (isH3) {
       var next = headingsArr[i + 1];
       if (!next || next.tagName === "H2") {
         li.className += " toc-h3-last";
+      }
+    }
+
+    // Mark last h4 before next h2/h3 (or end of list)
+    if (isH4) {
+      var next = headingsArr[i + 1];
+      if (!next || next.tagName === "H2" || next.tagName === "H3") {
+        li.className += " toc-h4-last";
       }
     }
 
@@ -143,14 +154,20 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
 
-      // Build a map from each heading to its parent h2 heading
+      // Build maps from each heading to its parent h2 and parent h3
       var parentH2 = {};
+      var parentH3 = {};
       var currentH2 = null;
+      var currentH3 = null;
       headingsArr.forEach(function (h) {
         if (h.tagName === "H2") {
           currentH2 = h;
+          currentH3 = null;
+        } else if (h.tagName === "H3") {
+          currentH3 = h;
         }
         parentH2[h.id] = currentH2;
+        parentH3[h.id] = currentH3;
       });
 
       // Update all TOC links and their parent li elements
@@ -161,22 +178,28 @@ document.addEventListener("DOMContentLoaded", function () {
         link.parentElement.classList.remove("current");
       });
 
-      // Mark visible headings active, and also their parent h2
+      // Mark visible headings active, and also their parent h2 and h3
       visibleHeadings.forEach(function (id) {
         var link = headingMap[id];
         if (link) {
           link.classList.add("active");
           link.parentElement.classList.add("active");
         }
-        // If this is an h3, also activate its parent h2
+        // Activate parent h2
         var ph2 = parentH2[id];
         if (ph2 && ph2.id !== id && headingMap[ph2.id]) {
           headingMap[ph2.id].classList.add("active");
           headingMap[ph2.id].parentElement.classList.add("active");
         }
+        // Activate parent h3
+        var ph3 = parentH3[id];
+        if (ph3 && ph3.id !== id && headingMap[ph3.id]) {
+          headingMap[ph3.id].classList.add("active");
+          headingMap[ph3.id].parentElement.classList.add("active");
+        }
       });
 
-      // If no headings visible, highlight the last one scrolled past and its parent h2
+      // If no headings visible, highlight the last one scrolled past and its parents
       if (visibleHeadings.size === 0) {
         var scrollTop = window.scrollY + 100;
         var lastPassed = null;
@@ -190,6 +213,11 @@ document.addEventListener("DOMContentLoaded", function () {
           if (ph2 && ph2.id !== lastPassed.id && headingMap[ph2.id]) {
             headingMap[ph2.id].classList.add("active");
             headingMap[ph2.id].parentElement.classList.add("active");
+          }
+          var ph3 = parentH3[lastPassed.id];
+          if (ph3 && ph3.id !== lastPassed.id && headingMap[ph3.id]) {
+            headingMap[ph3.id].classList.add("active");
+            headingMap[ph3.id].parentElement.classList.add("active");
           }
         }
       }
@@ -226,22 +254,29 @@ document.addEventListener("DOMContentLoaded", function () {
       if (boldId && headingMap[boldId]) {
         headingMap[boldId].classList.add("current");
         headingMap[boldId].parentElement.classList.add("current");
-        // If current heading is an h3, also bold its parent h2
+        // If current heading is an h3 or h4, also bold its parent h2
         var ph2 = parentH2[boldId];
         if (ph2 && ph2.id !== boldId && headingMap[ph2.id]) {
           headingMap[ph2.id].classList.add("current");
           headingMap[ph2.id].parentElement.classList.add("current");
         }
+        // If current heading is an h4, also bold its parent h3
+        var ph3 = parentH3[boldId];
+        if (ph3 && ph3.id !== boldId && headingMap[ph3.id]) {
+          headingMap[ph3.id].classList.add("current");
+          headingMap[ph3.id].parentElement.classList.add("current");
+        }
       }
 
-      // Propagate active to all sibling h3s when any h3 in the group is active
-      var h3Group = [];
-      function activateGroup() {
-        var hasActive = h3Group.some(function (item) {
+      // Propagate active: when any item in an h2 group is active,
+      // light up ALL h3s, h4s in that group (for continuous trunk lines)
+      var h2Group = []; // all h3+h4 items under current h2
+      function activateH2Group() {
+        var hasActive = h2Group.some(function (item) {
           return item.classList.contains("active");
         });
         if (hasActive) {
-          h3Group.forEach(function (item) {
+          h2Group.forEach(function (item) {
             item.classList.add("active");
             item.querySelector(".auto-toc-link").classList.add("active");
           });
@@ -249,13 +284,37 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       tocItems.forEach(function (item) {
         if (item.classList.contains("toc-h2")) {
-          activateGroup();
-          h3Group = [];
-        } else if (item.classList.contains("toc-h3")) {
-          h3Group.push(item);
+          activateH2Group();
+          h2Group = [];
+        } else {
+          h2Group.push(item);
         }
       });
-      activateGroup();
+      activateH2Group();
+
+      // Also propagate within h3 sub-groups: when any h4 is active,
+      // light up all h4 siblings under the same h3
+      var h4Group = [];
+      function activateH4Group() {
+        var hasActive = h4Group.some(function (item) {
+          return item.classList.contains("active");
+        });
+        if (hasActive) {
+          h4Group.forEach(function (item) {
+            item.classList.add("active");
+            item.querySelector(".auto-toc-link").classList.add("active");
+          });
+        }
+      }
+      tocItems.forEach(function (item) {
+        if (item.classList.contains("toc-h2") || item.classList.contains("toc-h3")) {
+          activateH4Group();
+          h4Group = [];
+        } else if (item.classList.contains("toc-h4")) {
+          h4Group.push(item);
+        }
+      });
+      activateH4Group();
     },
     {
       rootMargin: "-80px 0px -20% 0px",
