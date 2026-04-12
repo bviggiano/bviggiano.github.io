@@ -44,7 +44,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/teaching/";
           },
-        },{id: "notes-how-to-get-set-up-on-a-new-machine",
+        },{id: "post-a-formal-introduction-to-the-amino-acids",
+        
+          title: "A Formal Introduction to the Amino Acids",
+        
+        description: "A visual tour of the 20 standard amino acids, their chemical properties, and the evolutionary logic encoded in substitution matrices and the genetic code.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/amino-acids/";
+          
+        },
+      },{id: "notes-how-to-get-set-up-on-a-new-machine",
           title: 'How to get set up on a new machine',
           description: "A guide for configuring your set up on a cluster, from SSH keys to conda environments to git authentication.",
           section: "Notes",handler: () => {
