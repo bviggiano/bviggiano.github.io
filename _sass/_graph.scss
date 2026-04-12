@@ -114,6 +114,11 @@ $navbar-height: 57px;
   &.link-folder {
     stroke-opacity: 0.3;
   }
+
+  &.link-section {
+    stroke-opacity: 0.25;
+    stroke-dasharray: 2 2;
+  }
 }
 
 .graph-label {
@@ -183,7 +188,7 @@ footer {
 
 // Desktop: content sits next to the graph, navbar/terminal span full width
 // Align left edge with the navbar container, right edge stops before graph.
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
   #main-content.container {
     // Match the left position of the centered navbar container
     margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
@@ -197,7 +202,7 @@ footer {
 }
 
 // Mobile: graph sits in normal document flow at the bottom, centered
-@media (max-width: 767px) {
+@media (max-width: 1199px) {
   .graph-panel {
     position: static;
     width: 100%;

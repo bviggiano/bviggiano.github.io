@@ -45,6 +45,54 @@ module Obsidian
     end
   end
 
+  # Slugify a heading text to match kramdown's default auto-id algorithm
+  # See: kramdown/converter/html.rb `create_id`
+  def self.slugify_heading(text)
+    id = text.gsub(/^[^a-zA-Z]+/, '')
+    id = id.tr('^a-zA-Z0-9 -', '')
+    id = id.tr(' ', '-')
+    id.downcase
+  end
+
+  # Extract h2 and h3 headings from markdown content.
+  # Returns array of {level:, text:, slug:} hashes, with slugs deduplicated
+  # (kramdown appends "-1", "-2", ... for duplicates).
+  # Skips headings inside fenced code blocks and inline HTML blocks.
+  def self.extract_headings(content)
+    headings = []
+    seen_slugs = Hash.new(0)
+    in_fence = false
+
+    content.each_line do |line|
+      # Toggle fenced code blocks
+      if line =~ /^```/
+        in_fence = !in_fence
+        next
+      end
+      next if in_fence
+
+      # Match h2 and h3 markdown headings
+      m = line.match(/^(\#{2,3})\s+(.+?)\s*$/)
+      next unless m
+
+      level = m[1].length
+      text = m[2].strip
+      # Strip trailing closing hashes (e.g., "## Heading ##")
+      text = text.sub(/\s*#+\s*$/, '')
+      slug = slugify_heading(text)
+      next if slug.empty?
+
+      # Deduplicate by appending a counter
+      count = seen_slugs[slug]
+      final_slug = count.zero? ? slug : "#{slug}-#{count}"
+      seen_slugs[slug] += 1
+
+      headings << { level: level, text: text, slug: final_slug }
+    end
+
+    headings
+  end
+
   # ---- Generator: build graph data JSON ----
   class GraphGenerator < Jekyll::Generator
     safe true
@@ -85,6 +133,36 @@ module Obsidian
             tags: doc.data['tags'] || [],
             date: doc.data['date']&.strftime('%Y-%m-%d')
           }
+
+          # Generate h2/h3 sub-nodes from the document's markdown content.
+          # These orbit their parent page and are only shown when that page
+          # is the active one (filtered client-side in graph.js).
+          headings = Obsidian.extract_headings(doc.content)
+          last_h2_id = nil
+          headings.each do |h|
+            sub_id = "#{doc.url}##{h[:slug]}"
+            nodes[sub_id] = {
+              id: sub_id,
+              title: h[:text],
+              url: sub_id,
+              type: "h#{h[:level]}",
+              parent: doc.url,
+              folder: folder,
+              tags: [],
+              date: nil
+            }
+
+            if h[:level] == 2
+              # h2 links to the parent page node
+              links << { source: doc.url, target: sub_id, type: 'section' }
+              last_h2_id = sub_id
+            else
+              # h3 links to the nearest preceding h2 in the same doc, or the
+              # page itself if no h2 has appeared yet
+              parent_id = last_h2_id || doc.url
+              links << { source: parent_id, target: sub_id, type: 'section' }
+            end
+          end
         end
       end
 

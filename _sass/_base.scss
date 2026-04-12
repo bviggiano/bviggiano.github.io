@@ -649,6 +649,43 @@ footer.sticky-bottom {
   }
 }
 
+// Blog post listing with hero thumbnail
+.post-entry {
+  &.has-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+}
+
+.post-hero-thumb {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.post-entry-content {
+  flex: 1;
+  min-width: 0;
+}
+
+// Featured post hero image
+.featured-hero-preview {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px 6px 0 0;
+}
+
 .pagination {
   .page-item {
     .page-link {
@@ -792,6 +829,17 @@ footer.sticky-bottom {
     &:hover {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
+  }
+
+  .note-hero-thumb {
+    align-self: stretch;
+    width: auto;
+    height: auto;
+    max-width: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
   }
 
   .note-title-section {
@@ -1608,7 +1656,9 @@ nav[data-toggle="toc"] {
   position: fixed;
   top: 50%;
   max-width: 200px;
-  max-height: calc(100vh - var(--graph-panel-top, 80px) - 40px);
+  // Reserve 200px top + bottom so when centered the TOC leaves
+  // ~100px of clearance from the header/nav at the top
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
   z-index: 10;
   transform: translateX(-100%) translateY(-50%);
@@ -2125,7 +2175,7 @@ figure.cover {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  height: 160px;
+  height: 200px;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   background: var(--global-bg-color);
@@ -2159,6 +2209,71 @@ figure.cover {
 
   .hero-banner-right canvas {
     left: 0;
+  }
+}
+
+// Amino acid cards
+.aa-card {
+  border: 1px solid var(--global-divider-color);
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  background: var(--global-bg-color);
+  overflow: hidden;
+
+  .aa-card-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .aa-card-structure {
+      flex: 0 0 180px;
+      text-align: center;
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+
+    .aa-card-stats {
+      flex: 0 1 220px;
+      text-align: center;
+
+      .aa-codes {
+        font-family: monospace;
+        font-size: 0.95rem;
+        color: var(--global-text-color-light);
+        margin-bottom: 0.5rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+        margin: 0 auto;
+
+        td:first-child {
+          font-weight: 600;
+          white-space: nowrap;
+          padding-right: 0.75rem;
+          text-align: right;
+        }
+
+        td:last-child {
+          text-align: left;
+        }
+      }
+    }
+
+    .aa-card-3d {
+      flex: 0 0 180px;
+    }
+  }
+
+  .aa-card-body {
+    margin-top: 1rem;
+    font-size: 0.95rem;
   }
 }
 

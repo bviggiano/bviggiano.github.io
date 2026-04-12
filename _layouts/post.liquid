@@ -61,7 +61,7 @@ layout: default
   </header>
 
   {% if page.header_image %}
-    {% include figure.liquid path=page.header_image class="img-fluid rounded z-depth-1" avoid_scaling=true %}
+    {% include hero-banner.liquid image=page.header_image tile_image=page.header_tile_image alt=page.title %}
   {% endif %}
 
   <article class="post-content">
@@ -71,7 +71,12 @@ layout: default
       </div>
       <hr>
     {% endif %}
-    <div id="markdown-content">
+    <div
+      id="markdown-content"
+      {% if page.toc_depth %}
+        data-toc-depth="{{ page.toc_depth }}"
+      {% endif %}
+    >
       {{ content }}
     </div>
   </article>
@@ -80,8 +85,8 @@ layout: default
     {% include citation.liquid %}
   {% endif %}
 
-  {% comment %} Kudos button for notes {% endcomment %}
-  {% if url_beginning == '/notes' %}
+  {% comment %} Kudos button for notes and blog posts {% endcomment %}
+  {% if url_beginning == '/notes' or url_beginning == '/blog/' %}
     <div class="kudos-container">
       <button class="kudos-button" id="kudos-btn">
         <span class="kudos-count" id="kudos-count">0</span>

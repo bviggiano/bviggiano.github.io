@@ -161,6 +161,73 @@ $toc-indent: 16px;
   &.toc-h3:last-child::after {
     bottom: 50%;
   }
+
+  // h4 items: further indented under h3 with own trunk line
+  &.toc-h4 {
+    padding-left: ($toc-indent * 3);
+    position: relative;
+    max-height: 40px;
+    opacity: 1;
+
+    .auto-toc-link {
+      font-size: 0.8rem;
+    }
+
+    // h2 trunk + h3 trunk via box-shadow
+    &::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $toc-line-color;
+      box-shadow: $toc-indent 0 0 0 $toc-line-color;
+      transition: background 0.4s ease;
+    }
+
+    // h4 own trunk line (third level)
+    &::after {
+      content: "";
+      position: absolute;
+      left: (4px + $toc-indent * 2);
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: $toc-line-color;
+      transition: background 0.4s ease;
+    }
+
+    // Horizontal branch from h4 trunk to text
+    .auto-toc-link::before {
+      content: "";
+      position: absolute;
+      left: (4px + $toc-indent * 2);
+      top: 50%;
+      width: 8px;
+      height: 2px;
+      background: $toc-line-color;
+      transition: background 0.4s ease;
+    }
+
+    &.active::before {
+      background: $toc-active-color;
+      box-shadow: $toc-indent 0 0 0 $toc-active-color;
+    }
+
+    &.active::after {
+      background: $toc-active-color;
+    }
+
+    &.active .auto-toc-link::before {
+      background: $toc-active-color;
+    }
+  }
+
+  // Trim h4's own trunk at end of group
+  &.toc-h4.toc-h4-last::after {
+    bottom: 50%;
+  }
 }
 
 .auto-toc-link {
