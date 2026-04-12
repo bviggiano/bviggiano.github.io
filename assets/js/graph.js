@@ -98,9 +98,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var currentPath = window.location.pathname;
 
+    // Strip h2/h3 sub-nodes that don't belong to the current page.
+    // These sub-nodes orbit their parent page and are only visible when
+    // we're actively viewing that page.
+    data.nodes = data.nodes.filter(function (n) {
+      if (n.type === "h2" || n.type === "h3") {
+        return n.parent === currentPath;
+      }
+      return true;
+    });
+    var nodeIdSet = {};
+    data.nodes.forEach(function (n) {
+      nodeIdSet[n.id] = true;
+    });
+    data.links = data.links.filter(function (l) {
+      var src = typeof l.source === "string" ? l.source : l.source.id;
+      var tgt = typeof l.target === "string" ? l.target : l.target.id;
+      return nodeIdSet[src] && nodeIdSet[tgt];
+    });
+
     // If current page has a node, filter to only show its neighborhood
     var currentNode = data.nodes.find(function (n) {
-      return n.url === currentPath;
+      return n.url === currentPath || n.id === currentPath;
     });
     if (currentNode) {
       var maxHops = 2;
@@ -136,10 +155,33 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var nodeColor = function (d) {
+      if (d.type === "h2" || d.type === "h3") return "#9a9a9a";
       if (d.type === "post") return "#d97757";
       if (d.type === "folder") return "#8b8b8b";
       return "#2698ba";
     };
+
+    // Strip LaTeX math delimiters so titles like "The $21^*$ Proteinogenic
+    // Amino Acids" render as "The 21* Proteinogenic Amino Acids" on nodes
+    // and tooltips.
+    function cleanTitle(title) {
+      if (!title) return title;
+      return title
+        .replace(/\$([^$]+)\$/g, function (_, inner) {
+          return inner.replace(/[\^_{}\\]/g, "");
+        })
+        .replace(/`([^`]+)`/g, "$1");
+    }
+
+    // Unified node radius function used everywhere.
+    // Current page gets a big halo; h2/h3 sub-nodes are small satellites.
+    function baseRadius(d) {
+      if (d.url === currentPath) return 14;
+      if (d.type === "h2") return 5;
+      if (d.type === "h3") return 3;
+      if (d.type === "note") return 8;
+      return 12;
+    }
 
     // Restore saved positions
     var savedPositions = {};
@@ -168,6 +210,14 @@ document.addEventListener("DOMContentLoaded", function () {
         n.x = centerX + radius * Math.cos(angleStep * i);
         n.y = centerY + radius * Math.sin(angleStep * i);
       });
+    }
+
+    // Seed the current node at the simulation center. We DON'T pin it (no
+    // fx/fy) because with a strong centering force it'll naturally gravitate
+    // back to center, and the other nodes will orbit around it.
+    if (currentNode) {
+      currentNode.x = centerX;
+      currentNode.y = centerY;
     }
 
     var nodeById = {};
@@ -260,6 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var cls = "graph-link";
         if (d.type === "transclusion") cls += " link-transclusion";
         if (d.type === "folder") cls += " link-folder";
+        if (d.type === "section") cls += " link-section";
         return cls;
       })
       .attr("stroke-width", 1);
@@ -275,9 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (d.url === currentPath) cls += " graph-node-current";
         return cls;
       })
-      .attr("r", function (d) {
-        return d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
-      })
+      .attr("r", baseRadius)
       .attr("fill", function (d) {
         return nodeColor(d);
       })
@@ -291,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .join("text")
       .attr("class", "graph-label")
       .text(function (d) {
-        return d.title;
+        return cleanTitle(d.title);
       })
       .attr("display", "none")
       .style("cursor", "pointer");
@@ -301,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Shared highlight/unhighlight for both nodes and labels
     function highlightNode(event, d) {
-      tooltip.style("display", "block").text(d.title);
+      tooltip.style("display", "block").text(cleanTitle(d.title));
 
       // Highlight the corresponding node circle
       node
@@ -359,7 +408,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("filter", null);
       label.style("fill", null).style("font-weight", null);
       link.attr("stroke-opacity", function (d) {
-        return d.type === "folder" ? 0.3 : 0.6;
+        if (d.type === "folder") return 0.3;
+        if (d.type === "section") return 0.25;
+        return 0.6;
       });
       node.attr("opacity", 1);
       label.attr("opacity", 1);
@@ -399,20 +450,24 @@ document.addEventListener("DOMContentLoaded", function () {
           return screenY(d);
         })
         .attr("r", function (d) {
-          var base = d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
-          return base * Math.max(zoomScale, 0.5);
+          return baseRadius(d) * Math.max(zoomScale, 0.5);
         });
 
-      var scaledFontSize = Math.max(11, 14 * Math.max(zoomScale, 0.5));
+      // Label font size is proportional to the node's radius, so h2/h3
+      // sub-nodes get correspondingly smaller text
+      function fontSizeFor(d) {
+        return baseRadius(d) * 1.2 * Math.max(zoomScale, 0.5);
+      }
       label
         .attr("x", function (d) {
           return screenX(d);
         })
         .attr("y", function (d) {
-          var base = d.url === currentPath ? 14 : d.type === "note" ? 8 : 12;
-          return screenY(d) + base * Math.max(zoomScale, 0.5) + scaledFontSize + 4;
+          return screenY(d) + baseRadius(d) * Math.max(zoomScale, 0.5) + fontSizeFor(d) + 2;
         })
-        .style("font-size", scaledFontSize + "px");
+        .style("font-size", function (d) {
+          return fontSizeFor(d) + "px";
+        });
 
       link.attr("stroke-width", Math.max(1, zoomScale));
     }
@@ -424,6 +479,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Create simulation stopped
+    // Obsidian-inspired physics parameters. Obsidian uses (in its own units):
+    //   link distance: 198, link strength: 0.44, repel strength: 16.4,
+    //   center strength: 0.48
+    // Our graph panel is narrower, so link distances are scaled down a bit.
     simulation = d3
       .forceSimulation(data.nodes)
       .stop()
@@ -434,12 +493,42 @@ document.addEventListener("DOMContentLoaded", function () {
           .id(function (d) {
             return d.id;
           })
-          .distance(60)
+          .distance(function (l) {
+            return l.type === "section" ? 110 : 230;
+          })
+          .strength(function (l) {
+            return l.type === "section" ? 0.45 : 0.44;
+          })
       )
-      .force("charge", d3.forceManyBody().strength(-30))
-      .force("x", d3.forceX(centerX).strength(0.005))
-      .force("y", d3.forceY(centerY).strength(0.005))
-      .force("collide", d3.forceCollide(20))
+      .force(
+        "charge",
+        // Moderate repulsion for most nodes, but the current (orange) page
+        // node gets a much stronger charge so it pushes h3 satellites away
+        // (h3s aren't directly linked to the post, so only the many-body
+        // force keeps them from crowding the center)
+        d3.forceManyBody().strength(-60)
+      )
+      // Centering force — the current page node gets a much stronger pull
+      // toward center so it stays anchored there while its neighbors orbit
+      // around it (mimicking Obsidian's behavior).
+      .force(
+        "x",
+        d3.forceX(centerX).strength(function (d) {
+          return d.url === currentPath ? 0.8 : 0.12;
+        })
+      )
+      .force(
+        "y",
+        d3.forceY(centerY).strength(function (d) {
+          return d.url === currentPath ? 0.8 : 0.12;
+        })
+      )
+      .force(
+        "collide",
+        d3.forceCollide(function (d) {
+          return d.type === "h2" ? 10 : d.type === "h3" ? 8 : 18;
+        })
+      )
       .on("tick", ticked);
 
     if (hasPositions) {
@@ -484,7 +573,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Zoom-to-fit: smoothly transition to show all nodes within panel
+    // Zoom-to-fit: smoothly transition to show all nodes within panel.
+    // If there's a current-page node, we center the view on IT rather than
+    // on the bounding-box centroid, so the orange node always sits in the
+    // middle of the panel (Obsidian-style).
     function fitGraph(instant) {
       if (!data.nodes.length) return;
 
@@ -493,23 +585,39 @@ document.addEventListener("DOMContentLoaded", function () {
       sessionStorage.removeItem(ZOOM_KEY);
       sessionStorage.removeItem(VIEWBOX_KEY);
 
-      var xExtent = d3.extent(data.nodes, function (d) {
-        return d.x;
+      // Compute the scale: we want all nodes to fit in the panel, but we
+      // also want the orange node centered. Measure the farthest node from
+      // the current node (or from the bounding-box center if no current node)
+      // and size the zoom so that distance fits within half the panel width.
+      var simCx, simCy;
+      if (currentNode) {
+        simCx = currentNode.x;
+        simCy = currentNode.y;
+      } else {
+        var xExtent0 = d3.extent(data.nodes, function (d) {
+          return d.x;
+        });
+        var yExtent0 = d3.extent(data.nodes, function (d) {
+          return d.y;
+        });
+        simCx = (xExtent0[0] + xExtent0[1]) / 2;
+        simCy = (yExtent0[0] + yExtent0[1]) / 2;
+      }
+
+      var maxDx = 1,
+        maxDy = 1;
+      data.nodes.forEach(function (d) {
+        var ax = Math.abs(d.x - simCx);
+        var ay = Math.abs(d.y - simCy);
+        if (ax > maxDx) maxDx = ax;
+        if (ay > maxDy) maxDy = ay;
       });
-      var yExtent = d3.extent(data.nodes, function (d) {
-        return d.y;
-      });
-      var dx = xExtent[1] - xExtent[0] || 1;
-      var dy = yExtent[1] - yExtent[0] || 1;
+
       var padding = 30;
-      var scale = Math.min((graphPanelWidth - padding * 2) / dx, (height - padding * 2) / dy, 0.35);
+      // Need to fit [simCx - maxDx, simCx + maxDx] into the panel width
+      var scale = Math.min((graphPanelWidth / 2 - padding) / maxDx, (height / 2 - padding) / maxDy, 0.35);
       scale = Math.max(scale, 0.3);
 
-      // Center of all nodes in sim space
-      var simCx = (xExtent[0] + xExtent[1]) / 2;
-      var simCy = (yExtent[0] + yExtent[1]) / 2;
-
-      // We want: simCx * scale + offsetX = panelCenterX
       var panelCenterX = panelLeft + graphPanelWidth / 2;
       var panelCenterY = height / 2;
       var offsetX = panelCenterX - simCx * scale;
@@ -539,105 +647,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Only run simulation and fit on first load (no saved positions)
     if (!hasPositions) {
-      // Temporarily increase centering strength for initial settling
-      simulation.force("x").strength(0.1);
-      simulation.force("y").strength(0.1);
-      for (var i = 0; i < 300; i++) simulation.tick();
-      // Restore gentle centering for ambient drift
-      simulation.force("x").strength(0.005);
-      simulation.force("y").strength(0.005);
+      // Run enough ticks for the layout to settle around the current node.
+      // The forceX/forceY already have per-node strength functions that
+      // strongly center the current node and gently center the rest.
+      simulation.alpha(1);
+      for (var i = 0; i < 500; i++) simulation.tick();
       ticked();
       fitGraph(true);
       container.classList.add("rendered");
     }
 
-    // Ambient drift: smooth arcing orbits using per-node phase offsets
-    data.nodes.forEach(function (n) {
-      n._driftPhaseX = Math.random() * Math.PI * 2;
-      n._driftPhaseY = Math.random() * Math.PI * 2;
-      n._driftSpeedX = 0.0003 + Math.random() * 0.0004;
-      n._driftSpeedY = 0.0003 + Math.random() * 0.0004;
-      n._driftRadius = 8 + Math.random() * 12;
-      n._baseX = n.x;
-      n._baseY = n.y;
-    });
-
-    var driftStartTime = null;
-    var driftDelay = 2000; // ms before drift begins
-    var driftEaseIn = 3000; // ms to ease in to full drift
+    // Continuous physics: let d3-force run at a low energy level indefinitely
+    // so the graph always responds to forces (drag, resize, etc.) with a
+    // natural, fluid feel — similar to how Obsidian's graph view behaves.
     var draggedNode = null;
+    simulation
+      .velocityDecay(0.7) // Strongly damped for slow, floaty motion
+      .alphaMin(0.001)
+      .alphaDecay(0.008) // Very slow decay so perturbations linger
+      .alphaTarget(0.02) // Low ambient energy — gentle continuous motion
+      .restart();
 
-    // Soft collision: applies gentle spring-like repulsion each frame.
-    // The dragged node is treated as immovable so others yield to it.
-    var collisionDist = 20;
-    var collisionStrength = 0.15; // fraction of overlap corrected per frame
-    function resolveCollisions() {
-      for (var a = 0; a < data.nodes.length; a++) {
-        for (var b = a + 1; b < data.nodes.length; b++) {
-          var na = data.nodes[a],
-            nb = data.nodes[b];
-          var dx = nb.x - na.x,
-            dy = nb.y - na.y;
-          var dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < collisionDist && dist > 0.1) {
-            var push = (collisionDist - dist) * collisionStrength;
-            var nx = dx / dist,
-              ny = dy / dist;
-            var aFixed = na === draggedNode;
-            var bFixed = nb === draggedNode;
-            if (aFixed) {
-              // Only push b away
-              nb.x += nx * push;
-              nb.y += ny * push;
-              nb._baseX += nx * push;
-              nb._baseY += ny * push;
-            } else if (bFixed) {
-              // Only push a away
-              na.x -= nx * push;
-              na.y -= ny * push;
-              na._baseX -= nx * push;
-              na._baseY -= ny * push;
-            } else {
-              var halfPush = push / 2;
-              na.x -= nx * halfPush;
-              na.y -= ny * halfPush;
-              na._baseX -= nx * halfPush;
-              na._baseY -= ny * halfPush;
-              nb.x += nx * halfPush;
-              nb.y += ny * halfPush;
-              nb._baseX += nx * halfPush;
-              nb._baseY += ny * halfPush;
-            }
-          }
-        }
-      }
+    // Convert screen-space drag coords back into simulation-space coords so
+    // the dragged node follows the cursor exactly at any zoom level.
+    function screenToSimX(sx) {
+      return (sx - panOffsetX) / zoomScale;
     }
-
-    function ambientDrift(timestamp) {
-      if (driftStartTime === null) driftStartTime = timestamp;
-      var elapsed = timestamp - driftStartTime;
-
-      // Ease in: 0 during delay, then ramp from 0 to 1 over easeIn period
-      var intensity = 0;
-      if (elapsed > driftDelay) {
-        intensity = Math.min(1, (elapsed - driftDelay) / driftEaseIn);
-      }
-
-      if (intensity > 0) {
-        data.nodes.forEach(function (n) {
-          if (n === draggedNode) return;
-          n.x = n._baseX + Math.sin(elapsed * n._driftSpeedX + n._driftPhaseX) * n._driftRadius * intensity;
-          n.y = n._baseY + Math.cos(elapsed * n._driftSpeedY + n._driftPhaseY) * n._driftRadius * intensity;
-        });
-      }
-      resolveCollisions();
-      ticked();
-      requestAnimationFrame(ambientDrift);
+    function screenToSimY(sy) {
+      return (sy - panOffsetY) / zoomScale;
     }
-    requestAnimationFrame(ambientDrift);
 
     function dragstarted(event) {
       clearTimeout(resetTimer);
+      // Heat up the simulation gently on drag
       if (!event.active) simulation.alphaTarget(0.1).restart();
       draggedNode = event.subject;
       event.subject.fx = event.subject.x;
@@ -645,19 +687,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function dragged(event) {
-      event.subject.fx = event.x;
-      event.subject.fy = event.y;
-      event.subject.x = event.x;
-      event.subject.y = event.y;
+      event.subject.fx = screenToSimX(event.x);
+      event.subject.fy = screenToSimY(event.y);
     }
 
     function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0);
+      // Relax back to the low ambient target so motion keeps flowing gently
+      if (!event.active) simulation.alphaTarget(0.02);
       event.subject.fx = null;
       event.subject.fy = null;
-      // Update base position so drift orbits around the new location
-      event.subject._baseX = event.subject.x;
-      event.subject._baseY = event.subject.y;
       draggedNode = null;
       scheduleReset();
     }
@@ -683,16 +721,19 @@ document.addEventListener("DOMContentLoaded", function () {
     zoomRect.attr("x", panelLeft).attr("width", graphPanelWidth).attr("height", height);
 
     if (simulation) {
-      simulation.force("x", d3.forceX(centerX).strength(0.02));
-      simulation.force("y", d3.forceY(centerY).strength(0.02));
-
-      // Update base positions to recenter
-      data.nodes.forEach(function (n) {
-        n._baseX = n.x;
-        n._baseY = n.y;
-      });
-
-      simulation.alpha(0.3).restart();
+      simulation.force(
+        "x",
+        d3.forceX(centerX).strength(function (d) {
+          return d.url === currentPath ? 0.8 : 0.12;
+        })
+      );
+      simulation.force(
+        "y",
+        d3.forceY(centerY).strength(function (d) {
+          return d.url === currentPath ? 0.8 : 0.12;
+        })
+      );
+      simulation.alpha(0.1).restart();
     }
 
     fitGraph();

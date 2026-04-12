@@ -114,6 +114,11 @@ $navbar-height: 57px;
   &.link-folder {
     stroke-opacity: 0.3;
   }
+
+  &.link-section {
+    stroke-opacity: 0.25;
+    stroke-dasharray: 2 2;
+  }
 }
 
 .graph-label {
