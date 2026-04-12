@@ -1656,7 +1656,9 @@ nav[data-toggle="toc"] {
   position: fixed;
   top: 50%;
   max-width: 200px;
-  max-height: calc(100vh - var(--graph-panel-top, 80px) - 40px);
+  // Reserve 200px top + bottom so when centered the TOC leaves
+  // ~100px of clearance from the header/nav at the top
+  max-height: calc(100vh - 200px);
   overflow-y: auto;
   z-index: 10;
   transform: translateX(-100%) translateY(-50%);

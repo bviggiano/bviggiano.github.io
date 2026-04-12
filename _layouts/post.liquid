@@ -85,8 +85,8 @@ layout: default
     {% include citation.liquid %}
   {% endif %}
 
-  {% comment %} Kudos button for notes {% endcomment %}
-  {% if url_beginning == '/notes' %}
+  {% comment %} Kudos button for notes and blog posts {% endcomment %}
+  {% if url_beginning == '/notes' or url_beginning == '/blog/' %}
     <div class="kudos-container">
       <button class="kudos-button" id="kudos-btn">
         <span class="kudos-count" id="kudos-count">0</span>

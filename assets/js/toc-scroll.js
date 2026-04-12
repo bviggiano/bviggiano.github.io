@@ -315,6 +315,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
       activateH4Group();
+
+      // Auto-scroll the TOC sidebar so the current heading stays in view
+      if (boldId && headingMap[boldId]) {
+        var currentLi = headingMap[boldId].parentElement;
+        var tocRect = tocNav.getBoundingClientRect();
+        var itemRect = currentLi.getBoundingClientRect();
+        var padding = 30; // keep this much space above/below the current item
+        var targetScrollTop = tocNav.scrollTop;
+
+        if (itemRect.top < tocRect.top + padding) {
+          // Current item is above (or too close to) the top of the visible area
+          targetScrollTop += itemRect.top - tocRect.top - padding;
+        } else if (itemRect.bottom > tocRect.bottom - padding) {
+          // Current item is below (or too close to) the bottom of the visible area
+          targetScrollTop += itemRect.bottom - tocRect.bottom + padding;
+        }
+
+        if (targetScrollTop !== tocNav.scrollTop) {
+          tocNav.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+        }
+      }
     },
     {
       rootMargin: "-80px 0px -20% 0px",
