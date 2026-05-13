@@ -59,6 +59,16 @@ ninja.data = [{
           description: "Preprocessed AAV2 capsid sequences with viability measurements for ML benchmarking",
           section: "Projects",handler: () => {
               window.location.href = "/projects/aav2_capsid_viability/";
+            },},{id: "projects-namekit",
+          title: 'namekit',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/namekit/";
+            },},{id: "projects-onefig",
+          title: 'onefig',
+          description: "",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/onefig/";
             },},{id: "projects-pact",
           title: 'pact',
           description: "",
