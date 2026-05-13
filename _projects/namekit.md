@@ -6,5 +6,6 @@ importance: 5
 category:
 related_publications: False
 github: https://github.com/bviggiano/namekit
+pypi: namekit
 redirect: https://github.com/bviggiano/namekit
 ---

@@ -1194,6 +1194,45 @@ footer.sticky-bottom {
         align-items: center;
         gap: 0.3rem;
       }
+
+      .pypi-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: auto;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        background-color: rgba(55, 118, 171, 0.28);
+        color: #1f4e79;
+        line-height: 1.5;
+        cursor: pointer;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
+
+        .pypi-logo {
+          width: 0.95em;
+          height: 0.95em;
+          flex-shrink: 0;
+        }
+
+        &:hover {
+          background-color: #306998;
+          color: #fff;
+        }
+
+        html[data-theme="dark"] & {
+          background-color: rgba(116, 178, 232, 0.22);
+          color: #9dc8ed;
+
+          &:hover {
+            background-color: #4a90c8;
+            color: #fff;
+          }
+        }
+      }
     }
   }
 
