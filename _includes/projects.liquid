@@ -7,14 +7,19 @@
   >
     <div class="card h-100 hoverable">
       {% if project.img %}
-        {%
-          include figure.liquid
-          loading="eager"
-          path=project.img
-          sizes = "250px"
-          alt="project thumbnail"
-          class="card-img-top"
-        %}
+        <div
+          class="project-thumb"
+          style="--thumb-focus: {{ project.img_focus | default: 'center' }}; --thumb-zoom: {{ project.img_zoom | default: 1 }};"
+        >
+          {%
+            include figure.liquid
+            loading="eager"
+            path=project.img
+            sizes = "600px"
+            alt="project thumbnail"
+            class="card-img-top"
+          %}
+        </div>
       {% endif %}
       <div class="card-body">
         {% if project.github %}
