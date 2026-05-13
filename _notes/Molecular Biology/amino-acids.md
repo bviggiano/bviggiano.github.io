@@ -19,7 +19,7 @@ When you [Google "amino acids,"](https://www.google.com/search?q=amino+acids) on
 {% include figure.liquid path="assets/img/amino-acids-chart.png" caption="The chart of the 20 standard amino acids I have memorized too many times. Source: [Technology Networks](https://www.technologynetworks.com/applied-sciences/articles/amino-acids-functions-table-and-chart-324230)" class="img-fluid rounded" zoomable=true %}
 </div>
 
-I've often glanced these over and moved on to higher-level concepts like enzyme mechanics or structure analysis, but this time I wanted to appreciate the amino acids a bit more and use this as an excuse to mess around with displaying molecules on my website.
+I decided to write up a short reference on the amino acids and use this as an excuse to mess around with displaying molecules on my website!
 
 ## A brief aside on the amino acid synthetases
 
