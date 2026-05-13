@@ -40,21 +40,30 @@
       }
     }
   };
-</script> <script src="/assets/js/terminal.js" defer></script> <div class="container mt-5" id="main-content" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">projects</h1> <p class="post-description"></p> </header> <article> <p>Projects and codebases</p> <div class="projects"> <div class="row row-cols-1 row-cols-md-3"> <div class="col"> <a href="https://github.com/SUwonglab/ProVADA" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/provada_cover-480.webp 480w,/assets/img/projects/provada_cover-800.webp 800w,/assets/img/projects/provada_cover-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/provada_cover.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> SUwonglab/ProVADA</h2> <p class="card-text">Conditional variant generation via ensemble-guided test-time steering</p> <div class="repo-stats" id="repo-stats-suwonglab-provada"></div> <script>
+</script> <script src="/assets/js/terminal.js" defer></script> <div class="container mt-5" id="main-content" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">projects</h1> <p class="post-description"></p> </header> <article> <p>Projects and codebases</p> <div class="projects"> <div class="row row-cols-1 row-cols-md-3"> <div class="col"> <a href="https://github.com/SUwonglab/ProVADA" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/provada_cover-480.webp 480w,/assets/img/projects/provada_cover-800.webp 800w,/assets/img/projects/provada_cover-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/provada_cover.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> SUwonglab/ProVADA</h2> <p class="card-text">Conditional variant generation via ensemble-guided test-time steering</p> <div class="repo-stats" id="repo-stats-suwonglab-provada"> </div> <script>
             fetch('https://api.github.com/repos/SUwonglab/ProVADA')
               .then(response => response.json())
               .then(data => {
                 
                 const statsEl = document.getElementById('repo-stats-suwonglab-provada');
                 if (data.stargazers_count !== undefined) {
-                  statsEl.innerHTML = `
+                  statsEl.insertAdjacentHTML('afterbegin', `
                     <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
                     <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
-                  `;
+                  `);
                 }
               })
               .catch(() => {});
-          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/onefig" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/onefig-480.webp 480w,/assets/img/projects/onefig-800.webp 800w,/assets/img/projects/onefig-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/onefig.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/onefig</h2> <p class="card-text" id="repo-desc-bviggiano-onefig"></p> <div class="repo-stats" id="repo-stats-bviggiano-onefig"></div> <script>
+          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/onefig" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/onefig-480.webp 480w,/assets/img/projects/onefig-800.webp 800w,/assets/img/projects/onefig-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/onefig.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/onefig</h2> <p class="card-text" id="repo-desc-bviggiano-onefig"></p> <div class="repo-stats" id="repo-stats-bviggiano-onefig"> <span class="pypi-badge" role="link" tabindex="0" title="View on PyPI" onclick="event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/onefig/', '_blank', 'noopener,noreferrer');" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/onefig/', '_blank', 'noopener,noreferrer'); }"> <svg class="pypi-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 256 255" aria-hidden="true"> <path fill="#3776AB" d="M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.127h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072zM92.802 19.66a11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13 11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.13z"></path><path fill="#FFD43B" d="M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.71c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.895 62.518 33.895zm34.114-19.586a11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.131 11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13z"></path> </svg> onefig<span class="pypi-version" id="pypi-version-onefig"></span></span> <script>
+                fetch('https://pypi.org/pypi/onefig/json')
+                  .then((r) => r.json())
+                  .then((d) => {
+                    if (d.info && d.info.version) {
+                      document.getElementById('pypi-version-onefig').textContent = ' | v' + d.info.version;
+                    }
+                  })
+                  .catch(() => {});
+              </script> </div> <script>
             fetch('https://api.github.com/repos/bviggiano/onefig')
               .then(response => response.json())
               .then(data => {
@@ -65,10 +74,10 @@
                 
                 const statsEl = document.getElementById('repo-stats-bviggiano-onefig');
                 if (data.stargazers_count !== undefined) {
-                  statsEl.innerHTML = `
+                  statsEl.insertAdjacentHTML('afterbegin', `
                     <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
                     <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
-                  `;
+                  `);
                 }
               })
               .catch(() => {});
@@ -86,7 +95,7 @@
                 }
               })
               .catch(() => {});
-          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/pact" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/pact-480.webp 480w,/assets/img/projects/pact-800.webp 800w,/assets/img/projects/pact-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/pact.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/pact</h2> <p class="card-text" id="repo-desc-bviggiano-pact"></p> <div class="repo-stats" id="repo-stats-bviggiano-pact"></div> <script>
+          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/pact" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/pact-480.webp 480w,/assets/img/projects/pact-800.webp 800w,/assets/img/projects/pact-1400.webp 1400w," type="image/webp" sizes="600px"></source> <img src="/assets/img/projects/pact.png" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/pact</h2> <p class="card-text" id="repo-desc-bviggiano-pact"></p> <div class="repo-stats" id="repo-stats-bviggiano-pact"> </div> <script>
             fetch('https://api.github.com/repos/bviggiano/pact')
               .then(response => response.json())
               .then(data => {
@@ -97,14 +106,23 @@
                 
                 const statsEl = document.getElementById('repo-stats-bviggiano-pact');
                 if (data.stargazers_count !== undefined) {
-                  statsEl.innerHTML = `
+                  statsEl.insertAdjacentHTML('afterbegin', `
                     <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
                     <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
-                  `;
+                  `);
                 }
               })
               .catch(() => {});
-          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/namekit" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/namekit.svg" sizes="600px"></source> <img src="/assets/img/projects/namekit.svg" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/namekit</h2> <p class="card-text" id="repo-desc-bviggiano-namekit"></p> <div class="repo-stats" id="repo-stats-bviggiano-namekit"></div> <script>
+          </script> </div> </div> </a> </div> <div class="col"> <a href="https://github.com/bviggiano/namekit" target="_blank" rel="noopener noreferrer"> <div class="card h-100 hoverable"> <div class="project-thumb" style="--thumb-focus: center; --thumb-zoom: 1;"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/projects/namekit.svg" sizes="600px"></source> <img src="/assets/img/projects/namekit.svg" class="card-img-top" width="100%" height="auto" alt="project thumbnail" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"> </picture> </figure> </div> <div class="card-body"> <h2 class="card-title"> <i class="fa-brands fa-github gh-icon"></i> bviggiano/namekit</h2> <p class="card-text" id="repo-desc-bviggiano-namekit"></p> <div class="repo-stats" id="repo-stats-bviggiano-namekit"> <span class="pypi-badge" role="link" tabindex="0" title="View on PyPI" onclick="event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/namekit/', '_blank', 'noopener,noreferrer');" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/namekit/', '_blank', 'noopener,noreferrer'); }"> <svg class="pypi-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 256 255" aria-hidden="true"> <path fill="#3776AB" d="M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.127h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072zM92.802 19.66a11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13 11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.13z"></path><path fill="#FFD43B" d="M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.71c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.895 62.518 33.895zm34.114-19.586a11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.131 11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13z"></path> </svg> namekit<span class="pypi-version" id="pypi-version-namekit"></span></span> <script>
+                fetch('https://pypi.org/pypi/namekit/json')
+                  .then((r) => r.json())
+                  .then((d) => {
+                    if (d.info && d.info.version) {
+                      document.getElementById('pypi-version-namekit').textContent = ' | v' + d.info.version;
+                    }
+                  })
+                  .catch(() => {});
+              </script> </div> <script>
             fetch('https://api.github.com/repos/bviggiano/namekit')
               .then(response => response.json())
               .then(data => {
@@ -115,10 +133,10 @@
                 
                 const statsEl = document.getElementById('repo-stats-bviggiano-namekit');
                 if (data.stargazers_count !== undefined) {
-                  statsEl.innerHTML = `
+                  statsEl.insertAdjacentHTML('afterbegin', `
                     <span class="stat"><i class="fa-solid fa-star"></i> ${data.stargazers_count}</span>
                     <span class="stat"><i class="fa-solid fa-code-fork"></i> ${data.forks_count}</span>
-                  `;
+                  `);
                 }
               })
               .catch(() => {});
