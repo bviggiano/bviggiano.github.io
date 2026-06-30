@@ -74,6 +74,11 @@ ninja.data = [{
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/pact/";
+            },},{id: "projects-proto-tools",
+          title: 'proto-tools',
+          description: "A universal infrastructure layer for generative biology",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/proto-tools/";
             },},{id: "projects-provada",
           title: 'ProVADA',
           description: "Conditional variant generation via ensemble-guided test-time steering",
