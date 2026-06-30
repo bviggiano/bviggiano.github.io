@@ -1195,6 +1195,49 @@ footer.sticky-bottom {
         gap: 0.3rem;
       }
 
+      .docs-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-left: auto;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.15rem 0.6rem;
+        border-radius: 999px;
+        background-color: rgba(217, 119, 87, 0.22);
+        color: #b2542f;
+        line-height: 1.5;
+        cursor: pointer;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
+
+        i {
+          font-size: 0.85em;
+        }
+
+        &:hover {
+          background-color: var(--global-theme-color);
+          color: #fff;
+        }
+
+        html[data-theme="dark"] & {
+          background-color: rgba(38, 152, 186, 0.2);
+          color: #6fc4dc;
+
+          &:hover {
+            background-color: var(--global-theme-color);
+            color: #fff;
+          }
+        }
+      }
+
+      // When a docs badge precedes a pypi badge, only the docs badge pushes
+      // right so the two cluster together instead of spreading apart.
+      .docs-badge ~ .pypi-badge {
+        margin-left: 0;
+      }
+
       .pypi-badge {
         display: inline-flex;
         align-items: center;

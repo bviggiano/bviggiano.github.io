@@ -9,3 +9,9 @@
   url: https://github.com/bmds-260
   instructor: Mirabela Rusu
   description: Foundational techniques for processing, analyzing, and interpreting biomedical images for scientific discovery and clinical applications.
+
+- title: Computational Applications of High-Throughput Protein Data for Machine Learning
+  img: https://avatars.githubusercontent.com/u/261294559?s=200&v=4
+  url: https://github.com/bios-442
+  instructor: Russ Altman
+  description: Hands-on computational methods for analyzing high-throughput protein data, from gene expression matrices and protein language model embeddings to microscopy-derived features, training machine learning models for classification, function prediction, and data integration across modalities.
