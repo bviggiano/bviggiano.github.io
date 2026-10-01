@@ -259,7 +259,13 @@
         >
       {% endif %}
       {% if entry.code %}
-        <a href="{{ entry.code }}" class="btn btn-sm z-depth-0" role="button">Code</a>
+        <a
+          href="{{ entry.code }}"
+          class="btn btn-sm z-depth-0"
+          role="button"
+          style="background-color: #24292f; color: white; border: none; font-size: 0.9rem;"
+          ><i class="fa-brands fa-github" style="margin-right: 0.35em;"></i>GitHub</a
+        >
       {% endif %}
       {% if entry.poster %}
         {% if entry.poster contains '://' %}

@@ -1,4 +1,5 @@
 ---
+published: false
 layout: post
 title: A Formal Introduction to the Amino Acids
 date: 2026-04-04
