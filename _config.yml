@@ -317,7 +317,6 @@ filtered_bibtex_keywords:
     inspirehep_id,
     pdf,
     poster,
-    preprint,
     preview,
     selected,
     slides,
@@ -325,6 +324,7 @@ filtered_bibtex_keywords:
     video,
     website,
     github,
+    venue_type,
   ]
 
 # Maximum number of authors to be shown for each publication (more authors are visible on click)
