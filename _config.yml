@@ -317,6 +317,7 @@ filtered_bibtex_keywords:
     inspirehep_id,
     pdf,
     poster,
+    preprint,
     preview,
     selected,
     slides,

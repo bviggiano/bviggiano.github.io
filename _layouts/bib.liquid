@@ -205,6 +205,24 @@
           </a>
         {% endif %}
       {% endif %}
+      {% if entry.preprint %}
+        {% if entry.preprint contains 'biorxiv.org' %}
+          {% assign preprint_label = 'bioRxiv' %}
+        {% elsif entry.preprint contains 'medrxiv.org' %}
+          {% assign preprint_label = 'medRxiv' %}
+        {% elsif entry.preprint contains 'arxiv.org' %}
+          {% assign preprint_label = 'arXiv' %}
+        {% else %}
+          {% assign preprint_label = 'Preprint' %}
+        {% endif %}
+        <a
+          href="{{ entry.preprint }}"
+          class="btn btn-sm z-depth-0"
+          role="button"
+          style="background-color: #607d8b; color: white; border: none; font-size: 0.9rem;"
+          ><i class="fa-solid fa-file-lines" style="margin-right: 0.35em;"></i>{{ preprint_label -}}
+        </a>
+      {% endif %}
       {% if entry.doi %}
         <a href="https://doi.org/{{ entry.doi }}" class="btn btn-sm z-depth-0" role="button">DOI</a>
       {% endif %}
@@ -259,13 +277,7 @@
         >
       {% endif %}
       {% if entry.code %}
-        <a
-          href="{{ entry.code }}"
-          class="btn btn-sm z-depth-0"
-          role="button"
-          style="background-color: #24292f; color: white; border: none; font-size: 0.9rem;"
-          ><i class="fa-brands fa-github" style="margin-right: 0.35em;"></i>GitHub</a
-        >
+        <a href="{{ entry.code }}" class="btn btn-sm z-depth-0" role="button">Code</a>
       {% endif %}
       {% if entry.poster %}
         {% if entry.poster contains '://' %}
