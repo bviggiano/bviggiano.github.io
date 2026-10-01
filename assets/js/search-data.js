@@ -49,36 +49,21 @@ ninja.data = [{
           description: "A guide for configuring your set up on a cluster, from SSH keys to conda environments to git authentication.",
           section: "Notes",handler: () => {
               window.location.href = "/notes/cluster-set-up/";
-            },},{id: "notes-a-formal-introduction-to-the-amino-acids",
-          title: 'A Formal Introduction to the Amino Acids',
-          description: "A visual tour of the 20 standard amino acids, their chemical properties, and the evolutionary logic encoded in substitution matrices and the genetic code.",
-          section: "Notes",handler: () => {
-              window.location.href = "/notes/amino-acids/";
             },},{id: "projects-aav2-capsid-viability-dataset",
           title: 'AAV2 Capsid Viability Dataset',
           description: "Preprocessed AAV2 capsid sequences with viability measurements for ML benchmarking",
           section: "Projects",handler: () => {
               window.location.href = "/projects/aav2_capsid_viability/";
-            },},{id: "projects-namekit",
-          title: 'namekit',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/namekit/";
             },},{id: "projects-onefig",
           title: 'onefig',
           description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/onefig/";
-            },},{id: "projects-pact",
-          title: 'pact',
-          description: "",
-          section: "Projects",handler: () => {
-              window.location.href = "/projects/pact/";
-            },},{id: "projects-proto-tools",
-          title: 'proto-tools',
+            },},{id: "projects-proto",
+          title: 'Proto',
           description: "A universal infrastructure layer for generative biology",
           section: "Projects",handler: () => {
-              window.location.href = "/projects/proto-tools/";
+              window.location.href = "/projects/proto/";
             },},{id: "projects-provada",
           title: 'ProVADA',
           description: "Conditional variant generation via ensemble-guided test-time steering",
