@@ -541,7 +541,7 @@ export HF_TOKEN=hf_...
 You can generate a token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens). Verify it worked:
 
 ```bash
-huggingface-cli whoami
+hf auth whoami
 ```
 
 ### Weights & Biases
