@@ -1,4 +1,5 @@
 ---
+published: false
 layout: page
 title: namekit
 img: assets/img/projects/namekit.svg

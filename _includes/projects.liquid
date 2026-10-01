@@ -22,7 +22,40 @@
         </div>
       {% endif %}
       <div class="card-body">
-        {% if project.github %}
+        {% if project.repos %}
+          <h2 class="card-title">{{ project.title }}</h2>
+          <p class="card-text">{{ project.description }}</p>
+          <ul class="repo-list">
+            {% for repo in project.repos %}
+              {% assign repo_path = repo | remove: 'https://github.com/' %}
+              <li
+                class="repo-row"
+                role="link"
+                tabindex="0"
+                title="View on GitHub"
+                onclick="event.preventDefault(); event.stopPropagation(); window.open('{{ repo }}', '_blank', 'noopener,noreferrer');"
+                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.open('{{ repo }}', '_blank', 'noopener,noreferrer'); }"
+              >
+                <span class="repo-name"><i class="fa-brands fa-github gh-icon"></i> {{ repo_path }}</span>
+                <span class="stat" id="repo-stars-{{ repo_path | slugify }}"></span>
+              </li>
+              <script>
+                fetch('https://api.github.com/repos/{{ repo_path }}')
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.stargazers_count !== undefined) {
+                      document.getElementById('repo-stars-{{ repo_path | slugify }}').innerHTML =
+                        `<i class="fa-solid fa-star"></i> ${data.stargazers_count}`;
+                    }
+                  })
+                  .catch(() => {});
+              </script>
+            {% endfor %}
+          </ul>
+          <div class="repo-stats">
+            {% include project_badges.liquid %}
+          </div>
+        {% elsif project.github %}
           {% assign repo_path = project.github | remove: 'https://github.com/' %}
           <h2 class="card-title"><i class="fa-brands fa-github gh-icon"></i> {{ repo_path }}</h2>
           {% if project.description %}
@@ -31,44 +64,7 @@
             <p class="card-text" id="repo-desc-{{ repo_path | slugify }}"></p>
           {% endif %}
           <div class="repo-stats" id="repo-stats-{{ repo_path | slugify }}">
-            {% if project.docs %}
-              <span
-                class="docs-badge"
-                role="link"
-                tabindex="0"
-                title="View documentation"
-                onclick="event.preventDefault(); event.stopPropagation(); window.open('{{ project.docs }}', '_blank', 'noopener,noreferrer');"
-                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.open('{{ project.docs }}', '_blank', 'noopener,noreferrer'); }"
-              >
-                <i class="fa-solid fa-book" aria-hidden="true"></i> Docs
-              </span>
-            {% endif %}
-            {% if project.pypi %}
-              <span
-                class="pypi-badge"
-                role="link"
-                tabindex="0"
-                title="View on PyPI"
-                onclick="event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/{{ project.pypi }}/', '_blank', 'noopener,noreferrer');"
-                onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); window.open('https://pypi.org/project/{{ project.pypi }}/', '_blank', 'noopener,noreferrer'); }"
-              >
-                <svg class="pypi-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 255" aria-hidden="true">
-                  <path fill="#3776AB" d="M126.916.072c-64.832 0-60.784 28.115-60.784 28.115l.072 29.127h61.868v8.745H41.631S.145 61.355.145 126.77c0 65.417 36.21 63.097 36.21 63.097h21.61v-30.356s-1.165-36.21 35.632-36.21h61.362s34.475.557 34.475-33.319V33.97S194.67.072 126.916.072zM92.802 19.66a11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13 11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.13z"/><path fill="#FFD43B" d="M128.757 254.126c64.832 0 60.784-28.115 60.784-28.115l-.072-29.127H127.6v-8.745h86.441s41.486 4.705 41.486-60.71c0-65.416-36.21-63.096-36.21-63.096h-21.61v30.355s1.165 36.21-35.632 36.21h-61.362s-34.475-.557-34.475 33.32v56.013s-5.235 33.895 62.518 33.895zm34.114-19.586a11.12 11.12 0 0 1-11.13-11.13 11.12 11.12 0 0 1 11.13-11.131 11.12 11.12 0 0 1 11.13 11.13 11.12 11.12 0 0 1-11.13 11.13z"/>
-                </svg>
-                {{ project.pypi -}}
-                <span class="pypi-version" id="pypi-version-{{ project.pypi | slugify }}"></span
-              ></span>
-              <script>
-                fetch('https://pypi.org/pypi/{{ project.pypi }}/json')
-                  .then((r) => r.json())
-                  .then((d) => {
-                    if (d.info && d.info.version) {
-                      document.getElementById('pypi-version-{{ project.pypi | slugify }}').textContent = ' | v' + d.info.version;
-                    }
-                  })
-                  .catch(() => {});
-              </script>
-            {% endif %}
+            {% include project_badges.liquid %}
           </div>
           <script>
             fetch('https://api.github.com/repos/{{ repo_path }}')
