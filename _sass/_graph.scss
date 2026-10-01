@@ -8,7 +8,6 @@
 }
 
 $graph-panel-width: 280px;
-$navbar-height: 57px;
 
 // Right-side graph panel (always visible on desktop)
 // Hidden until JS sets --graph-panel-top to prevent layout flash
@@ -27,6 +26,12 @@ $navbar-height: 57px;
   flex-direction: column;
   overflow: visible;
   visibility: hidden; // Hidden until JS positions it
+
+  --graph-note-color: #2698ba;
+  --graph-post-color: #d97757;
+  --graph-folder-color: #8b8b8b;
+  --graph-section-color: #9a9a9a;
+  --graph-highlight-color: #b509ac;
 
   &.positioned {
     visibility: visible;
@@ -65,16 +70,6 @@ $navbar-height: 57px;
   }
 }
 
-// Invisible overlay within panel bounds to capture zoom/pan/drag events
-.graph-event-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
 // Graph node tooltip
 .graph-tooltip {
   position: absolute;
@@ -92,14 +87,34 @@ $navbar-height: 57px;
 
 // SVG graph elements
 .graph-node {
+  fill: var(--graph-note-color);
   cursor: pointer;
   transition:
     filter 0.2s,
     stroke-width 0.2s;
+
+  &--post {
+    fill: var(--graph-post-color);
+  }
+
+  &--folder {
+    fill: var(--graph-folder-color);
+  }
+
+  &--h2,
+  &--h3 {
+    fill: var(--graph-section-color);
+  }
+
+  &.is-hovered {
+    stroke: var(--graph-highlight-color);
+    stroke-width: 3px;
+    filter: brightness(1.3);
+  }
 }
 
 .graph-node-current {
-  stroke: #b509ac;
+  stroke: var(--graph-highlight-color);
   stroke-width: 2px;
 }
 
@@ -119,6 +134,14 @@ $navbar-height: 57px;
     stroke-opacity: 0.25;
     stroke-dasharray: 2 2;
   }
+
+  &.is-active {
+    stroke-opacity: 1;
+  }
+
+  &.is-dimmed {
+    stroke-opacity: 0.1;
+  }
 }
 
 .graph-label {
@@ -127,9 +150,15 @@ $navbar-height: 57px;
   text-anchor: middle;
   cursor: pointer;
 
-  &:hover {
-    fill: var(--global-theme-color);
+  &.is-hovered {
+    fill: var(--graph-highlight-color);
+    font-weight: bold;
   }
+}
+
+.graph-node.is-dimmed,
+.graph-label.is-dimmed {
+  opacity: 0.2;
 }
 
 // Wikilink styling in content
@@ -174,7 +203,6 @@ span.wikilink.broken {
 }
 
 // Ensure main content and footer sit above the graph panel
-// background-clip prevents the background from extending into padding/margin
 #main-content {
   position: relative;
   z-index: 2;
@@ -211,16 +239,9 @@ footer {
     border-top: 1px solid var(--global-divider-color);
     overflow: hidden;
 
-    // Override the full-viewport SVG for mobile
+    // Span the panel instead of the viewport
     #knowledge-graph {
-      position: relative;
       width: 100%;
-      right: auto;
-    }
-
-    // g group needs pointer events
-    g {
-      pointer-events: all;
     }
   }
 }

@@ -2,6 +2,11 @@ require 'json'
 require 'jekyll'
 
 module Obsidian
+  class << self
+    # Title/slug lookup shared by all documents during a build
+    attr_accessor :lookup
+  end
+
   # Build a lookup map of all notes and posts by title (downcased) -> document
   def self.build_lookup(site)
     lookup = {}
@@ -252,13 +257,16 @@ module Obsidian
     end
   end
 
-  # ---- Hook: process wikilinks and transclusions in content ----
+  # ---- Hooks: process wikilinks and transclusions in content ----
+  Jekyll::Hooks.register :site, :pre_render do |site|
+    Obsidian.lookup = Obsidian.build_lookup(site) if site.config.dig('obsidian_graph', 'enabled')
+  end
+
   Jekyll::Hooks.register [:documents], :pre_render do |doc, payload|
-    site = doc.site
-    next unless site.config.dig('obsidian_graph', 'enabled')
+    next unless doc.site.config.dig('obsidian_graph', 'enabled')
     next unless %w[notes posts].include?(doc.collection&.label)
 
-    lookup = Obsidian.build_lookup(site)
+    lookup = Obsidian.lookup
 
     # Process transclusions first: ![[target]] or ![[target#heading]]
     doc.content = doc.content.gsub(/!\[\[([^\]]+)\]\]/) do |match|
