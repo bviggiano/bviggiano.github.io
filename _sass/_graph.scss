@@ -1,3 +1,5 @@
+@use "variables" as v;
+
 /******************************************************************************
  * Knowledge Graph Panel
  ******************************************************************************/
@@ -209,9 +211,14 @@ span.wikilink.broken {
 }
 
 footer {
-  position: relative;
   z-index: 2;
   background: var(--global-bg-color);
+
+  // Only claim positioning when the footer isn't fixed; this rule is unlayered
+  // and would otherwise override Tailwind's layered `.fixed-bottom`.
+  &:not(.fixed-bottom) {
+    position: relative;
+  }
 }
 
 // Desktop: content sits next to the graph, navbar/terminal span full width
@@ -219,12 +226,12 @@ footer {
 @media (min-width: 1200px) {
   #main-content.container {
     // Match the left position of the centered navbar container
-    margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
+    margin-left: max(15px, calc((100vw - #{v.$max-content-width}) / 2));
     margin-right: ($graph-panel-width + 2px);
   }
 
   footer .container {
-    margin-left: max(15px, calc((100vw - #{$max-content-width}) / 2));
+    margin-left: max(15px, calc((100vw - #{v.$max-content-width}) / 2));
     margin-right: ($graph-panel-width + 2px);
   }
 }

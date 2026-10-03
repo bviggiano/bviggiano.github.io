@@ -1,3 +1,5 @@
+@use "variables" as v;
+
 /*******************************************************************************
  * Styles for the interactive terminal widget.
  * Uses CSS variables to adapt to light/dark site theme.
@@ -35,7 +37,7 @@ html[data-theme="dark"] {
 }
 
 .terminal-body {
-  max-width: $max-content-width;
+  max-width: v.$max-content-width;
   margin: 0 auto;
   padding: 4px 15px;
 }

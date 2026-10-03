@@ -26,15 +26,18 @@
         {%- comment -%}-- Publications --{%- endcomment -%}
         "publications": { "_url": "/publications/", "_children": {} },
 
-        {%- comment -%}-- Blog with posts --{%- endcomment -%}
-        "blog": {
-          "_url": "/blog/",
-          "_children": {
-            {%- for post in site.posts -%}
-              "{{ post.title | slugify }}.md": { "_url": "{{ post.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
-            {%- endfor -%}
-          }
-        },
+        {%- comment -%}-- Blog with posts (only while the blog page is published) --{%- endcomment -%}
+        {%- assign blog_page = site.pages | where: 'permalink', '/blog/' | first -%}
+        {%- if blog_page -%}
+          "blog": {
+            "_url": "/blog/",
+            "_children": {
+              {%- for post in site.posts -%}
+                "{{ post.title | slugify }}.md": { "_url": "{{ post.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            }
+          },
+        {%- endif -%}
 
         {%- comment -%}-- Notes --{%- endcomment -%}
         "notes": {
@@ -74,10 +77,10 @@
               "x": { "_url": "https://x.com/{{ social[1] }}", "_children": {}, "_social": true },
             {%- when 'linkedin_username' -%}
               "linkedin": { "_url": "https://www.linkedin.com/in/{{ social[1] }}", "_children": {}, "_social": true },
-            {%- when 'huggingface_username' -%}
-              "huggingface": { "_url": "https://huggingface.co/{{ social[1] }}", "_children": {}, "_social": true },
+            {%- when 'huggingface' -%}
+              "huggingface": { "_url": "{{ social[1].url }}", "_children": {}, "_social": true },
             {%- when 'work_url' -%}
-              "lab": { "_url": "{{ social[1] }}", "_children": {}, "_social": true },
+              "lab": { "_url": "{{ social[1].value }}", "_children": {}, "_social": true },
           {%- endcase -%}
         {%- endfor -%}
         "_end": { "_url": "/", "_children": {}, "_hidden": true }

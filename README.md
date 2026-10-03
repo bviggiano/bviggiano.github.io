@@ -8,13 +8,21 @@ Thanks to [alshedivat](https://github.com/alshedivat) for providing the outstand
 
 ### First time installation instructions
 
-See [INSTALL.md](INSTALL.md#deployment) for instructions on how to deploy the site using GitHub Actions.
+See [al-folio's INSTALL guide](https://github.com/alshedivat/al-folio/blob/main/docs/INSTALL.md) for instructions on how to deploy the site using GitHub Actions.
 
 When first deploying the site, make sure you follow all of the instructions in the section titled "Enabling automatic deployment".
 
-### To preview locally
+### To preview locally (with Docker)
 
-To preview the site locally, run:
+**1. Install Docker Desktop:**
+
+Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for [Mac](https://docs.docker.com/desktop/setup/install/mac-install/), [Windows](https://docs.docker.com/desktop/setup/install/windows-install/), or [Linux](https://docs.docker.com/desktop/setup/install/linux/). On a Mac, you can also install it with Homebrew:
+
+```bash
+brew install --cask docker
+```
+
+**2. Run the preview script:**
 
 ```bash
 ./preview_locally.sh

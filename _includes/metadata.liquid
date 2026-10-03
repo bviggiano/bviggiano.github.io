@@ -58,9 +58,14 @@
   <meta property="og:title" content="{% if page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% assign effective_og_image = page.og_image | default: page.header_image | default: site.og_image %}
-  {% if effective_og_image %}
-    <meta property="og:image" content="{{ effective_og_image }}">
+  {% assign og_image_source = page.og_image | default: page.header_image | default: site.og_image %}
+  {% if og_image_source %}
+    {% if og_image_source contains '://' %}
+      {% assign og_image_url = og_image_source %}
+    {% else %}
+      {% assign og_image_url = og_image_source | absolute_url %}
+    {% endif %}
+    <meta property="og:image" content="{{ og_image_url }}">
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
@@ -68,8 +73,8 @@
   <meta name="twitter:card" content="{% if page.og_image or page.header_image %}summary_large_image{% else %}summary{% endif %}">
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-  {% if effective_og_image %}
-    <meta name="twitter:image" content="{{ effective_og_image }}">
+  {% if og_image_source %}
+    <meta name="twitter:image" content="{{ og_image_url }}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">
@@ -85,6 +90,9 @@
     {% case social[0] %}
       {% when 'acm_id' %}
         {% capture link %}https://dl.acm.org/profile/{{ social[1] }}/{% endcapture %}
+        {% assign sameaslinks = sameaslinks | push: link %}
+      {% when 'arxiv_id' %}
+        {% capture link %}https://arxiv.org/a/{{ social[1] }}.html{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'blogger_url' %}
         {% capture link %}{{ social[1] }}{% endcapture %}
@@ -117,9 +125,6 @@
         {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'hal_id' %}
         {% capture link %}https://cv.hal.science/{{ social[1] }}/{% endcapture %}
-        {% assign sameaslinks = sameaslinks | push: link %}
-      {% when 'huggingface_username' %}
-        {% capture link %}https://huggingface.co/{{ social[1] }}{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'ieee_id' %}
         {% capture link %}https://ieeexplore.ieee.org/author/{{ social[1] }}/{% endcapture %}
@@ -211,7 +216,7 @@
         {% capture link %}https://wikipedia.org/wiki/User:{{ social[1] }}{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'work_url' %}
-        {% capture link %}{{ social[1] }}{% endcapture %}
+        {% capture link %}{{ social[1].value }}{% endcapture %}
         {% assign sameaslinks = sameaslinks | push: link %}
       {% when 'x_username' %}
         {% capture link %}https://twitter.com/{{ social[1] }}{% endcapture %}
@@ -265,10 +270,10 @@
               "name": "University of Wisconsin-Madison",
               "url": "https://www.wisc.edu"
           },
-          "description": "{{ site.description | strip_newlines | strip | escape }}",
           {% if sameaslinks != blank %}
-          "sameAs": {{ sameaslinks | jsonify }}
+          "sameAs": {{ sameaslinks | jsonify }},
           {% endif %}
+          "description": "{{ site.description | strip_newlines | strip | escape }}"
       }
     </script>
   {% endif %}
