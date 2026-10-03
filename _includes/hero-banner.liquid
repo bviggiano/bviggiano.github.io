@@ -1,0 +1,62 @@
+{% comment %}
+  Hero banner with tiled, blurred edges.
+  Usage: {% include hero-banner.liquid image="path/to/image.png" alt="Description" %}
+  For animated GIFs, pass a still frame for the edge tiles:
+    {% include hero-banner.liquid image="hero.gif" tile_image="hero.png" alt="..." %}
+{% endcomment %}
+{% assign hero_id = include.image | slugify | prepend: 'hero-' %}
+{% if include.tile_image and include.tile_image != '' %}
+  {% assign tile_src = include.tile_image %}
+{% else %}
+  {% assign tile_src = include.image %}
+{% endif %}
+<div class="hero-banner" id="{{ hero_id }}">
+  <div class="hero-banner-edge hero-banner-left"><canvas></canvas></div>
+  <img class="hero-banner-center" src="{{ include.image | relative_url }}" alt="{{ include.alt | default: 'Hero banner' }}">
+  <div class="hero-banner-edge hero-banner-right"><canvas></canvas></div>
+</div>
+
+<script>
+  (function () {
+    function fillTiles() {
+      var banner = document.getElementById('{{ hero_id }}');
+      if (!banner) return;
+      var img = new Image();
+      img.onload = function () {
+        banner.querySelectorAll('.hero-banner-edge canvas').forEach(function (canvas) {
+          var container = canvas.parentElement;
+          var h = container.offsetHeight;
+          var w = container.offsetWidth;
+          if (!h || !w) return;
+          var tileW = Math.round(img.width * (h / img.height));
+          canvas.height = h;
+          canvas.width = w;
+          var ctx = canvas.getContext('2d');
+          var isLeft = container.classList.contains('hero-banner-left');
+          var x = isLeft ? w : 0;
+          var dir = isLeft ? -1 : 1;
+          var i = 0;
+          while (isLeft ? x > -tileW : x < w) {
+            ctx.save();
+            if (i % 2 === 1) {
+              ctx.translate(x + tileW, 0);
+              ctx.scale(-1, 1);
+              ctx.drawImage(img, 0, 0, tileW, h);
+            } else {
+              ctx.drawImage(img, x, 0, tileW, h);
+            }
+            ctx.restore();
+            x += tileW * dir;
+            i++;
+          }
+        });
+      };
+      img.src = '{{ tile_src | relative_url }}';
+    }
+    if (document.readyState === 'complete') {
+      fillTiles();
+    } else {
+      window.addEventListener('load', fillTiles);
+    }
+  })();
+</script>
