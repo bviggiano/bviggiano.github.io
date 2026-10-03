@@ -14,15 +14,15 @@ When first deploying the site, make sure you follow all of the instructions in t
 
 ### To preview locally (with Docker)
 
-**1. Install Docker Desktop:**
+**0. Install Docker Desktop (one-time setup):**
 
-Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for [Mac](https://docs.docker.com/desktop/setup/install/mac-install/), [Windows](https://docs.docker.com/desktop/setup/install/windows-install/), or [Linux](https://docs.docker.com/desktop/setup/install/linux/). On a Mac, you can also install it with Homebrew:
+You only need to do this once. Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for [Mac](https://docs.docker.com/desktop/setup/install/mac-install/), [Windows](https://docs.docker.com/desktop/setup/install/windows-install/), or [Linux](https://docs.docker.com/desktop/setup/install/linux/). On a Mac, you can also install it with Homebrew:
 
 ```bash
 brew install --cask docker
 ```
 
-**2. Run the preview script:**
+**1. Run the preview script (each time you preview):**
 
 ```bash
 ./preview_locally.sh
@@ -36,24 +36,35 @@ The site will be available at [http://0.0.0.0:8080](http://0.0.0.0:8080)
 
 If you can't install Docker, you can run the site natively with Ruby and Jekyll.
 
-**1. Install rbenv and ruby-build:**
+#### One-time setup
+
+**0. Install rbenv and ruby-build:**
 
 ```bash
 brew install rbenv ruby-build
 ```
 
-**2. Install Ruby 3.3.5:**
+**1. Install Ruby 3.3.5:**
 
 ```bash
 rbenv install 3.3.5
 rbenv local 3.3.5
 ```
 
-**3. Install dependencies and serve:**
+**2. Install dependencies:**
 
 ```bash
 gem install bundler
 bundle install
+```
+
+Rerun `bundle install` whenever the `Gemfile` changes (for example, after merging upstream updates).
+
+#### Each time you preview
+
+**3. Serve the site:**
+
+```bash
 bundle exec jekyll serve
 ```
 
