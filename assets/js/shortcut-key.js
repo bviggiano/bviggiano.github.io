@@ -1,1 +1,0 @@
-let isMac=navigator.platform.toUpperCase().indexOf("MAC")>=0;if(isMac){let t=document.getElementById("search-shortcut-text");t&&(t.textContent="\u2318")}
