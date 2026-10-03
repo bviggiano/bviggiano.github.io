@@ -18,10 +18,25 @@ module.exports = {
     "font-weight-bold",
     "font-weight-medium",
     "font-weight-lighter",
-    // medium-zoom injects these at runtime, so they never appear in the static
+    // medium-zoom injects its classes at runtime, so they never appear in the static
     // HTML PurgeCSS scans; without them the zoom overlay's z-index rule is purged
     // and page chrome (scroll-progress bar, ToC) bleeds through a zoomed image.
-    "medium-zoom-overlay",
-    "medium-zoom-image--opened",
+    /^medium-zoom/,
+    // Classes toggled at runtime by custom scripts (graph.js, toc-scroll.js,
+    // ai-context-menu, page fade-in) or built by string concatenation.
+    /^graph-node--/,
+    /^link-(transclusion|folder|section)$/,
+    "is-active",
+    "is-dimmed",
+    "is-hovered",
+    "positioned",
+    "rendered",
+    "loaded",
+    "open",
+    "active",
+    "current",
+    "toc-mobile-open",
+    "toc-tab-hidden",
+    "toc-mobile-overlay-active",
   ],
 };

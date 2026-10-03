@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var tocSidebar = document.getElementById("toc-sidebar");
+  var tocSidebar = document.getElementById("auto-toc-sidebar");
   var tocNav = tocSidebar || document.getElementById("auto-toc");
   var content = document.getElementById("markdown-content");
   if (!tocNav || !content) return;
