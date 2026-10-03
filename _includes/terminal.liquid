@@ -26,15 +26,18 @@
         {%- comment -%}-- Publications --{%- endcomment -%}
         "publications": { "_url": "/publications/", "_children": {} },
 
-        {%- comment -%}-- Blog with posts --{%- endcomment -%}
-        "blog": {
-          "_url": "/blog/",
-          "_children": {
-            {%- for post in site.posts -%}
-              "{{ post.title | slugify }}.md": { "_url": "{{ post.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
-            {%- endfor -%}
-          }
-        },
+        {%- comment -%}-- Blog with posts (only while the blog page is published) --{%- endcomment -%}
+        {%- assign blog_page = site.pages | where: 'permalink', '/blog/' | first -%}
+        {%- if blog_page -%}
+          "blog": {
+            "_url": "/blog/",
+            "_children": {
+              {%- for post in site.posts -%}
+                "{{ post.title | slugify }}.md": { "_url": "{{ post.url }}", "_file": true }{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            }
+          },
+        {%- endif -%}
 
         {%- comment -%}-- Notes --{%- endcomment -%}
         "notes": {
