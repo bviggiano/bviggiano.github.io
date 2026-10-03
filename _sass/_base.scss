@@ -2600,3 +2600,7 @@ details {
     padding-bottom: 0.5rem;
   }
 }
+
+mjx-container[jax="CHTML"][display="true"] {
+  overflow-x: auto;
+}
