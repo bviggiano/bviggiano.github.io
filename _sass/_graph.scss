@@ -211,9 +211,14 @@ span.wikilink.broken {
 }
 
 footer {
-  position: relative;
   z-index: 2;
   background: var(--global-bg-color);
+
+  // Only claim positioning when the footer isn't fixed; this rule is unlayered
+  // and would otherwise override Tailwind's layered `.fixed-bottom`.
+  &:not(.fixed-bottom) {
+    position: relative;
+  }
 }
 
 // Desktop: content sits next to the graph, navbar/terminal span full width

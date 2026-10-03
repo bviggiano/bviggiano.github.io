@@ -1120,3 +1120,9 @@ details {
     padding-bottom: 0.5rem;
   }
 }
+
+// CV list groups: Bootstrap's list-group reset is gone in v1
+ul.list-group {
+  list-style: none;
+  padding-left: 0;
+}
