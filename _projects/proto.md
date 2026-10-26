@@ -2,7 +2,7 @@
 layout: page
 title: Proto
 description: A universal infrastructure layer for generative biology
-img: assets/img/projects/proto-tools.png
+img: assets/img/projects/proto_fig1a.png
 importance: 1
 category:
 related_publications: False
