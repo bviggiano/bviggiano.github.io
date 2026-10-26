@@ -4,6 +4,81 @@
 @string{aps = {American Physical Society,}}
 
 
+@ARTICLE{Margolis2026-dtw,
+  title       = "{DrugTargetWorld}: A Synthetic Biobank for Training and
+                 Benchmarking {AI} Scientists",
+  author      = "Margolis, Samuel and Schmiedmayer, Paul and Huang, Alan and
+                 Chen, Ethan and Bhattacharjee, Ishan and Shah, Atman and
+                 Viggiano, Ben and Cao, Fang and Reddy, Shriya and Xia, Roger
+                 and O'Sullivan, Jack and Katz, Daniel and Wheeler, Matthew and
+                 Ashley, Euan and Gomes, Bruna",
+  journal     = "arXiv",
+  pages       = "2610.09558",
+  abstract    = "Drug target discovery requires distinguishing molecules that
+                 causally drive disease from those that are merely associated
+                 with it. Training and evaluating AI agents to perform this
+                 workflow end-to-end is difficult because real world biobanks
+                 lack known causal ground truth and participant-level data is
+                 access controlled. We introduce DrugTargetWorld, a framework
+                 that procedurally generates simulated biobanks, or ``worlds,''
+                 with known but concealed causal structure. Each world contains
+                 genotypes, proteins, health records, outcomes, and synthetic
+                 magnetic resonance imaging (MRI) for 54,000 participants.
+                 Agents must construct a disease phenotype, identify causal
+                 driver proteins, infer the beneficial direction of modulation,
+                 and optionally conduct virtual `wet lab' experiments. We
+                 evaluated nine agents in 540 episodes across 20 cardiovascular
+                 worlds and three experimental budgets. Opus 5 and GPT-5.6 Sol
+                 achieved the highest mean composite scores, 39.98 and 35.38 of
+                 100, respectively, and both recovered 64\% of causal drivers on
+                 average. However, no agent reliably distinguished misleading
+                 non-causal proteins, and performance remained limited by the
+                 integrative judgments required to connect phenotype
+                 construction, causal evidence, and intervention decisions. By
+                 making each world's causal structure known to the evaluator but
+                 hidden from the agent, DrugTargetWorld turns end-to-end drug
+                 target discovery into a scalable training and evaluation
+                 problem with verifiable reward.",
+  month       =  oct,
+  year        =  2026,
+  url         = {https://arxiv.org/abs/2610.09558},
+  github      = {https://github.com/sammargolis/DrugTargetWorld},
+  website     = {https://drugtargetworld.vercel.app},
+  preview     = {drugtargetworld.png},
+  bibtex_show = {true}
+}
+
+
+@ARTICLE{Zhang2026-provada,
+  title       = "Generative steering to adapt proteins beyond native biological
+                 contexts",
+  author      = "Zhang*, Xiaowei and Lu*, Wenhui Sophia and Viggiano*, Ben and
+                 Reynolds, Kevin and Burick, Sophia and Sotillo, Elena and Dai,
+                 Haoyu and Lee, Geonhu and Liu, Zixuan and Yang, Nuoya and
+                 Mille-Fragoso, Luis S and Ashley, Euan and Yu, Bingfei and
+                 Mackall, Crystal L and Wong, Wing Hung and Gao, Xiaojing J",
+  journal     = "bioRxiv",
+  pages       = "2025.07.11.664238",
+  abstract    = "ProVADA is a test-time framework that steers a pretrained
+                 protein generator toward externally defined properties while
+                 preserving functional constraints, using a Mixture-Adaptation
+                 Directed Annealing sampler that combines coordinated mutations,
+                 population selection, and annealing. Experimentally, ProVADA
+                 converted secreted human renin into an active,
+                 drug-inhibitable cytosolic protease and deimmunized two murine
+                 single-chain antibody fragments, reducing HLA visibility while
+                 retaining antigen recognition and CAR-T-cell killing.",
+  month       =  oct,
+  year        =  2026,
+  doi         = {10.1101/2025.07.11.664238},
+  url         = {https://www.biorxiv.org/content/10.1101/2025.07.11.664238v2},
+  github      = {https://github.com/SUwonglab/ProVADA},
+  preview     = {provada_preprint.png},
+  bibtex_show = {true},
+  note        = {<sup>*</sup> These authors contributed equally.}
+}
+
+
 @ARTICLE{Merchant2026-hi,
   title       = "A high-level programming language for generative biology with Proto",
   author      = "Merchant*, Aditi T and Guo*, Daniel and Viggiano*, Ben and
@@ -36,7 +111,7 @@
   year        =  2026,
   language    = "en",
   url         = {https://www.biorxiv.org/content/10.1101/2026.06.22.733870v1},
-  preview     = {proto.png},
+  preview     = {proto_fig1a.png},
   selected    = {true},
   github      = {https://github.com/evo-design/proto-language},
   website     = {https://proto.evodesign.org/start},
@@ -88,7 +163,9 @@
                Brian L",
   journal   = "Nature",
   publisher = "Nature Publishing Group",
-  pages     = "1--13",
+  volume    =  652,
+  number    =  8112,
+  pages     = "1349--1361",
   abstract  = "All of life encodes information with DNA. Although tools for
                genome sequencing, synthesis and editing have transformed
                biological research, we still lack sufficient understanding of
@@ -126,7 +203,7 @@
   url       = {https://www.nature.com/articles/s41586-026-10176-5},
   github    = {https://github.com/ArcInstitute/evo2},
   bibtex_show = {true},
-  preview   = {evo2.png},
+  preview   = {evo2.jpg},
   selected  = {true}
 }
 
@@ -318,24 +395,6 @@
   bibtex_show  = {true}
 }
 
-
-@ARTICLE{Goyal2026-avs,
-  title     = "Trends in Racial and Ethnic Representation Among Vascular
-               Surgery Residents Relative to Other Specialties Over the Past
-               Decade",
-  author    = "Goyal, Kiran A and Chick, Jeffrey F B and Shin, David S and
-               Haurani, Mounir and Viggiano, Ben and Makary, Mina S",
-  journal   = "Ann. Vasc. Surg.",
-  publisher = "Elsevier",
-  volume    =  131,
-  pages     = "13--19",
-  month     =  oct,
-  year      =  2026,
-  doi       = {10.1016/j.avsg.2026.04.064},
-  url       = {https://www.sciencedirect.com/science/article/pii/S0890509626003730},
-  preview   = {vascular_diversity.jpg},
-  bibtex_show = {true}
-}
 
 @ARTICLE{Pundi2025-hro2,
   title     = "Diagnostic Yield and Healthcare Utilization of Wearable
